@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Database</string>
+    <string name="receipt_id">Receipt ID</string>
+    <string name="not_assigned">Not assigned</string>
+    <string name="company_name">Company Name</string>
+    <string name="receipt_cost">Cost</string>
+    <string name="receipt_date">Date</string>
+    <string name="add">Add</string>
+    <string name="find">Find</string>
+    <string name="delete">Delete</string>
+    <string name="no_match_found">No Match Found</string>
+    <string name="record_deleted">Record Deleted</string>
+</resources>
