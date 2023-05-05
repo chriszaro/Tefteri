@@ -2,6 +2,7 @@ package com.example.database;
 
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -60,10 +61,10 @@ public class AddProductScreen extends AppCompatActivity {
         //company closed test
         //String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=DCM1600619200252556F2BD37B9CF29CEB8695F8179590360D578695A091.20";
         //Verified
-        String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=CFA1800124300033535EBAA152B0CB943EDB30CF9135B5F8074ECB86E5622.99";
+        //String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=CFA1800124300033535EBAA152B0CB943EDB30CF9135B5F8074ECB86E5622.99";
         //Not Verified
         //String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=DCR1801381500016311AB2BFDBF46937691B63C936A85637F75B37C178B14.00";
-        //String input = "https://einvoice.s1ecos.gr/v/EL094352564-42547400-E33B5614B29BBB8AC2F25B345F3B75B83EAB3A9A-B1A3458713FA42C881D20651BDB4CD6D";
+        String input = "https://einvoice.s1ecos.gr/v/EL094352564-42547400-E33B5614B29BBB8AC2F25B345F3B75B83EAB3A9A-B1A3458713FA42C881D20651BDB4CD6D";
         //not supported type
         //String input = "https://www.iview.gr/181951675073530293";
         if (input.contains("https://www1.aade.gr") || input.contains("https://www1.gsis.gr")) {
@@ -184,10 +185,12 @@ public class AddProductScreen extends AppCompatActivity {
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length()+1,
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length()+1+12 //TODO πρέπει να βρούμε καλύτερο τρόπο για end index, ίσως regex
+                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length()+1+12
                 );
-                receiptCost = receiptCost.trim();
-                //TODO καθαρισμα το receiptCost
+                receiptCost = receiptCost.trim().replace(",", ".");
+                String[] xd = receiptCost.split("\\.");
+                receiptCost = xd[0] + "." + xd[1].charAt(0) + xd[1].charAt(1);
+
                 costBox.setText(receiptCost);
 
                 companyName = AddProductScreen.findWord(
