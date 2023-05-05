@@ -103,7 +103,7 @@ public class AddProductScreen extends AppCompatActivity {
                             16,
                             -1
                     );
-                    receiptCost = receiptCost.replace(".", ",");
+                    //receiptCost = receiptCost.replace(".", ",");
 
                     companyName = AddProductScreen.findWord(
                             info,
@@ -125,7 +125,7 @@ public class AddProductScreen extends AppCompatActivity {
                             16,
                             -1
                     );
-                    receiptCost = receiptCost.replace(".", ",");
+                    //receiptCost = receiptCost.replace(".", ",");
 
                     companyName = "Unknown";
 
@@ -146,7 +146,7 @@ public class AddProductScreen extends AppCompatActivity {
                             16,
                             -1
                     );
-                    receiptCost = receiptCost.replace(".", ",");
+                    //receiptCost = receiptCost.replace(".", ",");
 
                     companyName = AddProductScreen.findWord(
                             info,
@@ -184,9 +184,10 @@ public class AddProductScreen extends AppCompatActivity {
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length()+1,
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length()+1+6 //TODO πρέπει να βρούμε καλύτερο τρόπο για end index, ίσως regex
+                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length()+1+12 //TODO πρέπει να βρούμε καλύτερο τρόπο για end index, ίσως regex
                 );
                 receiptCost = receiptCost.trim();
+                //TODO καθαρισμα το receiptCost
                 costBox.setText(receiptCost);
 
                 companyName = AddProductScreen.findWord(
@@ -205,6 +206,7 @@ public class AddProductScreen extends AppCompatActivity {
             //TODO print not supported
         }
 
+        dbHandler.addProduct(new Receipt(nameBox.getText().toString(), Float.parseFloat(costBox.getText().toString()), dateBox.getText().toString()));
     }
 
     public static String findWord(String paragraph, String startString, String endString, int start, int end) {

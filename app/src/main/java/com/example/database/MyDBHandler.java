@@ -23,6 +23,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public MyDBHandler(Context context, String name,
                        SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+        Log.d("LAZAROS", "Eimai edo");
     }
 
     //Δημιουργία του σχήματος της ΒΔ (πίνακας products)
@@ -35,6 +36,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 COLUMN_COST + " INTEGER," +
                 COLUMN_DATE + " TEXT" + ")";
         db.execSQL(CREATE_PRODUCTS_TABLE);
+        Log.d("Stavros", "PINAKAS");
     }
 
     //Αναβάθμιση ΒΔ: εδώ τη διαγραφώ και τη ξαναδημιουργώ ίδια
