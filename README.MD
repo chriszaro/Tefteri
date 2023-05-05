@@ -1,5 +1,10 @@
 CAMERA API για QR
 
+Δουλείες (προς το παρόν):
+Χριστοδουλος: UI 
+Λάζαρος: Database stuff
+Σταύρος: Camera API
+
 !!!!!!!!!!!!!!!!!!!!!!!UI!!!!!!!!!
 Navigation Menu (Home/Sort by Date) για όλα τα activities
 
