@@ -12,9 +12,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     //Variables storing data to display for this example
-    private final String[] prices = {"50€", "50€", "65€", "2€"};
-    private final String[] dates = {"5/5/2025", "6/8/2020", "4/6/2012", "6/6/2022"};
-    private final String[] names = {"ego", "esy", "aytos", "emeis"};
+    private final String[] prices = {"50€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€"};
+    private final String[] dates = {"5/5/2025", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022"};
+    private final String[] names = {"ego", "esy", "aytos", "emeis", "esy", "aytos", "emeis", "esy", "aytos", "emeis"};
 
     //Class that holds the items to be displayed (Views in card_layout)
     static class ViewHolder extends RecyclerView.ViewHolder {
