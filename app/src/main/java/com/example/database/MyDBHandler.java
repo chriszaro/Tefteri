@@ -8,6 +8,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Log;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class MyDBHandler extends SQLiteOpenHelper {
     //Σταθερές για τη ΒΔ (όνομα ΒΔ, έκδοση, πίνακες κλπ)
     private static final int DATABASE_VERSION = 1;
@@ -30,11 +33,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_PRODUCTS_TABLE = "CREATE TABLE " +
-                TABLE_RECEIPTS + "(" +
+                TABLE_RECEIPTS + '(' +
                 COLUMN_ID + " INTEGER PRIMARY KEY," +
                 COLUMN_COMPANYNAME + " TEXT," +
                 COLUMN_COST + " INTEGER," +
-                COLUMN_DATE + " TEXT" + ")";
+                COLUMN_DATE + " TEXT" + ')';
         db.execSQL(CREATE_PRODUCTS_TABLE);
         Log.d("Stavros", "PINAKAS");
     }
@@ -61,7 +64,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     //Μέθοδος για εύρεση προϊόντος βάσει ονομασίας του
     public Receipt findProduct(String companyName) {
         String query = "SELECT * FROM " + TABLE_RECEIPTS + " WHERE " +
-                COLUMN_COMPANYNAME + " = '" + companyName + "'";
+                COLUMN_COMPANYNAME + " = '" + companyName + '\'';
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Receipt receipt = new Receipt();
@@ -76,6 +79,48 @@ public class MyDBHandler extends SQLiteOpenHelper {
             receipt = null;
         }
         db.close();
+        return receipt;
+    }
+
+
+    /**
+     * This method fetches the first N results from the table
+     * @param N the results we need
+     * @param skip the number of results to be skipped
+     * @return An array list of the receipts
+     */
+    public ArrayList<Receipt> fetchNReceipts(int N, int skip){
+        String query = "SELECT * FROM " + TABLE_RECEIPTS +
+                       " ORDER BY " + COLUMN_DATE +
+                       " LIMIT " + N +
+                       " OFFSET " + skip;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        ArrayList<Receipt> receipts =new ArrayList<>(N);
+        if (cursor.moveToFirst()){ // if the cursor is not empty
+            do {
+                Receipt receipt = this.createReceiptFromCursor(cursor);
+                receipts.add(receipt);
+            } while (cursor.moveToNext());
+        } else { // if the cursor is empty
+            receipts = null;
+        }
+        db.close();
+        return receipts;
+
+    }
+
+    /**
+     * This method creates a receipt object using a cursor
+     * @param cursor The cursor which contains data for the receipt, taken from a database
+     * @return The receipt that is created from the cursor
+     */
+    private Receipt createReceiptFromCursor(Cursor cursor){
+        Receipt receipt = new Receipt();
+        receipt.setID(Integer.parseInt(cursor.getString(0)));
+        receipt.set_companyName(cursor.getString(1));
+        receipt.set_cost(Integer.parseInt(cursor.getString(2)));
+        receipt.set_date(cursor.getString(3));
         return receipt;
     }
 
