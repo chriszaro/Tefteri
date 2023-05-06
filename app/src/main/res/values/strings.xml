@@ -1,13 +1,19 @@
 <resources>
-    <string name="app_name">Database</string>
-    <string name="receipt_id">Receipt ID</string>
+    <string name="app_name">Tefteri</string>
+    <string name="receipt_id">Αναγνωριστικό</string>
     <string name="not_assigned">Not assigned</string>
-    <string name="company_name">Company Name</string>
-    <string name="receipt_cost">Cost</string>
-    <string name="receipt_date">Date</string>
-    <string name="add">Add</string>
-    <string name="find">Find</string>
-    <string name="delete">Delete</string>
-    <string name="no_match_found">No Match Found</string>
-    <string name="record_deleted">Record Deleted</string>
+    <string name="company_name">Επωνυμία</string>
+    <string name="receipt_cost">Ποσό</string>
+    <string name="receipt_date">Ημερομηνία</string>
+    <string name="add">Προσθηκη</string>
+    <string name="find">Αναζητηση</string>
+    <string name="delete">Διαγραφη</string>
+    <string name="no_match_found">Δεν βρέθηκαν αποτελέσματα</string>
+    <string name="record_deleted">Επιτυχής Διαγραφή</string>
+    <string name="title_home">Αρχική</string>
+    <string name="title_dashboard">Μηνιαία</string>
+    <string name="title_notifications">Φίλτρα</string>
+    <string name="add_option">Προσθήκη</string>
+    <string name="multiple_add_option">Πολλαπλή προσθήκη</string>
+    <string name="add_and_edit_option">Με επεξεργασία</string>
 </resources>

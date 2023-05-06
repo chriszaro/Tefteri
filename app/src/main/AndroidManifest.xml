@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AddProductScreen" />
+        <activity android:name=".ViewReceiptScreen" />
 
         <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data

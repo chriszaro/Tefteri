@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/add_option"
+        android:title="@string/add_option" />
+    <item
+        android:id="@+id/multiple_add_option"
+        android:title="@string/multiple_add_option" />
+    <item
+        android:id="@+id/add_and_edit_option"
+        android:title="@string/add_and_edit_option" />
+</menu>

@@ -2,7 +2,6 @@ package com.example.database;
 
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,7 +18,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class AddProductScreen extends AppCompatActivity {
+public class ViewReceiptScreen extends AppCompatActivity {
     TextView idView;
     EditText nameBox;
     EditText costBox;
@@ -93,7 +92,7 @@ public class AddProductScreen extends AppCompatActivity {
 
                 //Verified
                 if (!doc.getElementsByClass("success").text().isEmpty()) {
-                    receiptDate = AddProductScreen.findWord(
+                    receiptDate = ViewReceiptScreen.findWord(
                             info,
                             "Ημερομηνία, ώρα",
                             "Ημερομηνία, ώρα",
@@ -115,7 +114,7 @@ public class AddProductScreen extends AppCompatActivity {
                     formattedDate = formattedDate + receiptDate.charAt(3);
                     receiptDate = formattedDate;
 
-                    receiptCost = AddProductScreen.findWord(
+                    receiptCost = ViewReceiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -124,7 +123,7 @@ public class AddProductScreen extends AppCompatActivity {
                     );
                     //receiptCost = receiptCost.replace(".", ",");
 
-                    companyName = AddProductScreen.findWord(
+                    companyName = ViewReceiptScreen.findWord(
                             info,
                             "Επωνυμία",
                             "Διεύθυνση",
@@ -137,7 +136,7 @@ public class AddProductScreen extends AppCompatActivity {
 
                     receiptDate = "Unknown";
 
-                    receiptCost = AddProductScreen.findWord(
+                    receiptCost = ViewReceiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -150,7 +149,7 @@ public class AddProductScreen extends AppCompatActivity {
 
                 } else if (!doc.getElementsByClass("box-warning").text().isEmpty()) {
                     //Not Verified
-                    receiptDate = AddProductScreen.findWord(
+                    receiptDate = ViewReceiptScreen.findWord(
                             info,
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -158,7 +157,7 @@ public class AddProductScreen extends AppCompatActivity {
                             49
                     );
 
-                    receiptCost = AddProductScreen.findWord(
+                    receiptCost = ViewReceiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -167,7 +166,7 @@ public class AddProductScreen extends AppCompatActivity {
                     );
                     //receiptCost = receiptCost.replace(".", ",");
 
-                    companyName = AddProductScreen.findWord(
+                    companyName = ViewReceiptScreen.findWord(
                             info,
                             "Επωνυμία",
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -188,7 +187,7 @@ public class AddProductScreen extends AppCompatActivity {
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByTag("body").text();
 
-                receiptDate = AddProductScreen.findWord(
+                receiptDate = ViewReceiptScreen.findWord(
                         info,
                         "Ημερομηνία Έκδοσης",
                         "Ημερομηνία Έκδοσης",
@@ -198,7 +197,7 @@ public class AddProductScreen extends AppCompatActivity {
                 receiptDate = receiptDate.replace("/","-");
                 dateBox.setText(receiptDate);
 
-                receiptCost = AddProductScreen.findWord(
+                receiptCost = ViewReceiptScreen.findWord(
                         info,
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
@@ -211,7 +210,7 @@ public class AddProductScreen extends AppCompatActivity {
 
                 costBox.setText(receiptCost);
 
-                companyName = AddProductScreen.findWord(
+                companyName = ViewReceiptScreen.findWord(
                         info,
                         "Εκδότης Επωνυμία επιχείρησης",
                         "Οδός",
