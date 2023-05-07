@@ -13,8 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.database.MainActivity;
-
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     //Variables storing data to display for this example
     private final String[] prices = {"50€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€"};
@@ -48,6 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 case R.id.edit_card:
                                     // Handle Edit menu item click
                                     Toast.makeText(view.getContext(), "edit clicked", Toast.LENGTH_SHORT).show();
+                                    startMyActivity(view.getContext(), true);
                                     return true;
                                 case R.id.delete_card:
                                     // Handle Delete menu item click
@@ -66,15 +65,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             });
 
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    startMyActivity(v.getContext());
+                @Override
+                public void onClick(View v) {
+                    startMyActivity(v.getContext(), false);
                 }
             });
         }
     }
 
-    public static void startMyActivity(Context context) {
+    public static void startMyActivity(Context context, Boolean edit) {
         Intent intent = new Intent(context, ViewReceiptScreen.class);
+        if (edit) {
+            intent.putExtra("editBoolean", true);
+        }
         context.startActivity(intent);
     }
 

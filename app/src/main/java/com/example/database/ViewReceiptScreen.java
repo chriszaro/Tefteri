@@ -1,5 +1,6 @@
 package com.example.database;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.method.KeyListener;
@@ -60,6 +61,15 @@ public class ViewReceiptScreen extends AppCompatActivity {
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        Intent intent = getIntent();
+        boolean editBoolean = intent.getBooleanExtra("editBoolean", false);
+
+        // Use custom settings as needed
+        if (editBoolean) {
+            // Do something based on customSetting1 being true
+            editReceipt(findViewById(android.R.id.content).getRootView());
+        }
     }
 
     public void editReceipt(View view){
