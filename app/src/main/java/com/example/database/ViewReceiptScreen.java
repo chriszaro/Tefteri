@@ -2,9 +2,12 @@ package com.example.database;
 
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.method.KeyListener;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,17 +27,29 @@ public class ViewReceiptScreen extends AppCompatActivity {
     EditText costBox;
     EditText dateBox;
 
-    private AdView mAdView;
+    KeyListener defaultKeyListenerForNameBox;
+
+    KeyListener defaultKeyListenerForCostBox;
+
+    KeyListener defaultKeyListenerForDateBox;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_product);
+        setContentView(R.layout.activity_view_receipt);
 
         //Get references to view objects
         idView = findViewById(R.id.receiptID);
         nameBox = findViewById(R.id.companyName);
+        defaultKeyListenerForNameBox = nameBox.getKeyListener();
+        nameBox.setKeyListener(null);
         costBox = findViewById(R.id.receiptCost);
+        defaultKeyListenerForCostBox = costBox.getKeyListener();
+        costBox.setKeyListener(null);
         dateBox = findViewById(R.id.receiptDate);
+        defaultKeyListenerForDateBox = dateBox.getKeyListener();
+        dateBox.setKeyListener(null);
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -42,10 +57,38 @@ public class ViewReceiptScreen extends AppCompatActivity {
 
             }
         });
-        mAdView=findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
+
+    public void editReceipt(View view){
+        nameBox.setKeyListener(defaultKeyListenerForNameBox);
+        costBox.setKeyListener(defaultKeyListenerForCostBox);
+        dateBox.setKeyListener(defaultKeyListenerForDateBox);
+
+        Button editButton = findViewById(R.id.editButton);
+        editButton.setText("ΑΠΟΘΗΚΕΥΣΗ");
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do something different when the button is clicked
+                newReceipt(view);
+            }
+        });
+
+        Button deleteButton = findViewById(R.id.deleteButton);
+        deleteButton.setText("ΑΚΥΡΩΣΗ");
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do something different when the button is clicked
+                newReceipt(view);
+            }
+        });
+
+    }
+
 
     //OnClick method for ADD button
     public void newReceipt(View view) {
@@ -143,7 +186,6 @@ public class ViewReceiptScreen extends AppCompatActivity {
                             16,
                             -1
                     );
-                    //receiptCost = receiptCost.replace(".", ",");
 
                     companyName = "Unknown";
 
@@ -164,7 +206,6 @@ public class ViewReceiptScreen extends AppCompatActivity {
                             16,
                             -1
                     );
-                    //receiptCost = receiptCost.replace(".", ",");
 
                     companyName = ViewReceiptScreen.findWord(
                             info,
@@ -223,7 +264,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
             }
         }
         else if (input.contains("https://www.iview.gr")) {
-            //TODO print not supported
+            Toast.makeText(this, "Δεν υποστηρίζεται αυτός ο τύπος απόδειξης", Toast.LENGTH_SHORT).show();
         }
 
         dbHandler.addProduct(new Receipt(nameBox.getText().toString(), Float.parseFloat(costBox.getText().toString()), dateBox.getText().toString()));

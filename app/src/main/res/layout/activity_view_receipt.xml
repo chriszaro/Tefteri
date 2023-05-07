@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="numberDecimal"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
         </TableRow>
 
         <TableRow
@@ -105,29 +105,22 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/editButton"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/add"
-            android:onClick="newReceipt"/>
-        <!--        <Button-->
-        <!--            android:id="@+id/button2"-->
-        <!--            style="@style/Widget.AppCompat.Button.Borderless"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_weight="1"-->
-        <!--            android:text="@string/find"-->
-        <!--            android:onClick="lookupProduct"/>-->
-        <!--        <Button-->
-        <!--            android:id="@+id/button"-->
-        <!--            style="@style/Widget.AppCompat.Button.Borderless"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_weight="1"-->
-        <!--            android:text="@string/delete"-->
-        <!--            android:onClick="removeProduct"/>-->
+            android:text="@string/edit"
+            android:onClick="editReceipt"/>
+
+        <Button
+            android:id="@+id/deleteButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="deleteReceipt"
+            android:text="@string/delete" />
     </LinearLayout>
 
 </LinearLayout>

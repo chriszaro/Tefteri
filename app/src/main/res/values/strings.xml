@@ -6,6 +6,7 @@
     <string name="receipt_cost">Ποσό</string>
     <string name="receipt_date">Ημερομηνία</string>
     <string name="add">Προσθηκη</string>
+    <string name="edit">Επεξεργασια</string>
     <string name="find">Αναζητηση</string>
     <string name="delete">Διαγραφη</string>
     <string name="no_match_found">Δεν βρέθηκαν αποτελέσματα</string>
