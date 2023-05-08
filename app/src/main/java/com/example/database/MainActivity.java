@@ -2,11 +2,11 @@ package com.example.database;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,13 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder> adapter;
+    static Menu activityBarMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,25 +37,24 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         adapter = new RecyclerAdapter();
         recyclerView.setAdapter(adapter);
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
-
-            }
-        });
+        //Code For Ads
+        MobileAds.initialize(this, initializationStatus -> {});
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
 
-    public void viewReceiptScreen(View view) {
-        //Create the Intent to start the AddProductScreen Activity
-        Intent i = new Intent(this, ViewReceiptScreen.class);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        activityBarMenu = menu;
+        MenuItem myMenuItem = menu.findItem(R.id.action_delete);
+        myMenuItem.setEnabled(false);
+        return true;
+    }
 
-        //Pass data to the AddProductScreen Activity through the Intent
-
-        //Ask Android to start the new Activity
-        startActivity(i);
+    public static Menu getActivityBarMenu() {
+        return activityBarMenu;
     }
 
     public void showPopup(View v) {
@@ -80,8 +78,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             default:
                 return false;
-
         }
+    }
 
+    public void viewReceiptScreen(View view) {
+        //Create the Intent to start the AddProductScreen Activity
+        Intent i = new Intent(this, ViewReceiptScreen.class);
+
+        //Pass data to the AddProductScreen Activity through the Intent
+
+        //Ask Android to start the new Activity
+        startActivity(i);
     }
 }
