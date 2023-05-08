@@ -1,14 +1,11 @@
 package com.example.database;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.content.Context;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MyDBHandler extends SQLiteOpenHelper {
@@ -26,7 +23,6 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public MyDBHandler(Context context, String name,
                        SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
-        Log.d("LAZAROS", "Eimai edo");
     }
 
     //Δημιουργία του σχήματος της ΒΔ (πίνακας products)
@@ -39,7 +35,6 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 COLUMN_COST + " INTEGER," +
                 COLUMN_DATE + " TEXT" + ')';
         db.execSQL(CREATE_PRODUCTS_TABLE);
-        Log.d("Stavros", "PINAKAS");
     }
 
     //Αναβάθμιση ΒΔ: εδώ τη διαγραφώ και τη ξαναδημιουργώ ίδια
@@ -54,6 +49,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public void addProduct(Receipt receipt) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_COMPANYNAME, receipt.get_companyName());
+        values.put(COLUMN_ID, receipt.get_ID());
         values.put(COLUMN_COST, receipt.get_cost());
         values.put(COLUMN_DATE, receipt.get_date());
         SQLiteDatabase db = this.getWritableDatabase();
@@ -122,6 +118,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         receipt.set_cost(Integer.parseInt(cursor.getString(2)));
         receipt.set_date(cursor.getString(3));
         return receipt;
+    }
+
+    public void deleteRecords(ArrayList<String> ids) {
+
     }
 
 //    //Μέθοδος για διαγραφή προϊόντος βάσει ονομασίας του

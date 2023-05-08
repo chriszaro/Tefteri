@@ -1,5 +1,6 @@
 package com.example.database;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder> adapter;
     static Menu activityBarMenu;
 
+    Context mainContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         //Set the layout of the items in the RecyclerView
         layoutManager = new LinearLayoutManager(this);
+        mainContext = this;
         recyclerView.setLayoutManager(layoutManager);
 
         //Set my Adapter for the RecyclerView
@@ -49,7 +54,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         getMenuInflater().inflate(R.menu.main_menu, menu);
         activityBarMenu = menu;
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
-        myMenuItem.setEnabled(false);
+        myMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
+                MyDBHandler dbHandler = new MyDBHandler(mainContext, null, null, 1);
+                Toast.makeText(mainContext, "delete", Toast.LENGTH_SHORT).show();
+                dbHandler.deleteRecords(RecyclerAdapter.findIDsOfItemsForDeletion());
+                return false;
+            }
+        });
+        myMenuItem.setVisible(false);
         return true;
     }
 

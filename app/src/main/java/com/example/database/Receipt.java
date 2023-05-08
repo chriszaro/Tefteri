@@ -1,44 +1,46 @@
 package com.example.database;
 
 public class Receipt {
-    private int _id;
-    private String _companyName;
-    private float _cost;
-    private String _date;
+    private int id;
+    private String companyName;
+    private float cost;
+    private String date;
 
     public Receipt() {
     }
 
-    public Receipt(int id, String companyName, float cost, String date) {
-        this.setID(id);
-        this._companyName = companyName;
-        this._cost = cost;
-        this._date = date;
-    }
-
     public Receipt(String companyName, float cost, String date) {
-        this._companyName = companyName;
-        this._cost = cost;
-        this._date = date;
+        this.companyName = companyName;
+        this.cost = cost;
+        this.date = date;
+        this.id = hashCode();
     }
 
-    public int getID() {
-        return _id;
+    @Override
+    public int hashCode() {
+        int hash = Float.floatToIntBits(cost);
+        hash = 31 * hash + companyName.hashCode();
+        hash = 31 * hash + date.hashCode();
+        return hash;
+    }
+
+    public int get_ID() {
+        return id;
     }
 
     public void setID(int _id) {
-        this._id = _id;
+        this.id = _id;
     }
 
-    public String get_companyName() {return _companyName;}
+    public String get_companyName() {return companyName;}
 
-    public void set_companyName(String companyName) {this._companyName = companyName;}
+    public void set_companyName(String companyName) {this.companyName = companyName;}
 
-    public float get_cost() {return _cost;}
+    public float get_cost() {return cost;}
 
-    public void set_cost(float cost) {this._cost = cost;}
+    public void set_cost(float cost) {this.cost = cost;}
 
-    public String get_date() {return _date;}
+    public String get_date() {return date;}
 
-    public void set_date(String date) {this._date = date;}
+    public void set_date(String date) {this.date = date;}
 }

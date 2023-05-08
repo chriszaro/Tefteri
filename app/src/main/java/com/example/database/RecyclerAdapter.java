@@ -16,21 +16,34 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     //Variables storing data to display for this example
-    private final String[] prices = {"50€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€"};
-    private final String[] dates = {"5/5/2025", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022"};
-    private final String[] names = {"ego", "esy", "aytos", "emeis", "esy", "aytos", "emeis", "esy", "aytos", "emeis"};
+    static private ArrayList<String> prices;
+    static private ArrayList<String> dates;
+    static private ArrayList<String> names;
+    static private ArrayList<String> id;
+
+    public RecyclerAdapter(){
+        prices = new ArrayList<>(Arrays.asList("50€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€"));
+        dates = new ArrayList<>(Arrays.asList("5/5/2025", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022"));
+        names = new ArrayList<>(Arrays.asList("ego", "esy", "aytos", "emeis", "esy", "aytos", "emeis", "esy", "aytos", "emeis"));
+        id = new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
+    }
 
     static HashSet<Integer> selectedCardViews;
+    static RecyclerAdapter.ViewHolder holder2;
 
     //Class that holds the items to be displayed (Views in card_layout)
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView itemPrice;
         TextView itemDate;
         TextView itemName;
+
+        TextView itemID;
         CheckBox checkBox;
 
         public ViewHolder(View itemView) {
@@ -119,14 +132,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public static void enableTrash(){
         Menu menu = MainActivity.getActivityBarMenu();
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
-        myMenuItem.setEnabled(true);
+        myMenuItem.setVisible(true);
     }
 
     //ViewHolder calls this method when all CheckBoxes are unselected.
     public static void disableTrash(){
         Menu menu = MainActivity.getActivityBarMenu();
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
-        myMenuItem.setEnabled(false);
+        myMenuItem.setVisible(false);
+    }
+
+    public static ArrayList<String> findIDsOfItemsForDeletion(){
+        HashSet<Integer> selectedCardViews = RecyclerAdapter.getSelectedCardViews();
+        ArrayList<String> idsToDelete = new ArrayList<>();
+        for (Integer selectedCardView : selectedCardViews) {
+            idsToDelete.add(RecyclerAdapter.holder2.itemID.getText().toString());
+        }
+        return idsToDelete;
     }
 
     //ViewHolder calls this method when a CardView is clicked.
@@ -141,18 +163,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     //RecyclerView calls this method to associate a ViewHolder with data.
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
-        holder.itemPrice.setText(prices[position]);
-        holder.itemDate.setText(dates[position]);
-        holder.itemName.setText(names[position]);
+        holder.itemPrice.setText(prices.get(position));
+        holder.itemDate.setText(dates.get(position));
+        holder.itemName.setText(names.get(position));
+        holder.itemName.setText(id.get(position));
         // Set the tag for the checkbox to its position in the adapter
         holder.checkBox.setTag(position);
-
+        holder2 = holder;
     }
 
     //RecyclerView calls this method to get the size of the dataset.
     @Override
     public int getItemCount() {
-        return names.length;
+        return names.size();
+    }
+
+    public static HashSet<Integer> getSelectedCardViews(){
+        return selectedCardViews;
     }
 }
 
