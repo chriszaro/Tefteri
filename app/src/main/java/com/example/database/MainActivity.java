@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
                 MyDBHandler dbHandler = new MyDBHandler(mainContext, null, null, 1);
                 Toast.makeText(mainContext, "delete", Toast.LENGTH_SHORT).show();
-                dbHandler.deleteRecords(RecyclerAdapter.findIDsOfItemsForDeletion());
+                dbHandler.deleteReceipts(RecyclerAdapter.findIDsOfItemsForDeletion());
                 return false;
             }
         });

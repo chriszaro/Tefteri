@@ -52,6 +52,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             itemDate = itemView.findViewById(R.id.item_date);
             itemName = itemView.findViewById(R.id.item_name);
             checkBox = itemView.findViewById(R.id.checkBox);
+//            itemID = itemView.findViewById(R.id.itemID); // does not work, the item has not yet been initialized ?
             selectedCardViews = new HashSet<>();
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {

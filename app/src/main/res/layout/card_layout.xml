@@ -11,7 +11,8 @@
     android:longClickable="true"
     card_view:cardCornerRadius="12dp"
     card_view:cardElevation="3dp"
-    card_view:contentPadding="4dp">
+    card_view:contentPadding="4dp"
+    android:id="@+id/itemID"> <!-- Addition to test whether we can get the card/item ID this way -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

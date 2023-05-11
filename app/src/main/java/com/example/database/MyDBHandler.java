@@ -89,7 +89,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
                        " ORDER BY " + COLUMN_DATE +
                        " LIMIT " + N +
-                       " OFFSET " + skip;
+                       " OFFSET " + skip + ';';
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         ArrayList<Receipt> receipts =new ArrayList<>(N);
@@ -106,6 +106,51 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     }
 
+
+    /**
+     * Leave the parameter null if you don't want to update it
+     * @param ID The ID of the receipt we want to update (NOT NULL)
+     * @param companyName The new company name
+     * @param cost The new cost
+     * @param date The new date
+     */
+    public void updateReceipt(String ID, String companyName, String cost, String date){
+        ContentValues pairs = new ContentValues();
+        if (companyName != null)
+            pairs.put(COLUMN_COMPANYNAME, companyName);
+        if (cost != null)
+            pairs.put(COLUMN_COST, cost);
+        if (date != null)
+            pairs.put(COLUMN_DATE, date);
+//        String updateString =
+//                (companyName == null ? COLUMN_COMPANYNAME + " = '" + companyName + "', ": "") +
+//                (cost == null ? COLUMN_COST + " = '" + cost + "', ": "") +
+//                (date == null ? COLUMN_DATE + " = '" + date + "', ": "");
+//        updateString = updateString.substring(0, updateString.length()-1); // cut the remaining comma
+
+        /*String query = "UPDATE " + TABLE_RECEIPTS +
+                " SET " +
+                 updateString +
+                " WHERE " + COLUMN_ID + " = '" + ID + "';"; // update only for the specific customer*/
+        SQLiteDatabase db = this.getWritableDatabase();
+        // found help at
+        // https://stackoverflow.com/questions/9798473/sqlite-in-android-how-to-update-a-specific-row
+        db.update(TABLE_RECEIPTS, pairs, COLUMN_ID + " = ?", new String[]{ID});
+        db.close();
+    }
+
+    public void deleteReceipt(String ID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", new String[]{ID});
+        db.close();
+    }
+
+    public void deleteReceipts(ArrayList<String> ids) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", (String[]) ids.toArray());
+        db.close();
+    }
+
     /**
      * This method creates a receipt object using a cursor
      * @param cursor The cursor which contains data for the receipt, taken from a database
@@ -118,10 +163,6 @@ public class MyDBHandler extends SQLiteOpenHelper {
         receipt.set_cost(Integer.parseInt(cursor.getString(2)));
         receipt.set_date(cursor.getString(3));
         return receipt;
-    }
-
-    public void deleteRecords(ArrayList<String> ids) {
-
     }
 
 //    //Μέθοδος για διαγραφή προϊόντος βάσει ονομασίας του
