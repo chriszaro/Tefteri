@@ -81,19 +81,20 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * This method fetches the first N results from the table
-     * @param N the results we need
+     *
+     * @param N    the results we need
      * @param skip the number of results to be skipped
      * @return An array list of the receipts
      */
-    public ArrayList<Receipt> fetchNReceipts(int N, int skip){
+    public ArrayList<Receipt> fetchNReceipts(int N, int skip) {
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                       " ORDER BY " + COLUMN_DATE +
-                       " LIMIT " + N +
-                       " OFFSET " + skip + ';';
+                " ORDER BY " + COLUMN_DATE +
+                " LIMIT " + N +
+                " OFFSET " + skip + ';';
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        ArrayList<Receipt> receipts =new ArrayList<>(N);
-        if (cursor.moveToFirst()){ // if the cursor is not empty
+        ArrayList<Receipt> receipts = new ArrayList<>(N);
+        if (cursor.moveToFirst()) { // if the cursor is not empty
             do {
                 Receipt receipt = this.createReceiptFromCursor(cursor);
                 receipts.add(receipt);
@@ -109,12 +110,13 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * Leave the parameter null if you don't want to update it
-     * @param ID The ID of the receipt we want to update (NOT NULL)
+     *
+     * @param ID          The ID of the receipt we want to update (NOT NULL)
      * @param companyName The new company name
-     * @param cost The new cost
-     * @param date The new date
+     * @param cost        The new cost
+     * @param date        The new date
      */
-    public void updateReceipt(String ID, String companyName, String cost, String date){
+    public void updateReceipt(String ID, String companyName, String cost, String date) {
         ContentValues pairs = new ContentValues();
         if (companyName != null)
             pairs.put(COLUMN_COMPANYNAME, companyName);
@@ -139,7 +141,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteReceipt(String ID){
+    public void deleteReceipt(String ID) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", new String[]{ID});
         db.close();
@@ -151,12 +153,41 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
+        month = month.length() == 1 ? '0' + month : month; // if the month is a single digit, add 0
+                                    // in front of it to make it compatible with an SQL query
+        String startDate = year + '-' + month + "01";
+        int m = Integer.parseInt(month);
+        String endDate;
+        if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12)
+            endDate = year + '-' + month + "31";
+        else
+            endDate = year + '-' + month + "30";
+        String query = "SELECT * FROM " + TABLE_RECEIPTS +
+                " WHERE " + COLUMN_DATE + " BETWEEN " +
+                startDate + " AND " + endDate + ';';
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        ArrayList<Receipt> receipts = new ArrayList<>();
+        if (cursor.moveToFirst()){
+            do {
+                Receipt r = createReceiptFromCursor(cursor);
+                receipts.add(r);
+            } while (cursor.moveToNext());
+        } /* else
+            receipts = null; */
+        db.close();
+        return receipts;
+    }
+
     /**
      * This method creates a receipt object using a cursor
+     *
      * @param cursor The cursor which contains data for the receipt, taken from a database
      * @return The receipt that is created from the cursor
      */
-    private Receipt createReceiptFromCursor(Cursor cursor){
+    private Receipt createReceiptFromCursor(Cursor cursor) {
         Receipt receipt = new Receipt();
         receipt.setID(Integer.parseInt(cursor.getString(0)));
         receipt.set_companyName(cursor.getString(1));
