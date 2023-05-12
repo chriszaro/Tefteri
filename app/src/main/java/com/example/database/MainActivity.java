@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         options.setBeepEnabled(true);
         options.setOrientationLocked(true);
         options.setCaptureActivity(QRScannerActivity.class);
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
         barLauncher.launch(options);
     }
 
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("Result");
+
             builder.setMessage(result.getContents());
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
