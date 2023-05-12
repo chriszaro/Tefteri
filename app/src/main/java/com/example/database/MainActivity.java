@@ -1,6 +1,8 @@
 package com.example.database;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
@@ -17,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     RecyclerView recyclerView;
@@ -83,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         switch (item.getItemId()) {
             case R.id.add_option:
                 Toast.makeText(this, "add clicked", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(mainContext, QRScannerActivity.class);
+//                startActivity(intent);
+                scanCode();
                 return true;
             case R.id.multiple_add_option:
                 Toast.makeText(this, "multiple_add_option clicked", Toast.LENGTH_SHORT).show();
@@ -94,6 +102,32 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return false;
         }
     }
+
+    private void scanCode(){
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Volume up to flash on");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(QRScannerActivity.class);
+        barLauncher.launch(options);
+    }
+
+    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if(result.getContents() != null)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Result");
+            builder.setMessage(result.getContents());
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            }).show();
+        }
+    });
+
+
 
     public void viewReceiptScreen(View view) {
         //Create the Intent to start the AddProductScreen Activity
