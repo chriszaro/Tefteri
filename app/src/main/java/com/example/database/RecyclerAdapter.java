@@ -2,6 +2,7 @@ package com.example.database;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,8 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,30 +26,32 @@ import java.util.HashSet;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     //Variables storing data to display for this example
-    static private ArrayList<String> prices;
-    static private ArrayList<String> dates;
-    static private ArrayList<String> names;
-    static private ArrayList<String> id;
+    private ArrayList<String> prices;
+    private ArrayList<String> dates;
+    private ArrayList<String> names;
+    private ArrayList<String> id;
 
-    public RecyclerAdapter(){
+    private MainActivity mainActivity;
+    public RecyclerAdapter(AppCompatActivity activity){
         prices = new ArrayList<>(Arrays.asList("50€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€"));
         dates = new ArrayList<>(Arrays.asList("5/5/2025", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022"));
         names = new ArrayList<>(Arrays.asList("ego", "esy", "aytos", "emeis", "esy", "aytos", "emeis", "esy", "aytos", "emeis"));
         id = new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
+        mainActivity = (MainActivity) activity;
     }
 
-    static HashSet<Integer> selectedCardViews;
-    static RecyclerAdapter.ViewHolder holder2;
+    HashSet<Integer> selectedCardViews;
+    RecyclerAdapter.ViewHolder holder2;
 
     //Class that holds the items to be displayed (Views in card_layout)
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView itemPrice;
         TextView itemDate;
         TextView itemName;
 
         TextView itemID;
         CheckBox checkBox;
-
+        private int tempCounter = 1;
         public ViewHolder(View itemView) {
             super(itemView);
             itemPrice = itemView.findViewById(R.id.item_price);
@@ -74,7 +80,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                     return true;
                                 case R.id.delete_card:
                                     // Handle Delete menu item click
-                                    Toast.makeText(view.getContext(), "delete clicked", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
+                                    tempCounter++;
+                                    MyDBHandler handler = new MyDBHandler(mainActivity, null, null, 1);
+//                                    handler.deleteReceipt();
                                     return true;
                                 default:
                                     return false;
@@ -130,30 +139,32 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     //ViewHolder calls this method when a CheckBox is selected.
-    public static void enableTrash(){
-        Menu menu = MainActivity.getActivityBarMenu();
+    public void enableTrash(){
+        Menu menu = mainActivity.getActivityBarMenu();
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
         myMenuItem.setVisible(true);
     }
 
     //ViewHolder calls this method when all CheckBoxes are unselected.
-    public static void disableTrash(){
-        Menu menu = MainActivity.getActivityBarMenu();
+    public void disableTrash(){
+        Menu menu = mainActivity.getActivityBarMenu();
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
         myMenuItem.setVisible(false);
     }
 
-    public static ArrayList<String> findIDsOfItemsForDeletion(){
-        HashSet<Integer> selectedCardViews = RecyclerAdapter.getSelectedCardViews();
+    public ArrayList<String> findIDsOfItemsForDeletion(){
+        HashSet<Integer> selectedCardViews = this.getSelectedCardViews();
         ArrayList<String> idsToDelete = new ArrayList<>();
         for (Integer selectedCardView : selectedCardViews) {
-            idsToDelete.add(RecyclerAdapter.holder2.itemID.getText().toString());
+            idsToDelete.add(this.holder2.itemID.getText().toString());
         }
+        Toast.makeText(mainActivity, "delete from RecyclerAdapter", Toast.LENGTH_SHORT).show();
+        Log.i("LAZAROS TAGS", idsToDelete.toArray().toString());
         return idsToDelete;
     }
 
     //ViewHolder calls this method when a CardView is clicked.
-    public static void startMyActivity(Context context, Boolean edit) {
+    public void startMyActivity(Context context, Boolean edit) {
         Intent intent = new Intent(context, ViewReceiptScreen.class);
         if (edit) {
             intent.putExtra("editBoolean", true);
@@ -179,7 +190,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return names.size();
     }
 
-    public static HashSet<Integer> getSelectedCardViews(){
+    public HashSet<Integer> getSelectedCardViews(){
         return selectedCardViews;
     }
 }

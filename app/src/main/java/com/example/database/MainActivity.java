@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,10 +28,11 @@ import com.journeyapps.barcodescanner.ScanOptions;
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter<RecyclerAdapter.ViewHolder> adapter;
-    static Menu activityBarMenu;
+    RecyclerAdapter adapter;
+    Menu activityBarMenu;
 
-    Context mainContext;
+    private Context mainContext;
+    private MyDBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,27 +47,33 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         recyclerView.setLayoutManager(layoutManager);
 
         //Set my Adapter for the RecyclerView
-        adapter = new RecyclerAdapter();
+        adapter = new RecyclerAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        //Code For Ads
+        // as per the android documentation, the database should remain open for as long as possible
+//        dbHandler = new MyDBHandler(this, null, null, 1);
+
+        // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {});
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         activityBarMenu = menu;
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
+        MainActivity ma = this;
         myMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
                 MyDBHandler dbHandler = new MyDBHandler(mainContext, null, null, 1);
                 Toast.makeText(mainContext, "delete", Toast.LENGTH_SHORT).show();
-                dbHandler.deleteReceipts(RecyclerAdapter.findIDsOfItemsForDeletion());
+//                dbHandler.deleteReceipts(adapter.findIDsOfItemsForDeletion());
+                dbHandler.deleteReceipt("1");
                 return false;
             }
         });
@@ -72,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         return true;
     }
 
-    public static Menu getActivityBarMenu() {
+    public Menu getActivityBarMenu() {
         return activityBarMenu;
     }
 
