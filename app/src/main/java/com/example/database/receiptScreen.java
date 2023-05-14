@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.method.KeyListener;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -144,7 +145,10 @@ public class receiptScreen extends AppCompatActivity {
         String input = "http://tam.gsis.gr/eafdss/myweb/q1.php?SIG=CFZ20000527005892836A762E8CAFEBEB510BCEF5692959BFD2F51E702200008.42";
         //not supported type
         //String input = "https://www.iview.gr/181951675073530293";
-        if (input.contains("https://www1.aade.gr") || input.contains("https://www1.gsis.gr") || input.contains("http://tam.gsis.gr")) {
+        if (input.contains("http://tam.gsis.gr")){
+            input = "https://www1.aade.gr/tameiakes" + input.substring(25);
+        }
+        if (input.contains("https://www1.aade.gr") || input.contains("https://www1.gsis.gr")) {
             try {
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByClass("info").text();
