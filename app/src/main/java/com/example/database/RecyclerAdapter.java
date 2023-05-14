@@ -16,9 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         prices = new ArrayList<>(Arrays.asList("50€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€"));
         dates = new ArrayList<>(Arrays.asList("5/5/2025", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022"));
         names = new ArrayList<>(Arrays.asList("ego", "esy", "aytos", "emeis", "esy", "aytos", "emeis", "esy", "aytos", "emeis"));
-        id = new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
+        id = new ArrayList<>(Arrays.asList("000", "111", "222", "333", "444", "555", "666", "777", "888", "999"));
         mainActivity = (MainActivity) activity;
     }
 
@@ -48,8 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TextView itemPrice;
         TextView itemDate;
         TextView itemName;
-
-        TextView itemID;
+        String itemID;
         CheckBox checkBox;
         private int tempCounter = 1;
         public ViewHolder(View itemView) {
@@ -58,7 +55,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             itemDate = itemView.findViewById(R.id.item_date);
             itemName = itemView.findViewById(R.id.item_name);
             checkBox = itemView.findViewById(R.id.checkBox);
-//            itemID = itemView.findViewById(R.id.itemID); // does not work, the item has not yet been initialized ?
             selectedCardViews = new HashSet<>();
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -114,7 +110,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         if (selectedCardViews.isEmpty()) {
                             Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(itemView.getContext(), "checked"+position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(itemView.getContext(), "checked card "+ id.get(position) + " at " + position, Toast.LENGTH_SHORT).show();
                         selectedCardViews.add(position);
                         enableTrash();
                     } else {
@@ -156,7 +152,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         HashSet<Integer> selectedCardViews = this.getSelectedCardViews();
         ArrayList<String> idsToDelete = new ArrayList<>();
         for (Integer selectedCardView : selectedCardViews) {
-            idsToDelete.add(this.holder2.itemID.getText().toString());
+            idsToDelete.add(this.holder2.itemID);
         }
         Toast.makeText(mainActivity, "delete from RecyclerAdapter", Toast.LENGTH_SHORT).show();
         Log.i("LAZAROS TAGS", idsToDelete.toArray().toString());
@@ -165,7 +161,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when a CardView is clicked.
     public void startMyActivity(Context context, Boolean edit) {
-        Intent intent = new Intent(context, ViewReceiptScreen.class);
+        Intent intent = new Intent(context, receiptScreen.class);
         if (edit) {
             intent.putExtra("editBoolean", true);
         }
@@ -178,7 +174,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.itemPrice.setText(prices.get(position));
         holder.itemDate.setText(dates.get(position));
         holder.itemName.setText(names.get(position));
-        holder.itemName.setText(id.get(position));
+        holder.itemID = id.get(position);
         // Set the tag for the checkbox to its position in the adapter
         holder.checkBox.setTag(position);
         holder2 = holder;

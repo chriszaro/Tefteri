@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewReceiptScreen" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <activity android:name=".receiptScreen" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <activity android:name=".QRScannerActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/zxing_CaptureTheme"/>

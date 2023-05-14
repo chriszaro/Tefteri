@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -103,9 +101,15 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.multiple_add_option:
                 Toast.makeText(this, "multiple_add_option clicked", Toast.LENGTH_SHORT).show();
-                return true;
+                /*while (true){
+                    scanCode();
+                    if (scanCode() == null){
+                        return true;
+                    }
+                }*/
             case R.id.add_and_edit_option:
-                viewReceiptScreen(findViewById(android.R.id.content).getRootView());
+                //scanCode();
+                editReceipt(findViewById(android.R.id.content).getRootView());
                 return true;
             default:
                 return false;
@@ -143,11 +147,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
 
 
-    public void viewReceiptScreen(View view) {
+    public void editReceipt(View view) {
         //Create the Intent to start the AddProductScreen Activity
-        Intent i = new Intent(this, ViewReceiptScreen.class);
+        Intent i = new Intent(this, receiptScreen.class);
 
         //Pass data to the AddProductScreen Activity through the Intent
+        i.putExtra("editBoolean", true);
 
         //Ask Android to start the new Activity
         startActivity(i);

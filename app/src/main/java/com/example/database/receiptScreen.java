@@ -23,7 +23,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class ViewReceiptScreen extends AppCompatActivity {
+public class receiptScreen extends AppCompatActivity {
     TextView idView;
     EditText nameBox;
     EditText costBox;
@@ -140,10 +140,11 @@ public class ViewReceiptScreen extends AppCompatActivity {
         //String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=CFA1800124300033535EBAA152B0CB943EDB30CF9135B5F8074ECB86E5622.99";
         //Not Verified
         //String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=DCR1801381500016311AB2BFDBF46937691B63C936A85637F75B37C178B14.00";
-        String input = "https://einvoice.s1ecos.gr/v/EL094352564-42547400-E33B5614B29BBB8AC2F25B345F3B75B83EAB3A9A-B1A3458713FA42C881D20651BDB4CD6D";
+        //String input = "https://einvoice.s1ecos.gr/v/EL094352564-42547400-E33B5614B29BBB8AC2F25B345F3B75B83EAB3A9A-B1A3458713FA42C881D20651BDB4CD6D";
+        String input = "http://tam.gsis.gr/eafdss/myweb/q1.php?SIG=CFZ20000527005892836A762E8CAFEBEB510BCEF5692959BFD2F51E702200008.42";
         //not supported type
         //String input = "https://www.iview.gr/181951675073530293";
-        if (input.contains("https://www1.aade.gr") || input.contains("https://www1.gsis.gr")) {
+        if (input.contains("https://www1.aade.gr") || input.contains("https://www1.gsis.gr") || input.contains("http://tam.gsis.gr")) {
             try {
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByClass("info").text();
@@ -151,7 +152,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
 
                 //Verified
                 if (!doc.getElementsByClass("success").text().isEmpty()) {
-                    receiptDate = ViewReceiptScreen.findWord(
+                    receiptDate = receiptScreen.findWord(
                             info,
                             "Ημερομηνία, ώρα",
                             "Ημερομηνία, ώρα",
@@ -173,7 +174,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
                     formattedDate = formattedDate + receiptDate.charAt(3);
                     receiptDate = formattedDate;
 
-                    receiptCost = ViewReceiptScreen.findWord(
+                    receiptCost = receiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -182,7 +183,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
                     );
                     //receiptCost = receiptCost.replace(".", ",");
 
-                    companyName = ViewReceiptScreen.findWord(
+                    companyName = receiptScreen.findWord(
                             info,
                             "Επωνυμία",
                             "Διεύθυνση",
@@ -195,7 +196,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
 
                     receiptDate = "Unknown";
 
-                    receiptCost = ViewReceiptScreen.findWord(
+                    receiptCost = receiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -207,7 +208,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
 
                 } else if (!doc.getElementsByClass("box-warning").text().isEmpty()) {
                     //Not Verified
-                    receiptDate = ViewReceiptScreen.findWord(
+                    receiptDate = receiptScreen.findWord(
                             info,
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -215,7 +216,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
                             49
                     );
 
-                    receiptCost = ViewReceiptScreen.findWord(
+                    receiptCost = receiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -223,7 +224,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
                             -1
                     );
 
-                    companyName = ViewReceiptScreen.findWord(
+                    companyName = receiptScreen.findWord(
                             info,
                             "Επωνυμία",
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -244,7 +245,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByTag("body").text();
 
-                receiptDate = ViewReceiptScreen.findWord(
+                receiptDate = receiptScreen.findWord(
                         info,
                         "Ημερομηνία Έκδοσης",
                         "Ημερομηνία Έκδοσης",
@@ -254,7 +255,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
                 receiptDate = receiptDate.replace("/","-");
                 dateBox.setText(receiptDate);
 
-                receiptCost = ViewReceiptScreen.findWord(
+                receiptCost = receiptScreen.findWord(
                         info,
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
@@ -267,7 +268,7 @@ public class ViewReceiptScreen extends AppCompatActivity {
 
                 costBox.setText(receiptCost);
 
-                companyName = ViewReceiptScreen.findWord(
+                companyName = receiptScreen.findWord(
                         info,
                         "Εκδότης Επωνυμία επιχείρησης",
                         "Οδός",
@@ -291,53 +292,6 @@ public class ViewReceiptScreen extends AppCompatActivity {
         int endDate = paragraph.indexOf(endString) + end;
         return paragraph.substring(startDate, endDate);
     }
-
-   /* public void downloadReceipt() {
-//        String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=DCM1600619200252556F2BD37B9CF29CEB8695F8179590360D578695A091.20";
-        String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=CFA1800124300033535EBAA152B0CB943EDB30CF9135B5F8074ECB86E5622.99";
-
-        try {
-            Document doc = Jsoup.connect(input).get();
-            String info = doc.getElementsByClass("info").text();
-            String receipt =  doc.getElementsByClass("receipt").text();
-
-            if (doc.getElementsByClass("warning").text().isEmpty()) {
-                System.out.print("Verified");
-
-                String receiptDate = MainActivity.findWord(
-                        info,
-                        "Ημερομηνία, ώρα",
-                        "Ημερομηνία, ώρα",
-                        16,
-                        32
-                );
-
-                String receiptCost = MainActivity.findWord(
-                        receipt,
-                        "Συνολικού ποσού",
-                        "ευρώ",
-                        16,
-                        -1
-                );
-
-                String companyName = MainActivity.findWord(
-                        info,
-                        "Επωνυμία",
-                        "Διεύθυνση",
-                        9,
-                        -1
-                );
-
-                nameBox.setText(companyName);
-                costBox.setText(receiptCost);
-                dateBox.setText(receiptDate);
-
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
 //    //OnClick method for FIND button
 //    public void lookupReceipt (View view) {
