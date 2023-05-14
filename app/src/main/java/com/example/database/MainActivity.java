@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         options.setOrientationLocked(true);
         options.setCaptureActivity(QRScannerActivity.class);
         options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+        options.setBeepEnabled(false);
         barLauncher.launch(options);
     }
 
@@ -126,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     dialogInterface.dismiss();
                 }
             }).show();
+
+            System.out.println(result.getContents());
         }
     });
 
