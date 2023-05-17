@@ -36,6 +36,12 @@ public class receiptScreen extends AppCompatActivity {
     KeyListener defaultKeyListenerForDateBox;
 
     MyDBHandler dbHandler;
+    MainActivity mainActivity;
+
+    public receiptScreen(AppCompatActivity mainActivity, MyDBHandler dbHandler) {
+        this.mainActivity = (MainActivity) mainActivity;
+        this.dbHandler = dbHandler;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
