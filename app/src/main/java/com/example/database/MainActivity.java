@@ -63,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         mAdView.loadAd(adRequest);
     }
 
+    /**
+     * This method is for the trash button on activity bar
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -82,10 +87,18 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         return true;
     }
 
+    /**
+     * Getter for ActivityBarMenu
+     * @return
+     */
     public Menu getActivityBarMenu() {
         return activityBarMenu;
     }
 
+    /**
+     * Method for popup menu from float button (add)
+     * @param v
+     */
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
@@ -93,6 +106,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         popup.show();
     }
 
+    /**
+     * Method for function of popup menu from float button (add)
+     * @param item the menu item that was clicked
+     * @return
+     */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
@@ -130,15 +148,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         barLauncher.launch(options);
     }
 
+    String lastReceiptID;
     ActivityResultLauncher<ScanOptions> barLauncher =
             registerForActivityResult(
                     new ScanContract(), result -> {
                         String input = result.getContents();
-                        downloadReceipt(input);
+                        lastReceiptID = downloadReceipt(input);
                     }
             );
 
-    public void downloadReceipt(String input) {
+    public String downloadReceipt(String input) {
 
         MyDBHandler dbHandler = new MyDBHandler(this, null, null, 1);
         String companyName = "";
@@ -286,7 +305,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         } else if (input.contains("https://www.iview.gr")) {
             Toast.makeText(this, "Δεν υποστηρίζεται αυτός ο τύπος απόδειξης", Toast.LENGTH_SHORT).show();
         }
-            dbHandler.addProduct(new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate));
+        Receipt newReceipt = new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate);
+        dbHandler.addProduct(newReceipt);
+        return String.valueOf(newReceipt.get_ID());
     }
 
     public void editReceipt(View view) {
@@ -295,6 +316,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         //Pass data to the AddProductScreen Activity through the Intent
         i.putExtra("editBoolean", true);
+        i.putExtra("newReceipt", true);
+        i.putExtra("id", lastReceiptID);
 
         //Ask Android to start the new Activity
         startActivity(i);

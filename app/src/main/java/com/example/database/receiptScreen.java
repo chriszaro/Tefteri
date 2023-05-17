@@ -25,7 +25,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class receiptScreen extends AppCompatActivity {
-    TextView idView;
     EditText nameBox;
     EditText costBox;
     EditText dateBox;
@@ -38,7 +37,6 @@ public class receiptScreen extends AppCompatActivity {
 
     MyDBHandler dbHandler;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,18 +47,22 @@ public class receiptScreen extends AppCompatActivity {
             actionBar.hide();
         }
 
+        dbHandler = new MyDBHandler(findViewById(android.R.id.content).getRootView().getContext(), null, null, 1);
+
         //Get references to view objects
-        idView = findViewById(R.id.receiptID);
         nameBox = findViewById(R.id.companyName);
         defaultKeyListenerForNameBox = nameBox.getKeyListener();
         nameBox.setKeyListener(null);
+
         costBox = findViewById(R.id.receiptCost);
         defaultKeyListenerForCostBox = costBox.getKeyListener();
         costBox.setKeyListener(null);
+
         dateBox = findViewById(R.id.receiptDate);
         defaultKeyListenerForDateBox = dateBox.getKeyListener();
         dateBox.setKeyListener(null);
 
+        //Code for ads
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
@@ -71,229 +73,92 @@ public class receiptScreen extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        //Get from intent if the receiptScreen is for view or edit
         Intent intent = getIntent();
         boolean editBoolean = intent.getBooleanExtra("editBoolean", false);
+        boolean newReceipt = intent.getBooleanExtra("newReceipt", false);
+
         String id = intent.getStringExtra("id");
-        //Log.d("after intent", id);
-        dbHandler = new MyDBHandler(findViewById(android.R.id.content).getRootView().getContext(), null, null, 1);
-        // Use custom settings as needed
+
+        //if true then edit, else just view
         if (editBoolean) {
-            // Do something based on customSetting1 being true
-            editReceipt(findViewById(android.R.id.content).getRootView(), id);
+            editReceipt(id, newReceipt);
         } else {
             viewReceipt(findViewById(android.R.id.content).getRootView(), id);
         }
     }
 
+    /**
+     * This method sets the receiptScreen to view mode.
+     *
+     * @param view
+     * @param id
+     */
     public void viewReceipt(View view, String id) {
-        MyDBHandler handler = new MyDBHandler(view.getContext(), null, null, 1);
-        Receipt receipt = handler.findProduct(id);
-        //Log.d("after handler", id);
-        if (receipt != null) {
-            costBox.setText(String.valueOf(receipt.get_cost()));
-            nameBox.setText(String.valueOf(receipt.get_companyName()));
-            dateBox.setText(String.valueOf(receipt.get_date()));
-        }
-        else{
-            Toast.makeText(view.getContext(), "null", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void editReceipt(View view, String id) {
-        nameBox.setKeyListener(defaultKeyListenerForNameBox);
-        costBox.setKeyListener(defaultKeyListenerForCostBox);
-        dateBox.setKeyListener(defaultKeyListenerForDateBox);
-
-        Button editButton = findViewById(R.id.editButton);
-        editButton.setText("ΑΠΟΘΗΚΕΥΣΗ");
-        //newReceipt(view);
-        editButton.setOnClickListener(new View.OnClickListener() {
+        //Set name and function to left button
+        Button leftButton = findViewById(R.id.leftButton);
+        leftButton.setText("ΕΠΕΞΕΡΓΑΣΙΑ");
+        leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Do something different when the button is clicked
-
-                dbHandler.addProduct(new Receipt(nameBox.getText().toString(), Float.parseFloat(costBox.getText().toString()), dateBox.getText().toString()));
-                endActivity();
+                editReceipt(id, false);
             }
         });
 
-        Button deleteButton = findViewById(R.id.deleteButton);
-        deleteButton.setText("ΑΚΥΡΩΣΗ");
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        //Set name and function to right button
+        Button rightButton = findViewById(R.id.rightButton);
+        rightButton.setText("ΔΙΑΓΡΑΦΗ");
+        rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Do something different when the button is clicked
                 dbHandler.deleteReceipt(id);
                 endActivity();
             }
         });
 
+        setValues(id);
+    }
+
+    /**
+     * This method sets the receiptScreen to edit mode.
+     *
+     * @param id
+     */
+    public void editReceipt(String id, Boolean newReceipt) {
+        //Reset the textBoxes listeners to default so the boxes are editable
+        nameBox.setKeyListener(defaultKeyListenerForNameBox);
+        costBox.setKeyListener(defaultKeyListenerForCostBox);
+        dateBox.setKeyListener(defaultKeyListenerForDateBox);
+
+        //Set name and function to left button
+        Button leftButton = findViewById(R.id.leftButton);
+        leftButton.setText("ΑΠΟΘΗΚΕΥΣΗ");
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endActivity();
+            }
+        });
+
+        //Set name and function to right button
+        Button rightButton = findViewById(R.id.rightButton);
+        rightButton.setText("ΑΚΥΡΩΣΗ");
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (newReceipt) {
+                    dbHandler.deleteReceipt(id);
+                }
+                endActivity();
+            }
+        });
+
+        setValues(id);
     }
 
     public void endActivity() {
         this.finish();
     }
-
-    //OnClick method for ADD button
- /*   public void newReceipt(View view) {
-        String companyName = nameBox.getText().toString();
-        String receiptCost = costBox.getText().toString();
-        String receiptDate = dateBox.getText().toString();
-
-        nameBox.setText("");
-        costBox.setText("");
-        dateBox.setText("");
-
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-        }
-
-        if (input.contains("http://tam.gsis.gr")) {
-            input = "https://www1.aade.gr/tameiakes" + input.substring(25);
-        }
-        if (input.contains("https://www1.aade.gr") || input.contains("https://www1.gsis.gr")) {
-            try {
-                Document doc = Jsoup.connect(input).get();
-                String info = doc.getElementsByClass("info").text();
-                String receipt = doc.getElementsByClass("receipt").text();
-
-                //Verified
-                if (!doc.getElementsByClass("success").text().isEmpty()) {
-                    receiptDate = receiptScreen.findWord(
-                            info,
-                            "Ημερομηνία, ώρα",
-                            "Ημερομηνία, ώρα",
-                            "Ημερομηνία, ώρα".length() + 1,
-                            "Ημερομηνία, ώρα".length() + 11
-                    );
-
-                    // 2022-04-15 to 15-04-2022
-                    String formattedDate = "";
-                    formattedDate = formattedDate + receiptDate.charAt(8);
-                    formattedDate = formattedDate + receiptDate.charAt(9);
-                    formattedDate = formattedDate + receiptDate.charAt(7);
-                    formattedDate = formattedDate + receiptDate.charAt(5);
-                    formattedDate = formattedDate + receiptDate.charAt(6);
-                    formattedDate = formattedDate + receiptDate.charAt(4);
-                    formattedDate = formattedDate + receiptDate.charAt(0);
-                    formattedDate = formattedDate + receiptDate.charAt(1);
-                    formattedDate = formattedDate + receiptDate.charAt(2);
-                    formattedDate = formattedDate + receiptDate.charAt(3);
-                    receiptDate = formattedDate;
-
-                    receiptCost = receiptScreen.findWord(
-                            receipt,
-                            "Συνολικού ποσού",
-                            "ευρώ",
-                            16,
-                            -1
-                    );
-                    //receiptCost = receiptCost.replace(".", ",");
-
-                    companyName = receiptScreen.findWord(
-                            info,
-                            "Επωνυμία",
-                            "Διεύθυνση",
-                            9,
-                            -1
-                    );
-
-                } else if (!doc.getElementsByClass("box-error").text().isEmpty()) {
-                    //closed company
-
-                    receiptDate = "Unknown";
-
-                    receiptCost = receiptScreen.findWord(
-                            receipt,
-                            "Συνολικού ποσού",
-                            "ευρώ",
-                            16,
-                            -1
-                    );
-
-                    companyName = "Unknown";
-
-                } else if (!doc.getElementsByClass("box-warning").text().isEmpty()) {
-                    //Not Verified
-                    receiptDate = receiptScreen.findWord(
-                            info,
-                            "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
-                            "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
-                            39,
-                            49
-                    );
-
-                    receiptCost = receiptScreen.findWord(
-                            receipt,
-                            "Συνολικού ποσού",
-                            "ευρώ",
-                            16,
-                            -1
-                    );
-
-                    companyName = receiptScreen.findWord(
-                            info,
-                            "Επωνυμία",
-                            "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
-                            9,
-                            -1
-                    );
-                }
-
-                nameBox.setText(companyName);
-                costBox.setText(receiptCost);
-                dateBox.setText(receiptDate);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (input.contains("https://einvoice.s1ecos.gr")) {
-            //einvoice
-            try {
-                Document doc = Jsoup.connect(input).get();
-                String info = doc.getElementsByTag("body").text();
-
-                receiptDate = receiptScreen.findWord(
-                        info,
-                        "Ημερομηνία Έκδοσης",
-                        "Ημερομηνία Έκδοσης",
-                        "Ημερομηνία Έκδοσης".length() + 1,
-                        "Ημερομηνία Έκδοσης".length() + 11
-                );
-                receiptDate = receiptDate.replace("/", "-");
-                dateBox.setText(receiptDate);
-
-                receiptCost = receiptScreen.findWord(
-                        info,
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length() + 1,
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length() + 1 + 12
-                );
-                receiptCost = receiptCost.trim().replace(",", ".");
-                String[] xd = receiptCost.split("\\.");
-                receiptCost = xd[0] + "." + xd[1].charAt(0) + xd[1].charAt(1);
-
-                costBox.setText(receiptCost);
-
-                companyName = receiptScreen.findWord(
-                        info,
-                        "Εκδότης Επωνυμία επιχείρησης",
-                        "Οδός",
-                        "Εκδότης Επωνυμία επιχείρησης".length() + 1,
-                        -1
-                );
-                nameBox.setText(companyName);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (input.contains("https://www.iview.gr")) {
-            Toast.makeText(this, "Δεν υποστηρίζεται αυτός ο τύπος απόδειξης", Toast.LENGTH_SHORT).show();
-        }
-    }*/
 
     public static String findWord(String paragraph, String startString, String endString, int start, int end) {
         int startDate = paragraph.indexOf(startString) + start;
@@ -301,32 +166,13 @@ public class receiptScreen extends AppCompatActivity {
         return paragraph.substring(startDate, endDate);
     }
 
-//    //OnClick method for FIND button
-//    public void lookupReceipt (View view) {
-//        MyDBHandler dbHandler = new MyDBHandler(this, null, null, 1);
-//        Product product = dbHandler.findProduct(productBox.getText().toString());
-//        if (product != null) {
-//            idView.setText(String.valueOf(product.getID()));
-//            quantityBox.setText(String.valueOf(product.getQuantity()));
-//        } else {
-//            idView.setText(getString(R.string.no_match_found));
-//            quantityBox.setText("");
-//        }
-//    }
+    public void setValues(String id) {
+        //search tin apodeiksi me to id
+        Receipt receipt = dbHandler.findProduct(id);
 
-//    //OnClick method for DELETE button
-//    public void removeReceipt (View view) {
-//        MyDBHandler dbHandler = new MyDBHandler(this, null, null, 1);
-//        boolean result = dbHandler.deleteProduct(productBox.getText().toString());
-//        if (result)
-//        {
-//            idView.setText(getString(R.string.record_deleted));
-//            productBox.setText("");
-//            quantityBox.setText("");
-//        }
-//        else {
-//            idView.setText(getString(R.string.no_match_found));
-//            quantityBox.setText("");
-//        }
-//    }
+        //set values sta boxes
+        costBox.setText(String.valueOf(receipt.get_cost()));
+        nameBox.setText(String.valueOf(receipt.get_companyName()));
+        dateBox.setText(String.valueOf(receipt.get_date()));
+    }
 }

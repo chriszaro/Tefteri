@@ -104,12 +104,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.edit_card:
-                                    // Handle Edit menu item click
+                                    // Handle Edit from LongClick menu
                                     Toast.makeText(view.getContext(), "edit clicked", Toast.LENGTH_SHORT).show();
                                     startMyActivity(view.getContext(), true, itemID);
                                     return true;
                                 case R.id.delete_card:
-                                    // Handle Delete menu item click
+                                    // Handle Delete from LongClick menu
                                     Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
                                     tempCounter++;
                                     MyDBHandler handler = new MyDBHandler(mainActivity, null, null, 1);
@@ -198,6 +198,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         Intent intent = new Intent(context, receiptScreen.class);
         if (edit) {
             intent.putExtra("editBoolean", true);
+            intent.putExtra("newReceipt", false);
         }
         intent.putExtra("id", id);
 
