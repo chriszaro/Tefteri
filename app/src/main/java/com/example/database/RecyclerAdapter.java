@@ -31,7 +31,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private ArrayList<String> id;
 
     private MainActivity mainActivity;
-    public RecyclerAdapter(AppCompatActivity activity){
+
+    public RecyclerAdapter(AppCompatActivity activity) {
         prices = new ArrayList<>();
         dates = new ArrayList<>();
         names = new ArrayList<>();
@@ -42,12 +43,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         ArrayList<Receipt> toAdd = handler.fetchNReceipts(40, 0);
 
-       if (!toAdd.isEmpty()){
-            for (Receipt selectedReceipt : toAdd) {
-                prices.add(String.valueOf(selectedReceipt.get_cost()));
-                dates.add(String.valueOf(selectedReceipt.get_date()));
-                names.add(String.valueOf(selectedReceipt.get_companyName()));
-                id.add(String.valueOf(selectedReceipt.get_ID()));
+        if (toAdd != null) {
+            if (!toAdd.isEmpty()) {
+                for (Receipt selectedReceipt : toAdd) {
+                    prices.add(String.valueOf(selectedReceipt.get_cost()));
+                    dates.add(String.valueOf(selectedReceipt.get_date()));
+                    names.add(String.valueOf(selectedReceipt.get_companyName()));
+                    id.add(String.valueOf(selectedReceipt.get_ID()));
+                }
             }
         }
 /*
@@ -83,6 +86,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         String itemID;
         CheckBox checkBox;
         private int tempCounter = 1;
+
         public ViewHolder(View itemView) {
             super(itemView);
             itemPrice = itemView.findViewById(R.id.item_price);
@@ -144,11 +148,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         if (selectedCardViews.isEmpty()) {
                             Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(itemView.getContext(), "checked card "+ id.get(position) + " at " + position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(itemView.getContext(), "checked card " + id.get(position) + " at " + position, Toast.LENGTH_SHORT).show();
                         selectedCardViews.add(position);
                         enableTrash();
                     } else {
-                        Toast.makeText(itemView.getContext(), "unchecked"+position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(itemView.getContext(), "unchecked" + position, Toast.LENGTH_SHORT).show();
                         selectedCardViews.remove(position);
                         if (selectedCardViews.isEmpty()) {
                             Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
@@ -169,20 +173,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     //ViewHolder calls this method when a CheckBox is selected.
-    public void enableTrash(){
+    public void enableTrash() {
         Menu menu = mainActivity.getActivityBarMenu();
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
         myMenuItem.setVisible(true);
     }
 
     //ViewHolder calls this method when all CheckBoxes are unselected.
-    public void disableTrash(){
+    public void disableTrash() {
         Menu menu = mainActivity.getActivityBarMenu();
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
         myMenuItem.setVisible(false);
     }
 
-    public ArrayList<String> findIDsOfItemsForDeletion(){
+    public ArrayList<String> findIDsOfItemsForDeletion() {
         HashSet<Integer> selectedCardViews = this.getSelectedCardViews();
         ArrayList<String> idsToDelete = new ArrayList<>();
         for (Integer selectedCardView : selectedCardViews) {
@@ -223,7 +227,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return names.size();
     }
 
-    public HashSet<Integer> getSelectedCardViews(){
+    public HashSet<Integer> getSelectedCardViews() {
         return selectedCardViews;
     }
 }

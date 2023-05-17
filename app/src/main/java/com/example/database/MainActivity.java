@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,14 +28,13 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, CameraScanCallback {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerAdapter adapter;
     Menu activityBarMenu;
 
     private Context mainContext;
-    private MyDBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,15 +129,46 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
                 }*/
             case R.id.add_and_edit_option:
-                scanCode();
-                editReceipt(recyclerView);
+                Log.d("STEP1", "eftasa");
+                scanCode(this);
+                Log.d("STEP2", "eftasa");
                 return true;
             default:
                 return false;
         }
     }
 
+    @Override
+    public void onScanComplete() {
+        Log.d("STEP4", "eftasa");
+        // Code to be executed after the camera scan is done
+
+        //Create the Intent to start the AddProductScreen Activity
+        Intent i = new Intent(this, receiptScreen.class);
+
+        //Pass data to the AddProductScreen Activity through the Intent
+        i.putExtra("editBoolean", true);
+        i.putExtra("newReceipt", true);
+        i.putExtra("id", lastReceiptID);
+        Log.d("lastID", lastReceiptID);
+
+        //Ask Android to start the new Activity
+        startActivity(i);
+    }
+
     private void scanCode() {
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Volume up to flash on");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(QRScannerActivity.class);
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+        options.setBeepEnabled(false);
+        barLauncher.launch(options);
+    }
+
+    private void scanCode(CameraScanCallback callback) {
+        Log.d("STEP2", "eftasa");
         ScanOptions options = new ScanOptions();
         options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
@@ -154,6 +185,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     new ScanContract(), result -> {
                         String input = result.getContents();
                         lastReceiptID = downloadReceipt(input);
+                        Log.d("STEP3", "eftasa");
+                        CameraScanCallback callback = (CameraScanCallback) mainContext;
+                        callback.onScanComplete();
                     }
             );
 
@@ -169,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                     .permitAll().build();
             StrictMode.setThreadPolicy(policy);
-
         }
 
         if (input.contains("http://tam.gsis.gr")) {
@@ -308,18 +341,5 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Receipt newReceipt = new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate);
         dbHandler.addProduct(newReceipt);
         return String.valueOf(newReceipt.get_ID());
-    }
-
-    public void editReceipt(View view) {
-        //Create the Intent to start the AddProductScreen Activity
-        Intent i = new Intent(this, receiptScreen.class);
-
-        //Pass data to the AddProductScreen Activity through the Intent
-        i.putExtra("editBoolean", true);
-        i.putExtra("newReceipt", true);
-        i.putExtra("id", lastReceiptID);
-
-        //Ask Android to start the new Activity
-        startActivity(i);
     }
 }

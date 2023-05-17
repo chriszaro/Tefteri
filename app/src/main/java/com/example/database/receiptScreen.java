@@ -79,6 +79,7 @@ public class receiptScreen extends AppCompatActivity {
         boolean newReceipt = intent.getBooleanExtra("newReceipt", false);
 
         String id = intent.getStringExtra("id");
+        setValues(id);
 
         //if true then edit, else just view
         if (editBoolean) {
@@ -115,8 +116,6 @@ public class receiptScreen extends AppCompatActivity {
                 endActivity();
             }
         });
-
-        setValues(id);
     }
 
     /**
@@ -125,10 +124,7 @@ public class receiptScreen extends AppCompatActivity {
      * @param id
      */
     public void editReceipt(String id, Boolean newReceipt) {
-        //Reset the textBoxes listeners to default so the boxes are editable
-        nameBox.setKeyListener(defaultKeyListenerForNameBox);
-        costBox.setKeyListener(defaultKeyListenerForCostBox);
-        dateBox.setKeyListener(defaultKeyListenerForDateBox);
+        resetFieldsListeners();
 
         //Set name and function to left button
         Button leftButton = findViewById(R.id.leftButton);
@@ -152,8 +148,6 @@ public class receiptScreen extends AppCompatActivity {
                 endActivity();
             }
         });
-
-        setValues(id);
     }
 
     public void endActivity() {
@@ -166,6 +160,10 @@ public class receiptScreen extends AppCompatActivity {
         return paragraph.substring(startDate, endDate);
     }
 
+    /**
+     * This method sets values to the fields
+     * @param id
+     */
     public void setValues(String id) {
         //search tin apodeiksi me to id
         Receipt receipt = dbHandler.findProduct(id);
@@ -174,5 +172,14 @@ public class receiptScreen extends AppCompatActivity {
         costBox.setText(String.valueOf(receipt.get_cost()));
         nameBox.setText(String.valueOf(receipt.get_companyName()));
         dateBox.setText(String.valueOf(receipt.get_date()));
+    }
+
+    /**
+     * This method resets the default key listeners for the text fields
+     */
+    public void resetFieldsListeners(){
+        nameBox.setKeyListener(defaultKeyListenerForNameBox);
+        costBox.setKeyListener(defaultKeyListenerForCostBox);
+        dateBox.setKeyListener(defaultKeyListenerForDateBox);
     }
 }
