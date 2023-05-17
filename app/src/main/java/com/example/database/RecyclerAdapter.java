@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -31,11 +32,44 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private MainActivity mainActivity;
     public RecyclerAdapter(AppCompatActivity activity){
-        prices = new ArrayList<>(Arrays.asList("50€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€", "50€", "65€", "2€"));
-        dates = new ArrayList<>(Arrays.asList("5/5/2025", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022", "6/8/2020", "4/6/2012", "6/6/2022"));
-        names = new ArrayList<>(Arrays.asList("ego", "esy", "aytos", "emeis", "esy", "aytos", "emeis", "esy", "aytos", "emeis"));
-        id = new ArrayList<>(Arrays.asList("000", "111", "222", "333", "444", "555", "666", "777", "888", "999"));
+        prices = new ArrayList<>();
+        dates = new ArrayList<>();
+        names = new ArrayList<>();
+        id = new ArrayList<>();
         mainActivity = (MainActivity) activity;
+
+        MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
+
+        ArrayList<Receipt> toAdd = handler.fetchNReceipts(40, 0);
+
+       if (!toAdd.isEmpty()){
+            for (Receipt selectedReceipt : toAdd) {
+                prices.add(String.valueOf(selectedReceipt.get_cost()));
+                dates.add(String.valueOf(selectedReceipt.get_date()));
+                names.add(String.valueOf(selectedReceipt.get_companyName()));
+                id.add(String.valueOf(selectedReceipt.get_ID()));
+            }
+        }
+/*
+        mainActivity.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
+
+                ArrayList<Receipt> toAdd = handler.fetchNReceipts(40, layoutManager.findLastVisibleItemPosition()+1);
+
+                for (Receipt selectedReceipt : toAdd) {
+                    prices.add(String.valueOf(selectedReceipt.get_cost()));
+                    dates.add(String.valueOf(selectedReceipt.get_date()));
+                    names.add(String.valueOf(selectedReceipt.get_companyName()));
+                    id.add(String.valueOf(selectedReceipt.get_ID()));
+                }
+            }
+        });*/
+
     }
 
     HashSet<Integer> selectedCardViews;
@@ -72,14 +106,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 case R.id.edit_card:
                                     // Handle Edit menu item click
                                     Toast.makeText(view.getContext(), "edit clicked", Toast.LENGTH_SHORT).show();
-                                    startMyActivity(view.getContext(), true);
+                                    startMyActivity(view.getContext(), true, itemID);
                                     return true;
                                 case R.id.delete_card:
                                     // Handle Delete menu item click
                                     Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
                                     tempCounter++;
                                     MyDBHandler handler = new MyDBHandler(mainActivity, null, null, 1);
-//                                    handler.deleteReceipt();
+                                    handler.deleteReceipt(itemID);
                                     return true;
                                 default:
                                     return false;
@@ -96,7 +130,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startMyActivity(v.getContext(), false);
+                    startMyActivity(v.getContext(), false, itemID);
                 }
             });
 
@@ -160,11 +194,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     //ViewHolder calls this method when a CardView is clicked.
-    public void startMyActivity(Context context, Boolean edit) {
+    public void startMyActivity(Context context, Boolean edit, String id) {
         Intent intent = new Intent(context, receiptScreen.class);
         if (edit) {
             intent.putExtra("editBoolean", true);
         }
+        intent.putExtra("id", id);
+
         context.startActivity(intent);
     }
 

@@ -36,6 +36,8 @@ public class receiptScreen extends AppCompatActivity {
 
     KeyListener defaultKeyListenerForDateBox;
 
+    MyDBHandler dbHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,26 +73,47 @@ public class receiptScreen extends AppCompatActivity {
 
         Intent intent = getIntent();
         boolean editBoolean = intent.getBooleanExtra("editBoolean", false);
-
+        String id = intent.getStringExtra("id");
+        //Log.d("after intent", id);
+        dbHandler = new MyDBHandler(findViewById(android.R.id.content).getRootView().getContext(), null, null, 1);
         // Use custom settings as needed
         if (editBoolean) {
             // Do something based on customSetting1 being true
-            editReceipt(findViewById(android.R.id.content).getRootView());
+            editReceipt(findViewById(android.R.id.content).getRootView(), id);
+        } else {
+            viewReceipt(findViewById(android.R.id.content).getRootView(), id);
         }
     }
 
-    public void editReceipt(View view){
+    public void viewReceipt(View view, String id) {
+        MyDBHandler handler = new MyDBHandler(view.getContext(), null, null, 1);
+        Receipt receipt = handler.findProduct(id);
+        //Log.d("after handler", id);
+        if (receipt != null) {
+            costBox.setText(String.valueOf(receipt.get_cost()));
+            nameBox.setText(String.valueOf(receipt.get_companyName()));
+            dateBox.setText(String.valueOf(receipt.get_date()));
+        }
+        else{
+            Toast.makeText(view.getContext(), "null", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void editReceipt(View view, String id) {
         nameBox.setKeyListener(defaultKeyListenerForNameBox);
         costBox.setKeyListener(defaultKeyListenerForCostBox);
         dateBox.setKeyListener(defaultKeyListenerForDateBox);
 
         Button editButton = findViewById(R.id.editButton);
         editButton.setText("ΑΠΟΘΗΚΕΥΣΗ");
+        //newReceipt(view);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Do something different when the button is clicked
-                newReceipt(view);
+
+                dbHandler.addProduct(new Receipt(nameBox.getText().toString(), Float.parseFloat(costBox.getText().toString()), dateBox.getText().toString()));
+                endActivity();
             }
         });
 
@@ -100,30 +123,23 @@ public class receiptScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Do something different when the button is clicked
-                newReceipt(view);
+                dbHandler.deleteReceipt(id);
+                endActivity();
             }
         });
 
     }
 
+    public void endActivity() {
+        this.finish();
+    }
 
     //OnClick method for ADD button
-    public void newReceipt(View view) {
-        MyDBHandler dbHandler = new MyDBHandler(this, null, null, 1);
+ /*   public void newReceipt(View view) {
         String companyName = nameBox.getText().toString();
         String receiptCost = costBox.getText().toString();
         String receiptDate = dateBox.getText().toString();
 
-        /*if (!companyName.equals("") && !receiptCost.equals("") && !receiptDate.equals("")) {
-            Receipt found = dbHandler.findProduct(companyName);
-            if (found == null) {
-                Receipt receipt = new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate);
-                dbHandler.addProduct(receipt);
-                nameBox.setText("");
-                costBox.setText("");
-                dateBox.setText("");
-            }
-        }*/
         nameBox.setText("");
         costBox.setText("");
         dateBox.setText("");
@@ -135,17 +151,8 @@ public class receiptScreen extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
 
         }
-        //company closed test
-        //String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=DCM1600619200252556F2BD37B9CF29CEB8695F8179590360D578695A091.20";
-        //Verified
-        //String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=CFA1800124300033535EBAA152B0CB943EDB30CF9135B5F8074ECB86E5622.99";
-        //Not Verified
-        //String input = "https://www1.aade.gr/tameiakes/myweb/q1.php?SIG=DCR1801381500016311AB2BFDBF46937691B63C936A85637F75B37C178B14.00";
-        //String input = "https://einvoice.s1ecos.gr/v/EL094352564-42547400-E33B5614B29BBB8AC2F25B345F3B75B83EAB3A9A-B1A3458713FA42C881D20651BDB4CD6D";
-        String input = "http://tam.gsis.gr/eafdss/myweb/q1.php?SIG=CFZ20000527005892836A762E8CAFEBEB510BCEF5692959BFD2F51E702200008.42";
-        //not supported type
-        //String input = "https://www.iview.gr/181951675073530293";
-        if (input.contains("http://tam.gsis.gr")){
+
+        if (input.contains("http://tam.gsis.gr")) {
             input = "https://www1.aade.gr/tameiakes" + input.substring(25);
         }
         if (input.contains("https://www1.aade.gr") || input.contains("https://www1.gsis.gr")) {
@@ -160,8 +167,8 @@ public class receiptScreen extends AppCompatActivity {
                             info,
                             "Ημερομηνία, ώρα",
                             "Ημερομηνία, ώρα",
-                            "Ημερομηνία, ώρα".length()+1,
-                            "Ημερομηνία, ώρα".length()+11
+                            "Ημερομηνία, ώρα".length() + 1,
+                            "Ημερομηνία, ώρα".length() + 11
                     );
 
                     // 2022-04-15 to 15-04-2022
@@ -253,18 +260,18 @@ public class receiptScreen extends AppCompatActivity {
                         info,
                         "Ημερομηνία Έκδοσης",
                         "Ημερομηνία Έκδοσης",
-                        "Ημερομηνία Έκδοσης".length()+1,
-                        "Ημερομηνία Έκδοσης".length()+11
+                        "Ημερομηνία Έκδοσης".length() + 1,
+                        "Ημερομηνία Έκδοσης".length() + 11
                 );
-                receiptDate = receiptDate.replace("/","-");
+                receiptDate = receiptDate.replace("/", "-");
                 dateBox.setText(receiptDate);
 
                 receiptCost = receiptScreen.findWord(
                         info,
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length()+1,
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length()+1+12
+                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length() + 1,
+                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length() + 1 + 12
                 );
                 receiptCost = receiptCost.trim().replace(",", ".");
                 String[] xd = receiptCost.split("\\.");
@@ -276,20 +283,17 @@ public class receiptScreen extends AppCompatActivity {
                         info,
                         "Εκδότης Επωνυμία επιχείρησης",
                         "Οδός",
-                        "Εκδότης Επωνυμία επιχείρησης".length()+1,
+                        "Εκδότης Επωνυμία επιχείρησης".length() + 1,
                         -1
                 );
                 nameBox.setText(companyName);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else if (input.contains("https://www.iview.gr")) {
+        } else if (input.contains("https://www.iview.gr")) {
             Toast.makeText(this, "Δεν υποστηρίζεται αυτός ο τύπος απόδειξης", Toast.LENGTH_SHORT).show();
         }
-
-        dbHandler.addProduct(new Receipt(nameBox.getText().toString(), Float.parseFloat(costBox.getText().toString()), dateBox.getText().toString()));
-    }
+    }*/
 
     public static String findWord(String paragraph, String startString, String endString, int start, int end) {
         int startDate = paragraph.indexOf(startString) + start;

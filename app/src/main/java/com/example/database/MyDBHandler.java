@@ -58,9 +58,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
     }
 
     //Μέθοδος για εύρεση προϊόντος βάσει ονομασίας του
-    public Receipt findProduct(String companyName) {
+    public Receipt findProduct(String id) {
         String query = "SELECT * FROM " + TABLE_RECEIPTS + " WHERE " +
-                COLUMN_COMPANYNAME + " = '" + companyName + '\'';
+                COLUMN_ID + " = '" + id + '\'';
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Receipt receipt = new Receipt();
@@ -68,7 +68,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
             receipt.setID(Integer.parseInt(cursor.getString(0)));
             receipt.set_companyName(cursor.getString(1));
-            receipt.set_cost(Integer.parseInt(cursor.getString(2)));
+            receipt.set_cost(Float.parseFloat(cursor.getString(2)));
             receipt.set_date(cursor.getString(3));
             cursor.close();
         } else {
@@ -191,7 +191,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         Receipt receipt = new Receipt();
         receipt.setID(Integer.parseInt(cursor.getString(0)));
         receipt.set_companyName(cursor.getString(1));
-        receipt.set_cost(Integer.parseInt(cursor.getString(2)));
+        receipt.set_cost(Float.parseFloat(cursor.getString(2)));
         receipt.set_date(cursor.getString(3));
         return receipt;
     }
