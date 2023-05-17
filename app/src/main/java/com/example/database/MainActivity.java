@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     /**
      * This method is for the trash button on activity bar
+     *
      * @param menu
      * @return
      */
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     /**
      * Getter for ActivityBarMenu
+     *
      * @return
      */
     public Menu getActivityBarMenu() {
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     /**
      * Method for popup menu from float button (add)
+     *
      * @param v
      */
     public void showPopup(View v) {
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     /**
      * Method for function of popup menu from float button (add)
+     *
      * @param item the menu item that was clicked
      * @return
      */
@@ -118,19 +122,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 Toast.makeText(this, "add clicked", Toast.LENGTH_SHORT).show();
 //                Intent intent = new Intent(mainContext, QRScannerActivity.class);
 //                startActivity(intent);
-                scanCode();
+                scanCode(false);
                 return true;
             case R.id.multiple_add_option:
                 Toast.makeText(this, "multiple_add_option clicked", Toast.LENGTH_SHORT).show();
                 /*while (true){
                     scanCode();
-                    if (scanCode() == null){
+                    if (scanCode(false) == null){
                         return true;
                     }
                 }*/
             case R.id.add_and_edit_option:
                 Log.d("STEP1", "eftasa");
-                scanCode(this);
+                scanCode(true);
                 Log.d("STEP2", "eftasa");
                 return true;
             default:
@@ -156,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivity(i);
     }
 
-    private void scanCode() {
+    private void scanCode(Boolean edit) {
         ScanOptions options = new ScanOptions();
         options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
@@ -164,23 +168,24 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         options.setCaptureActivity(QRScannerActivity.class);
         options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
         options.setBeepEnabled(false);
-        barLauncher.launch(options);
-    }
+        if (edit) {
+            barLauncher2.launch(options);
+        } else {
+            barLauncher.launch(options);
+        }
 
-    private void scanCode(CameraScanCallback callback) {
-        Log.d("STEP2", "eftasa");
-        ScanOptions options = new ScanOptions();
-        options.setPrompt("Volume up to flash on");
-        options.setBeepEnabled(true);
-        options.setOrientationLocked(true);
-        options.setCaptureActivity(QRScannerActivity.class);
-        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-        options.setBeepEnabled(false);
-        barLauncher.launch(options);
     }
 
     String lastReceiptID;
     ActivityResultLauncher<ScanOptions> barLauncher =
+            registerForActivityResult(
+                    new ScanContract(), result -> {
+                        String input = result.getContents();
+                        lastReceiptID = downloadReceipt(input);
+                    }
+            );
+
+    ActivityResultLauncher<ScanOptions> barLauncher2 =
             registerForActivityResult(
                     new ScanContract(), result -> {
                         String input = result.getContents();
