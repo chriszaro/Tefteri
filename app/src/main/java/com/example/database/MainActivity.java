@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     RecyclerView.LayoutManager layoutManager;
     RecyclerAdapter adapter;
     Menu activityBarMenu;
+    MyDBHandler dbHandler;
 
     private Context mainContext;
 
@@ -47,13 +48,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         layoutManager = new LinearLayoutManager(this);
         mainContext = this;
         recyclerView.setLayoutManager(layoutManager);
+        // as per the android documentation, the database should remain open for as long as possible
+        dbHandler = new MyDBHandler(mainContext, null, null, 1);
 
         //Set my Adapter for the RecyclerView
-        adapter = new RecyclerAdapter(this);
+        adapter = new RecyclerAdapter(this, dbHandler);
         recyclerView.setAdapter(adapter);
 
-        // as per the android documentation, the database should remain open for as long as possible
-//        dbHandler = new MyDBHandler(this, null, null, 1);
 
         // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {
@@ -77,9 +78,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         myMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
-                MyDBHandler dbHandler = new MyDBHandler(mainContext, null, null, 1);
+
                 Toast.makeText(mainContext, "delete", Toast.LENGTH_SHORT).show();
-                dbHandler.deleteReceipt("1");
                 return false;
             }
         });
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     public String downloadReceipt(String input) {
 
-        MyDBHandler dbHandler = new MyDBHandler(this, null, null, 1);
+//        MyDBHandler dbHandler = new MyDBHandler(this, null, null, 1);
         String companyName = "";
         String receiptCost = "";
         String receiptDate = "";
@@ -342,4 +342,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         dbHandler.addProduct(newReceipt);
         return String.valueOf(newReceipt.get_ID());
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHandler.close();
+    }
 }
+

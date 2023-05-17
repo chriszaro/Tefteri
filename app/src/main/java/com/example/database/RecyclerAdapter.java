@@ -30,18 +30,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private ArrayList<String> names;
     private ArrayList<String> id;
 
+    private MyDBHandler dbHandler;
+
     private MainActivity mainActivity;
 
-    public RecyclerAdapter(AppCompatActivity activity) {
+    public RecyclerAdapter(AppCompatActivity activity, MyDBHandler dbHandler) {
         prices = new ArrayList<>();
         dates = new ArrayList<>();
         names = new ArrayList<>();
         id = new ArrayList<>();
         mainActivity = (MainActivity) activity;
 
-        MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
+        dbHandler = new MyDBHandler(activity, null, null, 1);
 
-        ArrayList<Receipt> toAdd = handler.fetchNReceipts(40, 0);
+        ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, 0);
 
         if (toAdd != null) {
             if (!toAdd.isEmpty()) {
@@ -116,8 +118,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                     // Handle Delete from LongClick menu
                                     Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
                                     tempCounter++;
-                                    MyDBHandler handler = new MyDBHandler(mainActivity, null, null, 1);
-                                    handler.deleteReceipt(itemID);
+//                                    MyDBHandler handler = new MyDBHandler(mainActivity, null, null, 1);
+                                    dbHandler.deleteReceipt(itemID);
                                     return true;
                                 default:
                                     return false;

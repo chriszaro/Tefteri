@@ -54,7 +54,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_DATE, receipt.get_date());
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_RECEIPTS, null, values);
-        db.close();
+//        db.close();
     }
 
     //Μέθοδος για εύρεση προϊόντος βάσει ονομασίας του
@@ -74,7 +74,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         } else {
             receipt = null;
         }
-        db.close();
+//        db.close();
         return receipt;
     }
 
@@ -102,7 +102,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         } else { // if the cursor is empty
             receipts = null;
         }
-        db.close();
+//        db.close();
         return receipts;
 
     }
@@ -138,19 +138,19 @@ public class MyDBHandler extends SQLiteOpenHelper {
         // found help at
         // https://stackoverflow.com/questions/9798473/sqlite-in-android-how-to-update-a-specific-row
         db.update(TABLE_RECEIPTS, pairs, COLUMN_ID + " = ?", new String[]{ID});
-        db.close();
+//        db.close();
     }
 
     public void deleteReceipt(String ID) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", new String[]{ID});
-        db.close();
+//        db.close();
     }
 
     public void deleteReceipts(ArrayList<String> ids) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", (String[]) ids.toArray());
-        db.close();
+//        db.close();
     }
 
     public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
@@ -177,7 +177,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         } /* else
             receipts = null; */
-        db.close();
+//        db.close();
         return receipts;
     }
 
