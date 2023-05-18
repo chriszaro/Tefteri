@@ -63,17 +63,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 //                MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
 
-                ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, layoutManager.findLastVisibleItemPosition()+1);
-                if (toAdd != null)
-                for (Receipt selectedReceipt : toAdd) {
-                    prices.add(String.valueOf(selectedReceipt.get_cost()));
-                    dates.add(String.valueOf(selectedReceipt.get_date()));
-                    names.add(String.valueOf(selectedReceipt.get_companyName()));
-                    id.add(String.valueOf(selectedReceipt.get_ID()));
+                ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, layoutManager.findLastVisibleItemPosition() + 1);
+                if (toAdd != null) {
+                    for (Receipt selectedReceipt : toAdd) {
+                        prices.add(String.valueOf(selectedReceipt.get_cost()));
+                        dates.add(String.valueOf(selectedReceipt.get_date()));
+                        names.add(String.valueOf(selectedReceipt.get_companyName()));
+                        id.add(String.valueOf(selectedReceipt.get_ID()));
+                    }
                 }
             }
         });
-
     }
 
     HashSet<Integer> selectedCardViews;
