@@ -1,7 +1,7 @@
 CAMERA API για QR
 
 Δουλειές (προς το παρόν):
-Χριστοδουλος: UI 
+Χριστοδουλος: UI
 Λάζαρος: Database stuff
 Σταύρος: Camera API
 
@@ -9,10 +9,10 @@ CAMERA API για QR
 Navigation Menu (Home/Sort by Date) για όλα τα activities
 
 Main Activity:
-Floating button για τα scans 
-	one scan and return to home
-	multiple scan and exit with return
-	scan and then edit activity
+Floating button για τα scans
+one scan and return to home
+multiple scan and exit with return
+scan and then edit activity
 Παρατεταμένο κλικ: Hold Menu για τα cards με επιλογές (Edit/Delete)
 Κλικ: Click on card to View
 checkboxes για πολλαπλή διαγραφή καρτών
@@ -23,8 +23,11 @@ Edit στο View mode και Save στο Edit Mode, επίσης θα απενε
 
 !!!!!!!!!!!!!DATABASE!!!!!!!!!!!!!!
 {
-Για RecyclerView φορτώνει 20 αποδείξεις πχ και πιάνουμε το event ότι έφτασε στο τέλος για να κάνουμε query τα επόμενα 20.
-Μπορούμε να τεστάρουμε τι σημαίνει (αποδοτικά μιλώντας) το 20, το 50, το 100. Ξαναφορτώνουμε τα προηγούμενα + τα καινούργια Ή με κάποιο τρόπο φαίρνουμε μόνο τα επόμενα και τα κάνουμε append στον  πίνακα που χρησιμοποιούμε? πχ 20 1-20, 20μεχρι40 30 31 32
+Για RecyclerView φορτώνει 20 αποδείξεις πχ και πιάνουμε το event ότι έφτασε στο τέλος για να κάνουμε
+query τα επόμενα 20.
+Μπορούμε να τεστάρουμε τι σημαίνει (αποδοτικά μιλώντας) το 20, το 50, το 100. Ξαναφορτώνουμε τα
+προηγούμενα + τα καινούργια Ή με κάποιο τρόπο φαίρνουμε μόνο τα επόμενα και τα κάνουμε append στον
+πίνακα που χρησιμοποιούμε? πχ 20 1-20, 20μεχρι40 30 31 32
 
 var a;
 
@@ -34,7 +37,7 @@ WHERE id>a and limit(20)
 ORDER BY
 }
 
-Βάση Δεδομένων πώς παίρνουμε τα data?? 
+Βάση Δεδομένων πώς παίρνουμε τα data??
 
 
 
@@ -49,7 +52,7 @@ ORDER BY
 		version3: Μετά την 1η χειροκίνητη καταχώρηση από τον χρήση, αυτόματη συμπλήρωση και στις παλιές καταχωρήσεις της ίδιας επιχείρησης
 		
 			version4: Δική μας dns-like database από την οποία τραβάει τον διακριτικό τίτλο, αν υπάρχει αντιστοίχιση
-			
+
 -Προσθήκη Settings με αλλαγή γλώσσας, dark mode, import/export database
 
 -Προσθήκη Register/Login για cloud sync database
