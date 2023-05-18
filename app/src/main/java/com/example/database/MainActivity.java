@@ -68,6 +68,21 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         mAdView.loadAd(adRequest);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        refreshAdapter();
+    }
+
+    /**
+     * This method refresh the data of main activity
+     */
+    public void refreshAdapter() {
+        adapter = new RecyclerAdapter(this);
+        recyclerView.setAdapter(adapter);
+    }
+
     /**
      * This method is for the trash button on activity bar
      *
@@ -79,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         getMenuInflater().inflate(R.menu.main_menu, menu);
         activityBarMenu = menu;
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
-        MainActivity ma = this;
         myMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
@@ -123,9 +137,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_option:
-                Toast.makeText(this, "add clicked", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(mainContext, QRScannerActivity.class);
-//                startActivity(intent);
                 scanCode(false);
                 return true;
             case R.id.multiple_add_option:
@@ -136,19 +147,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         return true;
                     }
                 }*/
+                return true;
             case R.id.add_and_edit_option:
-                Log.d("STEP1", "eftasa");
                 scanCode(true);
-                Log.d("STEP2", "eftasa");
                 return true;
             default:
                 return false;
         }
     }
 
+    String lastReceiptID;
+
     @Override
     public void onScanComplete() {
-        Log.d("STEP4", "eftasa");
         // Code to be executed after the camera scan is done
 
         //Create the Intent to start the AddProductScreen Activity
@@ -158,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         i.putExtra("editBoolean", true);
         i.putExtra("newReceipt", true);
         i.putExtra("id", lastReceiptID);
-        Log.d("lastID", lastReceiptID);
 
         //Ask Android to start the new Activity
         startActivity(i);
@@ -177,34 +187,41 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         } else {
             barLauncher.launch(options);
         }
-
     }
 
-    String lastReceiptID;
+
+    // For normal scan
     ActivityResultLauncher<ScanOptions> barLauncher =
             registerForActivityResult(
                     new ScanContract(), result -> {
                         String input = result.getContents();
-                        lastReceiptID = downloadReceipt(input);
+                        if (input != null) {
+                            String temp = downloadReceipt(input);
+                            if (temp != null){
+                                lastReceiptID = temp;
+                            }
+                        }
                     }
             );
 
+    //For scan and edit
     ActivityResultLauncher<ScanOptions> barLauncher2 =
             registerForActivityResult(
                     new ScanContract(), result -> {
                         String input = result.getContents();
-                        if (input != null){
-                            lastReceiptID = downloadReceipt(input);
-                            Log.d("STEP3", "eftasa");
-                            CameraScanCallback callback = (CameraScanCallback) mainContext;
-                            callback.onScanComplete();
+                        if (input != null) {
+                            String temp = downloadReceipt(input);
+                            if (temp != null){
+                                lastReceiptID = temp;
+                                Log.d("STEP3", "eftasa");
+                                CameraScanCallback callback = (CameraScanCallback) mainContext;
+                                callback.onScanComplete();
+                            }
                         }
                     }
             );
 
     public String downloadReceipt(String input) {
-
-//        MyDBHandler dbHandler = new MyDBHandler(this, null, null, 1);
         String companyName = "";
         String receiptCost = "";
         String receiptDate = "";
@@ -216,10 +233,15 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             StrictMode.setThreadPolicy(policy);
         }
 
+        Log.d("before", input);
         if (input.contains("http://tam.gsis.gr")) {
             input = "https://www1.aade.gr/tameiakes" + input.substring(25);
+        } else if (input.contains("http://www1.gsis.gr")) {
+            input = "https://www1.aade.gr/tameiakes" + input.substring(29);
         }
-        if (input.contains("https://www1.aade.gr") || input.contains("https://www1.gsis.gr")) {
+        Log.d("after", input);
+
+        if (input.contains("https://www1.aade.gr")) {
             try {
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByClass("info").text();
@@ -346,8 +368,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (input.contains("https://www.iview.gr")) {
+        } else {
             Toast.makeText(this, "Δεν υποστηρίζεται αυτός ο τύπος απόδειξης", Toast.LENGTH_SHORT).show();
+            return null;
         }
         Receipt newReceipt = new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate);
         dbHandler.addProduct(newReceipt);
