@@ -55,17 +55,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }
             }
         }
-/*
         mainActivity.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
+//                MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
 
-                ArrayList<Receipt> toAdd = handler.fetchNReceipts(40, layoutManager.findLastVisibleItemPosition()+1);
-
+                ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, layoutManager.findLastVisibleItemPosition()+1);
+                if (toAdd != null)
                 for (Receipt selectedReceipt : toAdd) {
                     prices.add(String.valueOf(selectedReceipt.get_cost()));
                     dates.add(String.valueOf(selectedReceipt.get_date()));
@@ -73,7 +72,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     id.add(String.valueOf(selectedReceipt.get_ID()));
                 }
             }
-        });*/
+        });
 
     }
 

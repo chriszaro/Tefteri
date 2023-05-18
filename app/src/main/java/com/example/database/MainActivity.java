@@ -29,6 +29,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, CameraScanCallback {
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerAdapter adapter;
