@@ -76,7 +76,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         });
     }
 
-    HashSet<Integer> selectedCardViews;
+    HashSet<String> selectedCardViews;
     RecyclerAdapter.ViewHolder holder2;
 
     //Class that holds the items to be displayed (Views in card_layout)
@@ -151,11 +151,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                             Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
                         }
                         Toast.makeText(itemView.getContext(), "checked card " + id.get(position) + " at " + position, Toast.LENGTH_SHORT).show();
-                        selectedCardViews.add(position);
+                        selectedCardViews.add(id.get(position));
                         enableTrash();
                     } else {
                         Toast.makeText(itemView.getContext(), "unchecked" + position, Toast.LENGTH_SHORT).show();
-                        selectedCardViews.remove(position);
+                        selectedCardViews.remove(id.get(position));
                         if (selectedCardViews.isEmpty()) {
                             Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
                             disableTrash();
@@ -189,11 +189,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public ArrayList<String> findIDsOfItemsForDeletion() {
-        HashSet<Integer> selectedCardViews = this.getSelectedCardViews();
+        HashSet<String> selectedCardViews = this.getSelectedCardViews();
         ArrayList<String> idsToDelete = new ArrayList<>();
-        for (Integer selectedCardView : selectedCardViews) {
-            idsToDelete.add(this.holder2.itemID);
-        }
+        idsToDelete.addAll(selectedCardViews);
         Toast.makeText(mainActivity, "delete from RecyclerAdapter", Toast.LENGTH_SHORT).show();
         Log.i("LAZAROS TAGS", idsToDelete.toArray().toString());
         return idsToDelete;
@@ -229,7 +227,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return names.size();
     }
 
-    public HashSet<Integer> getSelectedCardViews() {
+    public HashSet<String> getSelectedCardViews() {
         return selectedCardViews;
     }
 }

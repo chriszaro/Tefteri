@@ -28,6 +28,8 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, CameraScanCallback {
     public RecyclerView getRecyclerView() {
         return recyclerView;
@@ -56,9 +58,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         dbHandler = new MyDBHandler(mainContext, null, null, 1);
 
         //Set my Adapter for the RecyclerView
-        adapter = new RecyclerAdapter(this);
-        recyclerView.setAdapter(adapter);
-
+        refreshAdapter();
 
         // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {
@@ -97,8 +97,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         myMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
-
+                ArrayList<String> ids = adapter.findIDsOfItemsForDeletion();
                 Toast.makeText(mainContext, "delete", Toast.LENGTH_SHORT).show();
+                for (String id : ids){
+                    dbHandler.deleteReceipt(id);
+                }
+                refreshAdapter();
                 return false;
             }
         });
@@ -141,12 +145,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.multiple_add_option:
                 Toast.makeText(this, "multiple_add_option clicked", Toast.LENGTH_SHORT).show();
-                /*while (true){
-                    scanCode();
-                    if (scanCode(false) == null){
-                        return true;
-                    }
-                }*/
+                scanCode(false);
                 return true;
             case R.id.add_and_edit_option:
                 scanCode(true);
