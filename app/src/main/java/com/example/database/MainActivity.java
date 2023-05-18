@@ -237,6 +237,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             input = "https://www1.aade.gr/tameiakes" + input.substring(25);
         } else if (input.contains("http://www1.gsis.gr")) {
             input = "https://www1.aade.gr/tameiakes" + input.substring(29);
+        } else if (input.contains("https://www1.gsis.gr")) {
+            input = "https://www1.aade.gr/tameiakes" + input.substring(30);
+        } else if (input.contains("https://www1.aade.gr/tameiakes/myweb/q1.ph?")){
+            input = "https://www1.aade.gr/tameiakes/myweb/q1.php" + input.substring(42);
         }
         Log.d("after", input);
 
