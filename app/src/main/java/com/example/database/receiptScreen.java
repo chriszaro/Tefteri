@@ -38,11 +38,11 @@ public class receiptScreen extends AppCompatActivity {
     MyDBHandler dbHandler;
 //    MainActivity mainActivity;
 
-    /*public receiptScreen(AppCompatActivity mainActivity, MyDBHandler dbHandler) {
+//    public receiptScreen(AppCompatActivity mainActivity) {
 //        this.mainActivity = (MainActivity) mainActivity;
-//        this.dbHandler = dbHandler;
-        dbHandler = new MyDBHandler(this, null, null, 1);
-    }*/
+////        this.dbHandler = dbHandler;
+////        dbHandler = new MyDBHandler(this, null, null, 1);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,17 +92,16 @@ public class receiptScreen extends AppCompatActivity {
         if (editBoolean) {
             editReceipt(id, newReceipt);
         } else {
-            viewReceipt(findViewById(android.R.id.content).getRootView(), id);
+            viewReceipt(id);
         }
     }
 
     /**
      * This method sets the receiptScreen to view mode.
      *
-     * @param view
      * @param id
      */
-    public void viewReceipt(View view, String id) {
+    public void viewReceipt(String id) {
         //Set name and function to left button
         Button leftButton = findViewById(R.id.leftButton);
         leftButton.setText("ΕΠΕΞΕΡΓΑΣΙΑ");

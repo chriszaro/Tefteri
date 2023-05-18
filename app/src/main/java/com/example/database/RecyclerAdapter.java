@@ -120,6 +120,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                     tempCounter++;
 //                                    MyDBHandler handler = new MyDBHandler(mainActivity, null, null, 1);
                                     dbHandler.deleteReceipt(itemID);
+                                    mainActivity.refreshAdapter();
                                     return true;
                                 default:
                                     return false;
