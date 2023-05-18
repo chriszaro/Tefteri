@@ -34,7 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private MainActivity mainActivity;
 
-    public RecyclerAdapter(AppCompatActivity activity, MyDBHandler dbHandler) {
+    public RecyclerAdapter(AppCompatActivity activity) {
         prices = new ArrayList<>();
         dates = new ArrayList<>();
         names = new ArrayList<>();

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         dbHandler = new MyDBHandler(mainContext, null, null, 1);
 
         //Set my Adapter for the RecyclerView
-        adapter = new RecyclerAdapter(this, dbHandler);
+        adapter = new RecyclerAdapter(this);
         recyclerView.setAdapter(adapter);
 
 
@@ -189,10 +189,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             registerForActivityResult(
                     new ScanContract(), result -> {
                         String input = result.getContents();
-                        lastReceiptID = downloadReceipt(input);
-                        Log.d("STEP3", "eftasa");
-                        CameraScanCallback callback = (CameraScanCallback) mainContext;
-                        callback.onScanComplete();
+                        if (input != null){
+                            lastReceiptID = downloadReceipt(input);
+                            Log.d("STEP3", "eftasa");
+                            CameraScanCallback callback = (CameraScanCallback) mainContext;
+                            callback.onScanComplete();
+                        }
                     }
             );
 
