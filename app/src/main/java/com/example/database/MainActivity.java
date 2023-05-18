@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
                 ArrayList<String> ids = adapter.findIDsOfItemsForDeletion();
-                Toast.makeText(mainContext, "delete", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mainContext, "delete", Toast.LENGTH_SHORT).show();
                 for (String id : ids){
                     dbHandler.deleteReceipt(id);
                 }
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.multiple_add_option:
                 Toast.makeText(this, "multiple_add_option clicked", Toast.LENGTH_SHORT).show();
-                scanCode(false);
+                //scanCode(false);
                 return true;
             case R.id.add_and_edit_option:
                 scanCode(true);
@@ -212,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             String temp = downloadReceipt(input);
                             if (temp != null){
                                 lastReceiptID = temp;
-                                Log.d("STEP3", "eftasa");
                                 CameraScanCallback callback = (CameraScanCallback) mainContext;
                                 callback.onScanComplete();
                             }
@@ -232,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             StrictMode.setThreadPolicy(policy);
         }
 
-        Log.d("before", input);
+        //Log.d("before", input);
         if (input.contains("http://tam.gsis.gr")) {
             input = "https://www1.aade.gr/tameiakes" + input.substring(25);
         } else if (input.contains("http://www1.gsis.gr")) {
@@ -242,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         } else if (input.contains("https://www1.aade.gr/tameiakes/myweb/q1.ph?")){
             input = "https://www1.aade.gr/tameiakes/myweb/q1.php" + input.substring(42);
         }
-        Log.d("after", input);
+        //Log.d("after", input);
 
         if (input.contains("https://www1.aade.gr")) {
             try {
@@ -281,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             16,
                             -1
                     );
-                    //receiptCost = receiptCost.replace(".", ",");
 
                     companyName = receiptScreen.findWord(
                             info,

@@ -15,8 +15,8 @@
     android:id="@+id/itemID"> <!-- Addition to test whether we can get the card/item ID this way -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_width="340dp"
+        android:layout_height="85dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
@@ -31,7 +31,7 @@
             android:textSize="16sp"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.777"
+            card_view:layout_constraintHorizontal_bias="0.794"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/item_name" />
 
@@ -43,7 +43,7 @@
             android:textSize="16sp"
             card_view:layout_constraintBottom_toTopOf="@+id/item_date"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.75"
+            card_view:layout_constraintHorizontal_bias="0.827"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_bias="0.357" />
@@ -57,9 +57,10 @@
             android:textStyle="bold"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintHorizontal_bias="0.25"
+            card_view:layout_constraintHorizontal_bias="0.167"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="0.505" />
 
         <CheckBox
             android:id="@+id/checkBox"

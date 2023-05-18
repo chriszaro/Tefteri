@@ -110,14 +110,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                             switch (item.getItemId()) {
                                 case R.id.edit_card:
                                     // Handle Edit from LongClick menu
-                                    Toast.makeText(view.getContext(), "edit clicked", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(view.getContext(), "edit clicked", Toast.LENGTH_SHORT).show();
                                     startMyActivity(view.getContext(), true, itemID);
                                     return true;
                                 case R.id.delete_card:
                                     // Handle Delete from LongClick menu
-                                    Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
                                     tempCounter++;
-//                                    MyDBHandler handler = new MyDBHandler(mainActivity, null, null, 1);
                                     dbHandler.deleteReceipt(itemID);
                                     mainActivity.refreshAdapter();
                                     return true;
@@ -147,17 +146,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     int position = (int) buttonView.getTag();
                     //If button is checked,
                     if (isChecked) {
-                        if (selectedCardViews.isEmpty()) {
-                            Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
-                        }
-                        Toast.makeText(itemView.getContext(), "checked card " + id.get(position) + " at " + position, Toast.LENGTH_SHORT).show();
+//                        if (selectedCardViews.isEmpty()) {
+//                            Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
+//                        }
+//                        Toast.makeText(itemView.getContext(), "checked card " + id.get(position) + " at " + position, Toast.LENGTH_SHORT).show();
                         selectedCardViews.add(id.get(position));
                         enableTrash();
                     } else {
-                        Toast.makeText(itemView.getContext(), "unchecked" + position, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(itemView.getContext(), "unchecked" + position, Toast.LENGTH_SHORT).show();
                         selectedCardViews.remove(id.get(position));
                         if (selectedCardViews.isEmpty()) {
-                            Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
                             disableTrash();
                         }
                     }
@@ -192,8 +191,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         HashSet<String> selectedCardViews = this.getSelectedCardViews();
         ArrayList<String> idsToDelete = new ArrayList<>();
         idsToDelete.addAll(selectedCardViews);
-        Toast.makeText(mainActivity, "delete from RecyclerAdapter", Toast.LENGTH_SHORT).show();
-        Log.i("LAZAROS TAGS", idsToDelete.toArray().toString());
+//        Toast.makeText(mainActivity, "delete from RecyclerAdapter", Toast.LENGTH_SHORT).show();
+//        Log.i("LAZAROS TAGS", idsToDelete.toArray().toString());
         return idsToDelete;
     }
 
@@ -214,7 +213,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
         holder.itemPrice.setText(prices.get(position));
         holder.itemDate.setText(dates.get(position));
+
         holder.itemName.setText(names.get(position));
+
+        int maxCharacters = 20; // Set the maximum number of characters you want to display
+
+        if (names.get(position).length() > maxCharacters) {
+            holder.itemName.setText(names.get(position).subSequence(0, maxCharacters));
+        }
+
         holder.itemID = id.get(position);
         // Set the tag for the checkbox to its position in the adapter
         holder.checkBox.setTag(position);
