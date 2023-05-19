@@ -64,6 +64,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 //                MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
 
                 ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, layoutManager.findLastVisibleItemPosition() + 1);
+//                String TAG = "SCROLL_LISTENER";
+//                Log.d(TAG, String.valueOf(layoutManager.findLastVisibleItemPosition()));
+                // the last visible item position is correctly reported
                 if (toAdd != null) {
                     for (Receipt selectedReceipt : toAdd) {
                         prices.add(String.valueOf(selectedReceipt.get_cost()));
@@ -74,6 +77,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }
             }
         });
+//        dbHandler.close();
     }
 
     HashSet<String> selectedCardViews;

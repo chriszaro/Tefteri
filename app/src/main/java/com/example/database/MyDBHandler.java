@@ -5,7 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class MyDBHandler extends SQLiteOpenHelper {
@@ -18,11 +23,13 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_COST = "cost";
 
     public static final String COLUMN_DATE = "date";
+    private Context context;
 
     //Constructor
     public MyDBHandler(Context context, String name,
                        SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+        this.context = context;
     }
 
     //Δημιουργία του σχήματος της ΒΔ (πίνακας products)
@@ -35,6 +42,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 COLUMN_COST + " INTEGER," +
                 COLUMN_DATE + " TEXT" + ')';
         db.execSQL(CREATE_PRODUCTS_TABLE);
+//        db.close();
     }
 
     //Αναβάθμιση ΒΔ: εδώ τη διαγραφώ και τη ξαναδημιουργώ ίδια
@@ -54,7 +62,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_DATE, receipt.get_date());
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_RECEIPTS, null, values);
-//        db.close();
+        db.close();
     }
 
     //Μέθοδος για εύρεση προϊόντος βάσει ονομασίας του
@@ -74,7 +82,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         } else {
             receipt = null;
         }
-//        db.close();
+        cursor.close();
+        db.close();
         return receipt;
     }
 
@@ -102,7 +111,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         } else { // if the cursor is empty
             receipts = null;
         }
-//        db.close();
+        cursor.close();
+        db.close();
         return receipts;
 
     }
@@ -138,24 +148,24 @@ public class MyDBHandler extends SQLiteOpenHelper {
         // found help at
         // https://stackoverflow.com/questions/9798473/sqlite-in-android-how-to-update-a-specific-row
         db.update(TABLE_RECEIPTS, pairs, COLUMN_ID + " = ?", new String[]{ID});
-//        db.close();
+        db.close();
     }
 
     public void deleteReceipt(String ID) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", new String[]{ID});
-//        db.close();
+        db.close();
     }
 
     public void deleteReceipts(ArrayList<String> ids) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", (String[]) ids.toArray());
-//        db.close();
+        db.close();
     }
 
     public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
         month = month.length() == 1 ? '0' + month : month; // if the month is a single digit, add 0
-                                    // in front of it to make it compatible with an SQL query
+        // in front of it to make it compatible with an SQL query
         String startDate = year + '-' + month + "01";
         int m = Integer.parseInt(month);
         String endDate;
@@ -170,14 +180,15 @@ public class MyDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         ArrayList<Receipt> receipts = new ArrayList<>();
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 Receipt r = createReceiptFromCursor(cursor);
                 receipts.add(r);
             } while (cursor.moveToNext());
         } /* else
             receipts = null; */
-//        db.close();
+        cursor.close();
+        db.close();
         return receipts;
     }
 
@@ -209,4 +220,48 @@ public class MyDBHandler extends SQLiteOpenHelper {
 //        }
 //        return result;
 //    }
+
+
+    /**
+     * Adds data from an sql file that contains sql INSERT statements
+     *
+     * @param filename The path to the file, located in the assets folder
+     */
+    public void loadDataFromFile(String filename) {
+        String TAG = "SQL massive Loader";
+        InputStream inputStream = null;
+        try {
+            // Open the SQL file in the assets folder
+            inputStream = this.context.getAssets().open(filename);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String line;
+
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            // Read the SQL file line by line
+            while ((line = bufferedReader.readLine()) != null) {
+//                stringBuilder.append(line);
+//                stringBuilder.append('\n');
+                db.execSQL(line);
+            }
+//            Log.d(TAG, stringBuilder.toString());
+            // Execute the SQL statements that we fetched
+//            db.execSQL(stringBuilder.toString());
+            db.close();
+
+            Log.d(TAG, "Loaded SQL file successfully");
+        } catch (IOException e) {
+            Log.e(TAG, "Error while loading SQL data: " + e.getMessage());
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    Log.e(TAG, "Error closing input stream: " + e.getMessage());
+                }
+            }
+        }
+    }
 }

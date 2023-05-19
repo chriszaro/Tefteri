@@ -57,6 +57,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // as per the android documentation, the database should remain open for as long as possible
         dbHandler = new MyDBHandler(mainContext, null, null, 1);
 
+        // Massively add data to database for testing purposes
+        boolean loadManyReceipts = false;
+        String manyReceiptsSQLInsertsFileName= "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
+        if (loadManyReceipts) {
+            dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);
+            Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
+        }
+
         //Set my Adapter for the RecyclerView
         refreshAdapter();
 
@@ -66,12 +74,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         refreshAdapter();
     }
 
@@ -381,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dbHandler.close();
+//        dbHandler.close();
     }
 }
 
