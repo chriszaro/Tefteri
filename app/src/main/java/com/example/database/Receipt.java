@@ -42,5 +42,25 @@ public class Receipt {
 
     public String get_date() {return date;}
 
+
+    /**
+     * Convert a reference string from DD-MM-YYYY to YYYY-MM-DD format
+     * @param ref
+     * @return
+     */
+    public static String convertDateToDatabaseCompatible(String ref){
+        // defensive programming just to be sure
+        if (ref.charAt(2) != '-') // if it's in format YYYY-MM-DD already, do nothing
+            return ref;
+        StringBuilder s = new StringBuilder();
+        s.append(ref.substring(6));
+        s.append('-');
+        s.append(ref.substring(3, 5));
+        s.append('-');
+        s.append(ref.substring(0, 2));
+
+        return s.toString();
+    }
+
     public void set_date(String date) {this.date = date;}
 }

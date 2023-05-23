@@ -59,7 +59,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_COMPANYNAME, receipt.get_companyName());
         values.put(COLUMN_ID, receipt.get_ID());
         values.put(COLUMN_COST, receipt.get_cost());
-        values.put(COLUMN_DATE, receipt.get_date());
+        String date = Receipt.convertDateToDatabaseCompatible(receipt.get_date());
+        values.put(COLUMN_DATE, date);
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_RECEIPTS, null, values);
         db.close();
@@ -71,14 +72,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 COLUMN_ID + " = '" + id + '\'';
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        Receipt receipt = new Receipt();
+        Receipt receipt;
         if (cursor.moveToFirst()) {
-            cursor.moveToFirst();
-            receipt.setID(Integer.parseInt(cursor.getString(0)));
-            receipt.set_companyName(cursor.getString(1));
-            receipt.set_cost(Float.parseFloat(cursor.getString(2)));
-            receipt.set_date(cursor.getString(3));
-            cursor.close();
+            receipt = this.createReceiptFromCursor(cursor);
         } else {
             receipt = null;
         }
@@ -124,7 +120,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
      * @param ID          The ID of the receipt we want to update (NOT NULL)
      * @param companyName The new company name
      * @param cost        The new cost
-     * @param date        The new date
+     * @param date        The new date (make sure it's in a database compatible format
      */
     public void updateReceipt(String ID, String companyName, String cost, String date) {
         ContentValues pairs = new ContentValues();
@@ -203,7 +199,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         receipt.setID(Integer.parseInt(cursor.getString(0)));
         receipt.set_companyName(cursor.getString(1));
         receipt.set_cost(Float.parseFloat(cursor.getString(2)));
-        receipt.set_date(cursor.getString(3));
+        String date = Receipt.convertDateToDatabaseCompatible(cursor.getString(3));
+        receipt.set_date(date);
         return receipt;
     }
 
