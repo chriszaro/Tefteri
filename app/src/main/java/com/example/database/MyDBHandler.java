@@ -93,7 +93,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
      */
     public ArrayList<Receipt> fetchNReceipts(int N, int skip) {
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " ORDER BY " + COLUMN_DATE +
+                " ORDER BY " + COLUMN_DATE + " DESC " +
                 " LIMIT " + N +
                 " OFFSET " + skip + ';';
         SQLiteDatabase db = this.getReadableDatabase();
@@ -104,13 +104,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 Receipt receipt = this.createReceiptFromCursor(cursor);
                 receipts.add(receipt);
             } while (cursor.moveToNext());
-        } else { // if the cursor is empty
+        } else // if the cursor is empty
             receipts = null;
-        }
         cursor.close();
         db.close();
         return receipts;
-
     }
 
 
