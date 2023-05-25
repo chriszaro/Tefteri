@@ -46,7 +46,7 @@ public class Receipt {
     /**
      * Convert a reference string from DD-MM-YYYY to YYYY-MM-DD format
      * @param ref
-     * @return
+     * @return The converted date as a string
      */
     public static String convertDateToDatabaseCompatible(String ref){
         // defensive programming just to be sure
@@ -58,6 +58,24 @@ public class Receipt {
         s.append(ref.substring(3, 5));
         s.append('-');
         s.append(ref.substring(0, 2));
+
+        return s.toString();
+    }
+    /**
+     * Convert a reference string from YYYY-MM-DD to DD-MM-YYYY format
+     * @param ref
+     * @return The converted date as a string
+     */
+    public static String convertDateToDDMMYYY(String ref){
+        // defensive programming just to be sure
+        if (ref.charAt(4) != '-') // if it's in format DD-MM-YYYY already, do nothing
+            return ref;
+        StringBuilder s = new StringBuilder();
+        s.append(ref.substring(8));
+        s.append('-');
+        s.append(ref.substring(5, 7));
+        s.append('-');
+        s.append(ref.substring(0, 4));
 
         return s.toString();
     }

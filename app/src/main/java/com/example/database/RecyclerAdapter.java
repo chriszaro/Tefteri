@@ -62,10 +62,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 //                MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
-
-                ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, layoutManager.findLastVisibleItemPosition() + 1);
-//                String TAG = "SCROLL_LISTENER";
-//                Log.d(TAG, String.valueOf(layoutManager.findLastVisibleItemPosition()));
+                // TODO Isn't the constant fetching of receipts too heavy on the read/write operations?
+                ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, layoutManager.findFirstVisibleItemPosition());
+                String TAG = "SCROLL_LISTENER";
+                Log.d(TAG, String.valueOf(layoutManager.findFirstVisibleItemPosition()));
                 // the last visible item position is correctly reported
                 if (toAdd != null) {
                     for (Receipt selectedReceipt : toAdd) {
@@ -74,6 +74,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         names.add(String.valueOf(selectedReceipt.get_companyName()));
                         id.add(String.valueOf(selectedReceipt.get_ID()));
                     }
+//                    Log.d(TAG, "toAdd in string: " + Arrays.toString(toAdd.toArray()));
                 }
             }
         });
