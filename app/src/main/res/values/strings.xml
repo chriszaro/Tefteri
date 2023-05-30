@@ -12,9 +12,19 @@
     <string name="no_match_found">Δεν βρέθηκαν αποτελέσματα</string>
     <string name="record_deleted">Επιτυχής Διαγραφή</string>
     <string name="title_home">Αρχική</string>
-    <string name="title_dashboard">Μηνιαία</string>
-    <string name="title_notifications">Φίλτρα</string>
+    <string name="title_calendar">Μηνιαία</string>
+    <string name="title_filters">Φίλτρα</string>
     <string name="add_option">Προσθήκη</string>
     <string name="multiple_add_option">Πολλαπλή προσθήκη</string>
     <string name="add_and_edit_option">Με επεξεργασία</string>
+    <string name="Cancel_button">ΑΚΥΡΩΣΗ</string>
+    <string name="Save_button">ΑΠΟΘΗΚΕΥΣΗ</string>
+    <string name="Delete_button">ΔΙΑΓΡΑΦΗ</string>
+    <string name="Edit_button">ΕΠΕΞΕΡΓΑΣΙΑ</string>
+    <string name="Recent">Πρόσφατες</string>
+    <string name="Date">Ημερομηνία</string>
+    <string name="Company_name">Επωνυμία</string>
+    <string name="Cost_amount">Ποσό</string>
+    <string name="Edit_card">Επεξεργασία</string>
+    <string name="Delete_card">Διαγραφή</string>
 </resources>

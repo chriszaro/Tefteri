@@ -1,5 +1,6 @@
 package com.example.database;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
@@ -103,9 +102,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
+                public boolean onLongClick(View view) { //view is the card
                     // Inflate the menu resource file
-                    PopupMenu popup = new PopupMenu(view.getContext(), view);
+                    PopupMenu popup = new PopupMenu(view.getContext(), view); //view.getContext() returns the activity that the card is contained within
                     popup.getMenuInflater().inflate(R.menu.card_menu, popup.getMenu());
 
                     // Handle menu item clicks
@@ -203,14 +202,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when a CardView is clicked.
     public void startMyActivity(Context context, Boolean edit, String id) {
-        Intent intent = new Intent(context, receiptScreen.class);
+        Intent intent = new Intent(context, ReceiptScreen.class);
         if (edit) {
             intent.putExtra("editBoolean", true);
             intent.putExtra("newReceipt", false);
         }
         intent.putExtra("id", id);
 
-        context.startActivity(intent);
+        Activity a = (Activity) context;
+        a.startActivity(intent);
     }
 
     //RecyclerView calls this method to associate a ViewHolder with data.

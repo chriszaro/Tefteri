@@ -2,14 +2,10 @@ package com.example.database;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.text.method.KeyListener;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -21,10 +17,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-public class receiptScreen extends AppCompatActivity {
+public class ReceiptScreen extends AppCompatActivity {
     EditText nameBox;
     EditText costBox;
     EditText dateBox;
@@ -97,7 +90,7 @@ public class receiptScreen extends AppCompatActivity {
     public void viewReceipt(String id) {
         //Set name and function to left button
         Button leftButton = findViewById(R.id.leftButton);
-        leftButton.setText("ΕΠΕΞΕΡΓΑΣΙΑ");
+        leftButton.setText(R.string.Edit_button);
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,7 +100,7 @@ public class receiptScreen extends AppCompatActivity {
 
         //Set name and function to right button
         Button rightButton = findViewById(R.id.rightButton);
-        rightButton.setText("ΔΙΑΓΡΑΦΗ");
+        rightButton.setText(R.string.Delete_button);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +120,7 @@ public class receiptScreen extends AppCompatActivity {
 
         //Set name and function to left button
         Button leftButton = findViewById(R.id.leftButton);
-        leftButton.setText("ΑΠΟΘΗΚΕΥΣΗ");
+        leftButton.setText(R.string.Save_button);
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +130,7 @@ public class receiptScreen extends AppCompatActivity {
 
         //Set name and function to right button
         Button rightButton = findViewById(R.id.rightButton);
-        rightButton.setText("ΑΚΥΡΩΣΗ");
+        rightButton.setText(R.string.Cancel_button);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,8 +162,8 @@ public class receiptScreen extends AppCompatActivity {
 
         //set values sta boxes
         costBox.setText(String.valueOf(receipt.get_cost()));
-        nameBox.setText(String.valueOf(receipt.get_companyName()));
-        dateBox.setText(String.valueOf(receipt.get_date()));
+        nameBox.setText(receipt.get_companyName());
+        dateBox.setText(receipt.get_date());
     }
 
     /**

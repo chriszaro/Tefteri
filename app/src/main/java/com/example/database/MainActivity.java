@@ -1,8 +1,6 @@
 package com.example.database;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -74,6 +72,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        //ClickListener for Calendar Icon
+        View calendar = findViewById(R.id.nav_view).findViewById(R.id.navigation_calendar);
+        calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mainContext, ViewByMonthScreen.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -169,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // Code to be executed after the camera scan is done
 
         //Create the Intent to start the AddProductScreen Activity
-        Intent i = new Intent(this, receiptScreen.class);
+        Intent i = new Intent(this, ReceiptScreen.class);
 
         //Pass data to the AddProductScreen Activity through the Intent
         i.putExtra("editBoolean", true);
@@ -258,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
                 //Verified
                 if (!doc.getElementsByClass("success").text().isEmpty()) {
-                    receiptDate = receiptScreen.findWord(
+                    receiptDate = ReceiptScreen.findWord(
                             info,
                             "Ημερομηνία, ώρα",
                             "Ημερομηνία, ώρα",
@@ -280,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     formattedDate = formattedDate + receiptDate.charAt(3);
                     receiptDate = formattedDate;
 
-                    receiptCost = receiptScreen.findWord(
+                    receiptCost = ReceiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -288,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             -1
                     );
 
-                    companyName = receiptScreen.findWord(
+                    companyName = ReceiptScreen.findWord(
                             info,
                             "Επωνυμία",
                             "Διεύθυνση",
@@ -301,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
                     receiptDate = "Unknown";
 
-                    receiptCost = receiptScreen.findWord(
+                    receiptCost = ReceiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -313,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
                 } else if (!doc.getElementsByClass("box-warning").text().isEmpty()) {
                     //Not Verified
-                    receiptDate = receiptScreen.findWord(
+                    receiptDate = ReceiptScreen.findWord(
                             info,
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -321,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             49
                     );
 
-                    receiptCost = receiptScreen.findWord(
+                    receiptCost = ReceiptScreen.findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -329,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             -1
                     );
 
-                    companyName = receiptScreen.findWord(
+                    companyName = ReceiptScreen.findWord(
                             info,
                             "Επωνυμία",
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -346,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByTag("body").text();
 
-                receiptDate = receiptScreen.findWord(
+                receiptDate = ReceiptScreen.findWord(
                         info,
                         "Ημερομηνία Έκδοσης",
                         "Ημερομηνία Έκδοσης",
@@ -355,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 );
                 receiptDate = receiptDate.replace("/", "-");
 
-                receiptCost = receiptScreen.findWord(
+                receiptCost = ReceiptScreen.findWord(
                         info,
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
@@ -366,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 String[] xd = receiptCost.split("\\.");
                 receiptCost = xd[0] + "." + xd[1].charAt(0) + xd[1].charAt(1);
 
-                companyName = receiptScreen.findWord(
+                companyName = ReceiptScreen.findWord(
                         info,
                         "Εκδότης Επωνυμία επιχείρησης",
                         "Οδός",
