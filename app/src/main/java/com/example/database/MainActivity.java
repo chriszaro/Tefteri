@@ -146,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         popup.show();
     }
 
+    // Add a flag indicating whether we are in multi-scan mode
+    private boolean isMultiScanMode = false;
+
     /**
      * Method for function of popup menu from float button (add)
      *
@@ -160,7 +163,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.multiple_add_option:
                 Toast.makeText(this, "multiple_add_option clicked", Toast.LENGTH_SHORT).show();
-                //scanCode(false);
+                isMultiScanMode = true;
+                scanCode(false);
                 return true;
             case R.id.add_and_edit_option:
                 scanCode(true);
@@ -203,20 +207,21 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
     }
 
+    // For normal and multiple scan
+    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
+        String input = result.getContents();
+        if (input != null) {
+            String temp = downloadReceipt(input);
+            if (temp != null){
+                lastReceiptID = temp;
+            }
+        }
 
-    // For normal scan
-    ActivityResultLauncher<ScanOptions> barLauncher =
-            registerForActivityResult(
-                    new ScanContract(), result -> {
-                        String input = result.getContents();
-                        if (input != null) {
-                            String temp = downloadReceipt(input);
-                            if (temp != null){
-                                lastReceiptID = temp;
-                            }
-                        }
-                    }
-            );
+        // If we are in multi-scan mode, relaunch the scanner
+        if (isMultiScanMode) {
+            scanCode(false);
+        }
+    });
 
     //For scan and edit
     ActivityResultLauncher<ScanOptions> barLauncher2 =
