@@ -1,6 +1,7 @@
 package com.example.database;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -208,20 +210,36 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     // For normal and multiple scan
-    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
-        String input = result.getContents();
-        if (input != null) {
-            String temp = downloadReceipt(input);
-            if (temp != null){
-                lastReceiptID = temp;
-            }
-        }
+    ActivityResultLauncher<ScanOptions> barLauncher =
+            registerForActivityResult(new ScanContract(), result -> {
+                String input = result.getContents();
+                if (input != null) {
+                    String temp = downloadReceipt(input);
+                    if (temp != null){
+                        lastReceiptID = temp;
+                    }
 
-        // If we are in multi-scan mode, relaunch the scanner
-        if (isMultiScanMode) {
-            scanCode(false);
-        }
-    });
+                    if (isMultiScanMode) {
+                        new AlertDialog.Builder(this)
+                                .setTitle("Continue scanning?")
+                                .setMessage("Do you want to continue scanning?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Continue scanning
+                                        scanCode(false);
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Stop scanning
+                                        isMultiScanMode = false;
+                                    }
+                                })
+                                .show();
+                    }
+                }
+            });
+
 
     //For scan and edit
     ActivityResultLauncher<ScanOptions> barLauncher2 =
