@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
      * @return
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { // here goes options menu with question mark
         getMenuInflater().inflate(R.menu.main_menu, menu);
         activityBarMenu = menu;
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
@@ -120,6 +120,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     dbHandler.deleteReceipt(id);
                 }
                 refreshAdapter();
+                return false;
+            }
+        });
+
+        MenuItem questionMark = menu.findItem(R.id.action_about);
+        questionMark.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
+                Intent intent = new Intent(mainContext, AboutActivity.class);
+                startActivity(intent);
                 return false;
             }
         });
