@@ -111,6 +111,23 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return receipts;
     }
 
+    public ArrayList<Receipt> fetchAllReceipts(){
+        String query = "SELECT * FROM " + TABLE_RECEIPTS +
+                " ORDER BY " + COLUMN_DATE + " DESC " + ';';
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        ArrayList<Receipt> receipts = new ArrayList<>();
+        if (cursor.moveToFirst()) { // if the cursor is not empty
+            do {
+                Receipt receipt = this.createReceiptFromCursor(cursor);
+                receipts.add(receipt);
+            } while (cursor.moveToNext());
+        } else // if the cursor is empty
+            receipts = null;
+        cursor.close();
+        db.close();
+        return receipts;
+    }
 
     /**
      * Leave the parameter null if you don't want to update it
