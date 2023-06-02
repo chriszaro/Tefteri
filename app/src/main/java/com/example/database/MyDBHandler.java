@@ -197,7 +197,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         receipt.setID(Integer.parseInt(cursor.getString(0)));
         receipt.set_companyName(cursor.getString(1));
         receipt.set_cost(Float.parseFloat(cursor.getString(2)));
-        String date = Receipt.convertDateToDatabaseCompatible(cursor.getString(3));
+        String date = Receipt.convertDateToDDMMYYY(cursor.getString(3));
         receipt.set_date(date);
         return receipt;
     }
