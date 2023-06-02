@@ -56,6 +56,8 @@ public class Receipt {
      */
     public static String convertDateToDatabaseCompatible(String ref){
         // defensive programming just to be sure
+        if (ref.length() < 10) // if it ain't in date format, something went wrong
+            return ref;
         if (ref.charAt(2) != '-') // if it's in format YYYY-MM-DD already, do nothing
             return ref;
         StringBuilder s = new StringBuilder();
@@ -75,6 +77,8 @@ public class Receipt {
      */
     public static String convertDateToDDMMYYY(String ref){
         // defensive programming just to be sure
+        if (ref.length() < 10) // if it ain't in date format, something went wrong
+            return ref;
         if (ref.charAt(4) != '-') // if it's in format DD-MM-YYYY already, do nothing
             return ref;
         StringBuilder s = new StringBuilder();

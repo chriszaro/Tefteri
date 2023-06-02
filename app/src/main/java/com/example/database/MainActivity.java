@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         dbHandler = new MyDBHandler(mainContext, null, null, 1);
 
         // Massively add data to database for testing purposes
-        boolean loadManyReceipts = false;
+        boolean loadManyReceipts = true;
         String manyReceiptsSQLInsertsFileName= "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
         if (loadManyReceipts) {
             dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);

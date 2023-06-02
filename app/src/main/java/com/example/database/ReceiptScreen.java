@@ -1,11 +1,13 @@
 package com.example.database;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.KeyListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -30,6 +32,8 @@ public class ReceiptScreen extends AppCompatActivity {
 
     MyDBHandler dbHandler;
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +43,7 @@ public class ReceiptScreen extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-
+         context = this;
         dbHandler = new MyDBHandler(findViewById(android.R.id.content).getRootView().getContext(), null, null, 1);
 
         //Get references to view objects
@@ -124,7 +128,16 @@ public class ReceiptScreen extends AppCompatActivity {
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                endActivity();
+                String date = dateBox.getText().toString();
+                String cost = costBox.getText().toString();
+                String name = nameBox.getText().toString();
+                if (date.length() == 0 && cost.length() == 0 && name.length() == 0) {
+                    Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
+                }
+                else if (dbHandler.updateReceipt(id, name, cost, date)) {
+//                    Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
+                    endActivity();
+                }
             }
         });
 

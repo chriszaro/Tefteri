@@ -137,14 +137,19 @@ public class MyDBHandler extends SQLiteOpenHelper {
      * @param cost        The new cost
      * @param date        The new date (make sure it's in a database compatible format
      */
-    public void updateReceipt(String ID, String companyName, String cost, String date) {
+    public boolean updateReceipt(String ID, String companyName, String cost, String date) {
         ContentValues pairs = new ContentValues();
         if (companyName != null)
             pairs.put(COLUMN_COMPANYNAME, companyName);
         if (cost != null)
             pairs.put(COLUMN_COST, cost);
-        if (date != null)
+        if (date != null) {
+            date = Receipt.convertDateToDatabaseCompatible(date);
             pairs.put(COLUMN_DATE, date);
+        }
+        if (pairs.size() == 0){
+            return false;
+        }
 //        String updateString =
 //                (companyName == null ? COLUMN_COMPANYNAME + " = '" + companyName + "', ": "") +
 //                (cost == null ? COLUMN_COST + " = '" + cost + "', ": "") +
@@ -160,6 +165,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         // https://stackoverflow.com/questions/9798473/sqlite-in-android-how-to-update-a-specific-row
         db.update(TABLE_RECEIPTS, pairs, COLUMN_ID + " = ?", new String[]{ID});
         db.close();
+        return true;
     }
 
     public void deleteReceipt(String ID) {
