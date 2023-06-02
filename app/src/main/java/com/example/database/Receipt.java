@@ -43,6 +43,7 @@ public class Receipt {
     public String get_date() {return date;}
 
 
+
     /**
      * Convert a reference string from DD-MM-YYYY to YYYY-MM-DD format
      * @param ref
