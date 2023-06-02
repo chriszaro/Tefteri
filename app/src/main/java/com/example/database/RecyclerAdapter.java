@@ -42,7 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         dbHandler = new MyDBHandler(activity, null, null, 1);
 
-        ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, 0);
+        ArrayList<Receipt> toAdd = dbHandler.fetchAllReceipts();
 
         if (toAdd != null) {
             if (!toAdd.isEmpty()) {
@@ -53,7 +53,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     id.add(String.valueOf(selectedReceipt.get_ID()));
                 }
             }
-        }
+        }/*
         mainActivity.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -76,7 +76,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 //                    Log.d(TAG, "toAdd in string: " + Arrays.toString(toAdd.toArray()));
                 }
             }
-        });
+        });*/
 //        dbHandler.close();
     }
 

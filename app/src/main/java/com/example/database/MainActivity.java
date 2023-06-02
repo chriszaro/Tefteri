@@ -298,8 +298,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     );
 
                     // 2022-04-15 to 15-04-2022
-                    String formattedDate = "";
-                    formattedDate = formattedDate + receiptDate.charAt(8);
+                    // String formattedDate = "";
+                    receiptDate = Receipt.convertDateToDDMMYYY(receiptDate);
+/*                    formattedDate = formattedDate + receiptDate.charAt(8); ANTIO CAKE
                     formattedDate = formattedDate + receiptDate.charAt(9);
                     formattedDate = formattedDate + receiptDate.charAt(7);
                     formattedDate = formattedDate + receiptDate.charAt(5);
@@ -309,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     formattedDate = formattedDate + receiptDate.charAt(1);
                     formattedDate = formattedDate + receiptDate.charAt(2);
                     formattedDate = formattedDate + receiptDate.charAt(3);
-                    receiptDate = formattedDate;
+                    receiptDate = formattedDate;*/
 
                     receiptCost = ReceiptScreen.findWord(
                             receipt,
