@@ -1,5 +1,7 @@
 package com.example.database;
 
+import java.text.SimpleDateFormat;
+
 public class Receipt {
     private int id;
     private String companyName;
@@ -14,6 +16,7 @@ public class Receipt {
         this.cost = cost;
         this.date = date;
         this.id = hashCode();
+        // Receipts can be created
     }
 
     @Override
@@ -42,6 +45,9 @@ public class Receipt {
 
     public String get_date() {return date;}
 
+    // DD-MM-YYYY
+    // YYYY-MM-DD
+//    SimpleDateFormat
 
     /**
      * Convert a reference string from DD-MM-YYYY to YYYY-MM-DD format
@@ -61,6 +67,7 @@ public class Receipt {
 
         return s.toString();
     }
+
     /**
      * Convert a reference string from YYYY-MM-DD to DD-MM-YYYY format
      * @param ref
