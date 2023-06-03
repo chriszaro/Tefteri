@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
 
         //Set my Adapter for the RecyclerView
-        refreshAdapter();
+        //refreshAdapter();
 
         // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {

@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,6 +56,8 @@ public class ViewByMonthScreen extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         mainContext = this;
         recyclerView.setLayoutManager(layoutManager);
+        // as per the android documentation, the database should remain open for as long as possible
+        dbHandler = new MyDBHandler(mainContext, null, null, 1);
 
         // Month spinner
         Spinner monthSpinner = findViewById(R.id.spinner_month);
@@ -76,8 +80,6 @@ public class ViewByMonthScreen extends AppCompatActivity {
         selectedYear = String.valueOf(actual_calendar.get(Calendar.YEAR));
         selectedMonth = String.valueOf(actual_calendar.get(Calendar.MONTH));
 
-        refreshAdapter();
-
         // Set the current year and month as the default values
         yearSpinner.setSelection(years.indexOf(selectedYear));
         monthSpinner.setSelection(Integer.parseInt(selectedMonth));
@@ -87,7 +89,8 @@ public class ViewByMonthScreen extends AppCompatActivity {
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedMonth = String.valueOf(Integer.parseInt((String) parent.getItemAtPosition(position))+ 1);
+                selectedMonth = String.valueOf(Integer.parseInt((String) parent.getItemAtPosition(position)));
+                Log.d("month", selectedMonth);
                 refreshAdapter();
             }
 
@@ -100,6 +103,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedYear = (String) parent.getItemAtPosition(position);
+                Log.d("year", selectedYear);
                 refreshAdapter();
             }
 
@@ -107,23 +111,6 @@ public class ViewByMonthScreen extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        recyclerView = findViewById(R.id.recycler_view);
-
-        //Set the layout of the items in the RecyclerView
-        layoutManager = new LinearLayoutManager(this);
-        mainContext = this;
-        recyclerView.setLayoutManager(layoutManager);
-        // as per the android documentation, the database should remain open for as long as possible
-        dbHandler = new MyDBHandler(mainContext, null, null, 1);
-
-        // Massively add data to database for testing purposes
-        boolean loadManyReceipts = false;
-        String manyReceiptsSQLInsertsFileName= "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
-        if (loadManyReceipts) {
-            dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);
-            Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
-        }
 
         // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {
@@ -146,8 +133,55 @@ public class ViewByMonthScreen extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshAdapter();
+    }
+
+    /**
+     * This method is for the trash button on activity bar
+     *
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) { // here goes options menu with question mark
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        activityBarMenu = menu;
+        MenuItem trashCanItem = menu.findItem(R.id.action_delete);
+        trashCanItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
+                ArrayList<String> ids = adapter.findIDsOfItemsForDeletion();
+                for (String id : ids){
+                    Log.d("gamotinmamasou", id);
+                    dbHandler.deleteReceipt(id);
+                }
+                refreshAdapter();
+                return false;
+            }
+        });
+
+        MenuItem questionMark = menu.findItem(R.id.action_about);
+        questionMark.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
+                Intent intent = new Intent(mainContext, AboutActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
+        trashCanItem.setVisible(false);
+        return true;
+    }
+
     public void refreshAdapter() {
         adapter = new RecyclerAdapter( this, false, selectedMonth, selectedYear);
         recyclerView.setAdapter(adapter);
+    }
+
+    public Menu getActivityBarMenu() {
+        return activityBarMenu;
     }
 }

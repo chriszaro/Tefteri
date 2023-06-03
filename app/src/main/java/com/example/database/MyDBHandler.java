@@ -181,6 +181,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     }
 
     public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
+
         month = month.length() == 1 ? '0' + month : month; // if the month is a single digit, add 0
         // in front of it to make it compatible with an SQL query
         String startDate = year + '-' + month + "01";

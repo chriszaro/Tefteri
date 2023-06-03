@@ -54,9 +54,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         if(monthly){
             toAdd = dbHandler.fetchReceiptsBasedOnMonthAndYear(month, year);
+            Log.d("gamo2", "gamisou");
         }
         else {
             toAdd = dbHandler.fetchAllReceipts();
+            Log.d("gamo3", "gamisou");
         }
 
         if (toAdd != null) {
@@ -113,7 +115,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                     //Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
                                     tempCounter++;
                                     dbHandler.deleteReceipt(itemID);
-                                    if(!monthly){
+                                    if(monthly){
                                         MainActivity mainActivity = (MainActivity) activity;
                                         mainActivity.refreshAdapter();
                                     }
@@ -171,18 +173,36 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when a CheckBox is selected.
     public void enableTrash() {
-        MainActivity mainActivity = (MainActivity) activity;
-        Menu menu = mainActivity.getActivityBarMenu();
-        MenuItem myMenuItem = menu.findItem(R.id.action_delete);
-        myMenuItem.setVisible(true);
+        if(monthly){    // !monthly
+            MainActivity temp = (MainActivity) activity;
+            Menu menu = temp.getActivityBarMenu();
+            MenuItem myMenuItem = menu.findItem(R.id.action_delete);
+            myMenuItem.setVisible(true);
+        }
+        else {
+            ViewByMonthScreen temp = (ViewByMonthScreen) activity;
+            Menu menu = temp.getActivityBarMenu();
+            MenuItem myMenuItem = menu.findItem(R.id.action_delete);
+            myMenuItem.setVisible(true);
+        }
+
     }
 
     //ViewHolder calls this method when all CheckBoxes are unselected.
     public void disableTrash() {
-        MainActivity mainActivity = (MainActivity) activity;
-        Menu menu = mainActivity.getActivityBarMenu();
-        MenuItem myMenuItem = menu.findItem(R.id.action_delete);
-        myMenuItem.setVisible(false);
+        if(monthly){    // !monthly
+            MainActivity temp = (MainActivity) activity;
+            Menu menu = temp.getActivityBarMenu();
+            MenuItem myMenuItem = menu.findItem(R.id.action_delete);
+            myMenuItem.setVisible(false);
+        }
+        else {
+            ViewByMonthScreen temp = (ViewByMonthScreen) activity;
+            Menu menu = temp.getActivityBarMenu();
+            MenuItem myMenuItem = menu.findItem(R.id.action_delete);
+            myMenuItem.setVisible(false);
+        }
+
     }
 
     public ArrayList<String> findIDsOfItemsForDeletion() {
