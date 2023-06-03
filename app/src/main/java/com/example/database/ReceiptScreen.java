@@ -43,7 +43,7 @@ public class ReceiptScreen extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-         context = this;
+        context = this;
         dbHandler = new MyDBHandler(findViewById(android.R.id.content).getRootView().getContext(), null, null, 1);
 
         //Get references to view objects
@@ -133,10 +133,13 @@ public class ReceiptScreen extends AppCompatActivity {
                 String name = nameBox.getText().toString();
                 if (date.length() == 0 && cost.length() == 0 && name.length() == 0) {
                     Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
-                }
-                else if (dbHandler.updateReceipt(id, name, cost, date)) {
-//                    Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
-                    endActivity();
+                } else {
+                    //TODO checks if date is 10 characters long, and the 2 dashes are where they supposed to be
+                    //TODO check if cost is with dot and not with comma and if it is in the right format
+                    //TODO add hints in XML
+                    if (dbHandler.updateReceipt(id, name, cost, date)) {
+                        endActivity();
+                    }
                 }
             }
         });
@@ -167,6 +170,7 @@ public class ReceiptScreen extends AppCompatActivity {
 
     /**
      * This method sets values to the fields
+     *
      * @param id
      */
     public void setValues(String id) {
@@ -182,7 +186,7 @@ public class ReceiptScreen extends AppCompatActivity {
     /**
      * This method resets the default key listeners for the text fields
      */
-    public void resetFieldsListeners(){
+    public void resetFieldsListeners() {
         nameBox.setKeyListener(defaultKeyListenerForNameBox);
         costBox.setKeyListener(defaultKeyListenerForCostBox);
         dateBox.setKeyListener(defaultKeyListenerForDateBox);

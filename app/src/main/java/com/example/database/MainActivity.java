@@ -110,12 +110,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onCreateOptionsMenu(Menu menu) { // here goes options menu with question mark
         getMenuInflater().inflate(R.menu.main_menu, menu);
         activityBarMenu = menu;
-        MenuItem myMenuItem = menu.findItem(R.id.action_delete);
-        myMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        MenuItem trashCanItem = menu.findItem(R.id.action_delete);
+        trashCanItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
                 ArrayList<String> ids = adapter.findIDsOfItemsForDeletion();
-                //Toast.makeText(mainContext, "delete", Toast.LENGTH_SHORT).show();
                 for (String id : ids){
                     dbHandler.deleteReceipt(id);
                 }
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return false;
             }
         });
-        myMenuItem.setVisible(false);
+        trashCanItem.setVisible(false);
         return true;
     }
 
@@ -174,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 scanCode(false);
                 return true;
             case R.id.multiple_add_option:
-                Toast.makeText(this, "multiple_add_option clicked", Toast.LENGTH_SHORT).show();
                 isMultiScanMode = true;
                 scanCode(false);
                 return true;
@@ -279,7 +277,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             StrictMode.setThreadPolicy(policy);
         }
 
-        //Log.d("before", input);
         if (input.contains("http://tam.gsis.gr")) {
             input = "https://www1.aade.gr/tameiakes" + input.substring(25);
         } else if (input.contains("http://www1.gsis.gr")) {
@@ -289,7 +286,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         } else if (input.contains("https://www1.aade.gr/tameiakes/myweb/q1.ph?")){
             input = "https://www1.aade.gr/tameiakes/myweb/q1.php" + input.substring(42);
         }
-        //Log.d("after", input);
 
         if (input.contains("https://www1.aade.gr")) {
             try {
@@ -297,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 String info = doc.getElementsByClass("info").text();
                 String receipt = doc.getElementsByClass("receipt").text();
 
-                //Verified
+                //Gov Verified Receipts
                 if (!doc.getElementsByClass("success").text().isEmpty()) {
                     receiptDate = ReceiptScreen.findWord(
                             info,
@@ -306,21 +302,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             "Ημερομηνία, ώρα".length() + 1,
                             "Ημερομηνία, ώρα".length() + 11
                     );
-
-                    // 2022-04-15 to 15-04-2022
-                    // String formattedDate = "";
                     receiptDate = Receipt.convertDateToDDMMYYY(receiptDate);
-/*                    formattedDate = formattedDate + receiptDate.charAt(8); ANTIO CAKE
-                    formattedDate = formattedDate + receiptDate.charAt(9);
-                    formattedDate = formattedDate + receiptDate.charAt(7);
-                    formattedDate = formattedDate + receiptDate.charAt(5);
-                    formattedDate = formattedDate + receiptDate.charAt(6);
-                    formattedDate = formattedDate + receiptDate.charAt(4);
-                    formattedDate = formattedDate + receiptDate.charAt(0);
-                    formattedDate = formattedDate + receiptDate.charAt(1);
-                    formattedDate = formattedDate + receiptDate.charAt(2);
-                    formattedDate = formattedDate + receiptDate.charAt(3);
-                    receiptDate = formattedDate;*/
 
                     receiptCost = ReceiptScreen.findWord(
                             receipt,
@@ -339,8 +321,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     );
 
                 } else if (!doc.getElementsByClass("box-error").text().isEmpty()) {
-                    //closed company
-
+                    //Receipt from closed company
                     receiptDate = "Unknown";
 
                     receiptCost = ReceiptScreen.findWord(
@@ -354,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     companyName = "Unknown";
 
                 } else if (!doc.getElementsByClass("box-warning").text().isEmpty()) {
-                    //Not Verified
+                    //Not Verified from gov receipt
                     receiptDate = ReceiptScreen.findWord(
                             info,
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -383,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 e.printStackTrace();
             }
         } else if (input.contains("https://einvoice.s1ecos.gr")) {
-            //einvoice
+            //einvoice receipt type
             try {
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByTag("body").text();
@@ -425,12 +406,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Receipt newReceipt = new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate);
         dbHandler.addProduct(newReceipt);
         return String.valueOf(newReceipt.get_ID());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        dbHandler.close();
     }
 }
 

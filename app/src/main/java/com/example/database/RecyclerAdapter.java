@@ -53,31 +53,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     id.add(String.valueOf(selectedReceipt.get_ID()));
                 }
             }
-        }/*
-        mainActivity.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-//                MyDBHandler handler = new MyDBHandler(activity, null, null, 1);
-                // TODO Isn't the constant fetching of receipts too heavy on the read/write operations?
-                ArrayList<Receipt> toAdd = dbHandler.fetchNReceipts(40, layoutManager.findFirstVisibleItemPosition());
-                String TAG = "SCROLL_LISTENER";
-                Log.d(TAG, String.valueOf(layoutManager.findFirstVisibleItemPosition()));
-                // the last visible item position is correctly reported
-                if (toAdd != null) {
-                    for (Receipt selectedReceipt : toAdd) {
-                        prices.add(String.valueOf(selectedReceipt.get_cost()));
-                        dates.add(String.valueOf(selectedReceipt.get_date()));
-                        names.add(String.valueOf(selectedReceipt.get_companyName()));
-                        id.add(String.valueOf(selectedReceipt.get_ID()));
-                    }
-//                    Log.d(TAG, "toAdd in string: " + Arrays.toString(toAdd.toArray()));
-                }
-            }
-        });*/
-//        dbHandler.close();
+        }
     }
 
     HashSet<String> selectedCardViews;
@@ -150,17 +126,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     int position = (int) buttonView.getTag();
                     //If button is checked,
                     if (isChecked) {
-//                        if (selectedCardViews.isEmpty()) {
-//                            Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
-//                        }
-//                        Toast.makeText(itemView.getContext(), "checked card " + id.get(position) + " at " + position, Toast.LENGTH_SHORT).show();
                         selectedCardViews.add(id.get(position));
                         enableTrash();
                     } else {
-                        //Toast.makeText(itemView.getContext(), "unchecked" + position, Toast.LENGTH_SHORT).show();
                         selectedCardViews.remove(id.get(position));
                         if (selectedCardViews.isEmpty()) {
-                            //Toast.makeText(itemView.getContext(), "empty", Toast.LENGTH_SHORT).show();
                             disableTrash();
                         }
                     }
@@ -195,8 +165,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         HashSet<String> selectedCardViews = this.getSelectedCardViews();
         ArrayList<String> idsToDelete = new ArrayList<>();
         idsToDelete.addAll(selectedCardViews);
-//        Toast.makeText(mainActivity, "delete from RecyclerAdapter", Toast.LENGTH_SHORT).show();
-//        Log.i("LAZAROS TAGS", idsToDelete.toArray().toString());
         return idsToDelete;
     }
 

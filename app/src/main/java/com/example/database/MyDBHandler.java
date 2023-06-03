@@ -225,21 +225,6 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return receipt;
     }
 
-//    //Μέθοδος για διαγραφή προϊόντος βάσει ονομασίας του
-//    public boolean deleteProduct(String productname) {
-//        boolean result = false;
-//        Product product = findProduct(productname);
-//        if (product != null){
-//            SQLiteDatabase db = this.getWritableDatabase();
-//            db.delete(TABLE_PRODUCTS, COLUMN_ID + " = ?",
-//                    new String[] { String.valueOf(product.getID()) });
-//            result = true;
-//            db.close();
-//        }
-//        return result;
-//    }
-
-
     /**
      * Adds data from an sql file that contains sql INSERT statements
      *

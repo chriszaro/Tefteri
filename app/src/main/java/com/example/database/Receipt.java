@@ -16,7 +16,6 @@ public class Receipt {
         this.cost = cost;
         this.date = date;
         this.id = hashCode();
-        // Receipts can be created
     }
 
     @Override
