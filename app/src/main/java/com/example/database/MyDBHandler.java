@@ -193,7 +193,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
             endDate = year + '-' + month + "-30";
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
                 " WHERE " + COLUMN_DATE + " BETWEEN " +
-                "'" + startDate + "'" + " AND " + "'"+ endDate + "'" + ';';
+                "'" + startDate + "'" + " AND " + "'"+ endDate + "'" +
+                " ORDER BY " + COLUMN_DATE + " DESC " + ';';
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
