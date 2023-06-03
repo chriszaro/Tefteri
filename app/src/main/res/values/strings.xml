@@ -3,7 +3,7 @@
     <string name="receipt_id">Αναγνωριστικό</string>
     <string name="not_assigned">Not assigned</string>
     <string name="company_name">Επωνυμία</string>
-    <string name="receipt_cost">Ποσό</string>
+    <string name="receipt_cost">Ποσό (€)</string>
     <string name="receipt_date">Ημερομηνία</string>
     <string name="add">Προσθηκη</string>
     <string name="edit">Επεξεργασια</string>

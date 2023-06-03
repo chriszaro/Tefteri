@@ -178,7 +178,7 @@ public class ReceiptScreen extends AppCompatActivity {
         Receipt receipt = dbHandler.findProduct(id);
 
         //set values sta boxes
-        costBox.setText(String.valueOf(receipt.get_cost()));
+        costBox.setText(String.valueOf(receipt.get_cost()).replace('.',','));
         nameBox.setText(receipt.get_companyName());
         dateBox.setText(receipt.get_date());
     }

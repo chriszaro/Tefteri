@@ -184,7 +184,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     //RecyclerView calls this method to associate a ViewHolder with data.
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
-        holder.itemPrice.setText(prices.get(position));
+        holder.itemPrice.setText(prices.get(position).replace('.', ',') + '€');
         holder.itemDate.setText(dates.get(position));
 
         holder.itemName.setText(names.get(position));
