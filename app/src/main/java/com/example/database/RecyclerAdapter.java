@@ -31,18 +31,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private MyDBHandler dbHandler;
 
-    private MainActivity mainActivity;
+    private Activity activity;
 
-    public RecyclerAdapter(AppCompatActivity activity) {
+    boolean monthly;
+
+    /**
+     *
+     * @param activity
+     * @param monthly boolean
+     */
+    public RecyclerAdapter(AppCompatActivity activity, boolean monthly, String month, String year) {
         prices = new ArrayList<>();
         dates = new ArrayList<>();
         names = new ArrayList<>();
         id = new ArrayList<>();
-        mainActivity = (MainActivity) activity;
+        this.monthly = monthly;
+
+        ArrayList<Receipt> toAdd;
 
         dbHandler = new MyDBHandler(activity, null, null, 1);
+        this.activity = activity;
 
-        ArrayList<Receipt> toAdd = dbHandler.fetchAllReceipts();
+        if(monthly){
+            toAdd = dbHandler.fetchReceiptsBasedOnMonthAndYear(month, year);
+        }
+        else {
+            toAdd = dbHandler.fetchAllReceipts();
+        }
 
         if (toAdd != null) {
             if (!toAdd.isEmpty()) {
@@ -98,7 +113,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                     //Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
                                     tempCounter++;
                                     dbHandler.deleteReceipt(itemID);
-                                    mainActivity.refreshAdapter();
+                                    if(!monthly){
+                                        MainActivity mainActivity = (MainActivity) activity;
+                                        mainActivity.refreshAdapter();
+                                    }
+                                    else{
+                                        ViewByMonthScreen viewByMonthScreen = (ViewByMonthScreen) activity;
+                                        viewByMonthScreen.refreshAdapter();
+                                    }
                                     return true;
                                 default:
                                     return false;
@@ -149,6 +171,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when a CheckBox is selected.
     public void enableTrash() {
+        MainActivity mainActivity = (MainActivity) activity;
         Menu menu = mainActivity.getActivityBarMenu();
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
         myMenuItem.setVisible(true);
@@ -156,6 +179,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when all CheckBoxes are unselected.
     public void disableTrash() {
+        MainActivity mainActivity = (MainActivity) activity;
         Menu menu = mainActivity.getActivityBarMenu();
         MenuItem myMenuItem = menu.findItem(R.id.action_delete);
         myMenuItem.setVisible(false);

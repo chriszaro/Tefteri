@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ViewByMonthScreen extends AppCompatActivity {
 
-    private static final String[] MONTHS = new String[] { "Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιουλής", "Αύγουστος", "Σεπτέμβριος", "Οκτώμβριος", "Νοέμβριος", "Δεκέμβριος" };
+    private static final String[] MONTHS = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
     private static final int MIN_YEAR = 1900;
     private static final int MAX_YEAR = 2099;
 
@@ -40,11 +40,20 @@ public class ViewByMonthScreen extends AppCompatActivity {
 
     private Context mainContext;
 
+    String selectedYear;
+    String selectedMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_by_month_screen);
+
+        recyclerView = findViewById(R.id.recycler_view);
+
+        //Set the layout of the items in the RecyclerView
+        layoutManager = new LinearLayoutManager(this);
+        mainContext = this;
+        recyclerView.setLayoutManager(layoutManager);
 
         // Month spinner
         Spinner monthSpinner = findViewById(R.id.spinner_month);
@@ -64,19 +73,22 @@ public class ViewByMonthScreen extends AppCompatActivity {
 
         // Get current date
         Calendar actual_calendar = Calendar.getInstance();
-        int currentYear = actual_calendar.get(Calendar.YEAR);
-        int currentMonth = actual_calendar.get(Calendar.MONTH);  // Month is 0-indexed
+        selectedYear = String.valueOf(actual_calendar.get(Calendar.YEAR));
+        selectedMonth = String.valueOf(actual_calendar.get(Calendar.MONTH));
+
+        refreshAdapter();
 
         // Set the current year and month as the default values
-        yearSpinner.setSelection(years.indexOf(String.valueOf(currentYear)));
-        monthSpinner.setSelection(currentMonth);
+        yearSpinner.setSelection(years.indexOf(selectedYear));
+        monthSpinner.setSelection(Integer.parseInt(selectedMonth));
+
 
         // You can use an OnItemSelectedListener to react to changes:
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedMonth = (String) parent.getItemAtPosition(position);
-                // Do something with the selected month
+                selectedMonth = String.valueOf(Integer.parseInt((String) parent.getItemAtPosition(position))+ 1);
+                refreshAdapter();
             }
 
             @Override
@@ -87,8 +99,8 @@ public class ViewByMonthScreen extends AppCompatActivity {
         yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedYear = (String) parent.getItemAtPosition(position);
-                // Do something with the selected year
+                selectedYear = (String) parent.getItemAtPosition(position);
+                refreshAdapter();
             }
 
             @Override
@@ -113,9 +125,6 @@ public class ViewByMonthScreen extends AppCompatActivity {
             Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
         }
 
-        //Set my Adapter for the RecyclerView
-        //refreshAdapter();
-
         // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {
         });
@@ -135,5 +144,10 @@ public class ViewByMonthScreen extends AppCompatActivity {
                 a.finish();
             }
         });
+    }
+
+    public void refreshAdapter() {
+        adapter = new RecyclerAdapter( this, false, selectedMonth, selectedYear);
+        recyclerView.setAdapter(adapter);
     }
 }

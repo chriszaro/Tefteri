@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
      * This method refresh the data of main activity
      */
     public void refreshAdapter() {
-        adapter = new RecyclerAdapter(this);
+        adapter = new RecyclerAdapter(this, false, "", "");
         recyclerView.setAdapter(adapter);
     }
 
