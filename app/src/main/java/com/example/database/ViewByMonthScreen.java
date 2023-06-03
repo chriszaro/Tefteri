@@ -177,7 +177,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
     }
 
     public void refreshAdapter() {
-        adapter = new RecyclerAdapter( this, false, selectedMonth, selectedYear);
+        adapter = new RecyclerAdapter( this, true, selectedMonth, selectedYear);
         recyclerView.setAdapter(adapter);
     }
 

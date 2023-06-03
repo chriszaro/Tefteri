@@ -115,7 +115,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                     //Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
                                     tempCounter++;
                                     dbHandler.deleteReceipt(itemID);
-                                    if(monthly){
+                                    if(!monthly){
                                         MainActivity mainActivity = (MainActivity) activity;
                                         mainActivity.refreshAdapter();
                                     }
@@ -173,7 +173,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when a CheckBox is selected.
     public void enableTrash() {
-        if(monthly){    // !monthly
+        if(!monthly){    // !monthly
             MainActivity temp = (MainActivity) activity;
             Menu menu = temp.getActivityBarMenu();
             MenuItem myMenuItem = menu.findItem(R.id.action_delete);
@@ -190,7 +190,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when all CheckBoxes are unselected.
     public void disableTrash() {
-        if(monthly){    // !monthly
+        if(!monthly){    // !monthly
             MainActivity temp = (MainActivity) activity;
             Menu menu = temp.getActivityBarMenu();
             MenuItem myMenuItem = menu.findItem(R.id.action_delete);

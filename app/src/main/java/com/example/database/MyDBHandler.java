@@ -184,16 +184,16 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
         month = month.length() == 1 ? '0' + month : month; // if the month is a single digit, add 0
         // in front of it to make it compatible with an SQL query
-        String startDate = year + '-' + month + "01";
+        String startDate = year + '-' + month + "-01";
         int m = Integer.parseInt(month);
         String endDate;
         if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12)
-            endDate = year + '-' + month + "31";
+            endDate = year + '-' + month + "-31";
         else
-            endDate = year + '-' + month + "30";
+            endDate = year + '-' + month + "-30";
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
                 " WHERE " + COLUMN_DATE + " BETWEEN " +
-                startDate + " AND " + endDate + ';';
+                "'" + startDate + "'" + " AND " + "'"+ endDate + "'" + ';';
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
