@@ -11,9 +11,8 @@
     <string name="delete">Διαγραφη</string>
     <string name="no_match_found">Δεν βρέθηκαν αποτελέσματα</string>
     <string name="record_deleted">Επιτυχής Διαγραφή</string>
-    <string name="title_home">Αρχική</string>
+    <string name="title_recents">Πρόσφατες</string>
     <string name="title_calendar">Μηνιαία</string>
-    <string name="title_filters">Φίλτρα</string>
     <string name="add_option">Προσθήκη</string>
     <string name="multiple_add_option">Πολλαπλή προσθήκη</string>
     <string name="add_and_edit_option">Με επεξεργασία</string>

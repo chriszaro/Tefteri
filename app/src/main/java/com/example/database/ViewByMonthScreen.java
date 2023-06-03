@@ -1,7 +1,6 @@
 package com.example.database;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -17,10 +16,10 @@ public class ViewByMonthScreen extends AppCompatActivity {
         setContentView(R.layout.activity_view_by_month_screen);
 
         BottomNavigationView nav = findViewById(R.id.nav_view);
-        nav.getMenu().findItem(R.id.navigation_home).setChecked(false);
-        nav.getMenu().findItem(R.id.navigation_calendar).setChecked(true);
+        nav.getMenu().findItem(R.id.navigation_recents).setChecked(false);
+        nav.getMenu().findItem(R.id.navigation_monthly).setChecked(true);
 
-        View calendar = nav.findViewById(R.id.navigation_home);
+        View calendar = nav.findViewById(R.id.navigation_recents);
         Activity a = this;
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override

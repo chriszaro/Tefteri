@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         mAdView.loadAd(adRequest);
 
         //ClickListener for Calendar Icon
-        View calendar = findViewById(R.id.nav_view).findViewById(R.id.navigation_calendar);
+        View calendar = findViewById(R.id.nav_view).findViewById(R.id.navigation_monthly);
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

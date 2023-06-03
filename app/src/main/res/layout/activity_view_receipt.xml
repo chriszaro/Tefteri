@@ -52,13 +52,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/receipt_cost"
                 android:textSize="18sp" />
+
             <EditText
                 android:id="@+id/receiptCost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="15.50"
                 android:inputType="numberDecimal"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
         </TableRow>
 
         <TableRow
@@ -71,11 +73,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/receipt_date"
                 android:textSize="18sp" />
+
             <EditText
                 android:id="@+id/receiptDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="ΗΗ-ΜΜ-ΕΕΕΕ"
                 android:inputType="date"
                 android:textSize="18sp" />
 
