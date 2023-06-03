@@ -131,13 +131,17 @@ public class ReceiptScreen extends AppCompatActivity {
                 String date = dateBox.getText().toString();
                 String cost = costBox.getText().toString();
                 String name = nameBox.getText().toString();
-                if (date.length() == 0 && cost.length() == 0 && name.length() == 0) {
+                if (date.length() == 0 || cost.length() == 0 || name.length() == 0) {
                     Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
                 } else {
-                    //TODO checks if date is 10 characters long, and the 2 dashes are where they supposed to be
-                    //TODO check if cost is with dot and not with comma and if it is in the right format
-                    //TODO add hints in XML
-                    if (dbHandler.updateReceipt(id, name, cost, date)) {
+                    if (date.length() != 10) {
+                        Toast.makeText(context, R.string.wrong_date_format, Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (date.charAt(2) == '/' || date.charAt(5) == '/') {
+                            date = date.replace('/', '-');
+                        }
+                        dbHandler.updateReceipt(id, name, cost, date);
+                        Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
                         endActivity();
                     }
                 }
@@ -178,7 +182,7 @@ public class ReceiptScreen extends AppCompatActivity {
         Receipt receipt = dbHandler.findProduct(id);
 
         //set values sta boxes
-        costBox.setText(String.valueOf(receipt.get_cost()).replace('.',','));
+        costBox.setText(String.valueOf(receipt.get_cost()));
         nameBox.setText(receipt.get_companyName());
         dateBox.setText(receipt.get_date());
     }

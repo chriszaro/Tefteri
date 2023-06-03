@@ -28,4 +28,6 @@
     <string name="Delete_card">Διαγραφή</string>
     <string name="emptyValues">ΚΕΝΑ ΠΕΔΙΑ</string>
     <string name="Go_to_about_page">About</string>
+    <string name="wrong_date_format">Λάθος μορφή ημερομηνίας!</string>
+    <string name="updated">Ενημερώθηκε!</string>
 </resources>
