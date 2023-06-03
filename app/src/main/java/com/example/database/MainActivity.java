@@ -29,6 +29,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, CameraScanCallback {
     public RecyclerView getRecyclerView() {
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     RecyclerAdapter adapter;
     Menu activityBarMenu;
     MyDBHandler dbHandler;
+    // Add a flag indicating whether we are in multi-scan mode
+    private boolean isMultiScanMode = false;
 
     private Context mainContext;
 
@@ -157,9 +161,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         popup.show();
     }
 
-    // Add a flag indicating whether we are in multi-scan mode
-    private boolean isMultiScanMode = false;
-
     /**
      * Method for function of popup menu from float button (add)
      *
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
 
                     if (isMultiScanMode) {
-                        new AlertDialog.Builder(this)
+                        AlertDialog dialog = new AlertDialog.Builder(this)
                                 .setTitle("Continue scanning?")
                                 .setMessage("Do you want to continue scanning?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -244,6 +245,20 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                                     }
                                 })
                                 .show();
+
+                        // After 5 seconds, treat non-responses as "Yes"
+                        final Timer t = new Timer();
+                        t.schedule(new TimerTask() {
+                            public void run() {
+                                dialog.dismiss(); // close dialog
+                                t.cancel(); // cancel also the Timer
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        scanCode(false); // Continue scanning
+                                    }
+                                });
+                            }
+                        }, 1); // 1 millisecond
                     }
                 }
             });
