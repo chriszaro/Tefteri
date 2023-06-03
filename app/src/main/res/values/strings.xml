@@ -28,4 +28,5 @@
     <string name="Edit_card">Επεξεργασία</string>
     <string name="Delete_card">Διαγραφή</string>
     <string name="emptyValues">ΚΕΝΑ ΠΕΔΙΑ</string>
+    <string name="Go_to_about_page">About</string>
 </resources>
