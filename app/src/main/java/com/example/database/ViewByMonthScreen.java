@@ -29,19 +29,12 @@ import java.util.List;
 public class ViewByMonthScreen extends AppCompatActivity {
 
     private static final String[] MONTHS = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
-    private static final int MIN_YEAR = 1900;
-    private static final int MAX_YEAR = 2099;
-
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-
     RecyclerAdapter adapter;
-
     Menu activityBarMenu;
     MyDBHandler dbHandler;
-
     private Context mainContext;
-
     String selectedYear;
     String selectedMonth;
 
@@ -65,6 +58,10 @@ public class ViewByMonthScreen extends AppCompatActivity {
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         monthSpinner.setAdapter(monthAdapter);
 
+        int MIN_YEAR = 2019;
+        Calendar actual_calendar = Calendar.getInstance();
+        int MAX_YEAR = actual_calendar.get(Calendar.YEAR);
+
         // Year spinner
         Spinner yearSpinner = findViewById(R.id.spinner_year);
         List<String> years = new ArrayList<>();
@@ -76,7 +73,6 @@ public class ViewByMonthScreen extends AppCompatActivity {
         yearSpinner.setAdapter(yearAdapter);
 
         // Get current date
-        Calendar actual_calendar = Calendar.getInstance();
         selectedYear = String.valueOf(actual_calendar.get(Calendar.YEAR));
         selectedMonth = String.valueOf(actual_calendar.get(Calendar.MONTH));
 
@@ -84,13 +80,11 @@ public class ViewByMonthScreen extends AppCompatActivity {
         yearSpinner.setSelection(years.indexOf(selectedYear));
         monthSpinner.setSelection(Integer.parseInt(selectedMonth));
 
-
         // You can use an OnItemSelectedListener to react to changes:
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedMonth = String.valueOf(Integer.parseInt((String) parent.getItemAtPosition(position)));
-                Log.d("month", selectedMonth);
                 refreshAdapter();
             }
 
@@ -103,7 +97,6 @@ public class ViewByMonthScreen extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedYear = (String) parent.getItemAtPosition(position);
-                Log.d("year", selectedYear);
                 refreshAdapter();
             }
 
@@ -155,7 +148,6 @@ public class ViewByMonthScreen extends AppCompatActivity {
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
                 ArrayList<String> ids = adapter.findIDsOfItemsForDeletion();
                 for (String id : ids){
-                    Log.d("gamotinmamasou", id);
                     dbHandler.deleteReceipt(id);
                 }
                 refreshAdapter();

@@ -25,13 +25,10 @@ public class ReceiptScreen extends AppCompatActivity {
     EditText dateBox;
 
     KeyListener defaultKeyListenerForNameBox;
-
     KeyListener defaultKeyListenerForCostBox;
-
     KeyListener defaultKeyListenerForDateBox;
 
     MyDBHandler dbHandler;
-
     Context context;
 
     @Override

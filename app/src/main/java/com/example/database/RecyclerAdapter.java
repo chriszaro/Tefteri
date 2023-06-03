@@ -54,11 +54,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         if(monthly){
             toAdd = dbHandler.fetchReceiptsBasedOnMonthAndYear(month, year);
-            Log.d("gamo2", "gamisou");
         }
         else {
             toAdd = dbHandler.fetchAllReceipts();
-            Log.d("gamo3", "gamisou");
         }
 
         if (toAdd != null) {
@@ -83,7 +81,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TextView itemName;
         String itemID;
         CheckBox checkBox;
-        private int tempCounter = 1;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -107,13 +104,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                             switch (item.getItemId()) {
                                 case R.id.edit_card:
                                     // Handle Edit from LongClick menu
-                                    //Toast.makeText(view.getContext(), "edit clicked", Toast.LENGTH_SHORT).show();
                                     startMyActivity(view.getContext(), true, itemID);
                                     return true;
                                 case R.id.delete_card:
                                     // Handle Delete from LongClick menu
-                                    //Toast.makeText(view.getContext(), "delete clicked " + tempCounter, Toast.LENGTH_SHORT).show();
-                                    tempCounter++;
                                     dbHandler.deleteReceipt(itemID);
                                     if(!monthly){
                                         MainActivity mainActivity = (MainActivity) activity;
@@ -129,7 +123,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                             }
                         }
                     });
-
                     // Show the popup menu
                     popup.show();
                     return true;
@@ -173,7 +166,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when a CheckBox is selected.
     public void enableTrash() {
-        if(!monthly){    // !monthly
+        if(!monthly){
             MainActivity temp = (MainActivity) activity;
             Menu menu = temp.getActivityBarMenu();
             MenuItem myMenuItem = menu.findItem(R.id.action_delete);
@@ -190,7 +183,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     //ViewHolder calls this method when all CheckBoxes are unselected.
     public void disableTrash() {
-        if(!monthly){    // !monthly
+        if(!monthly){
             MainActivity temp = (MainActivity) activity;
             Menu menu = temp.getActivityBarMenu();
             MenuItem myMenuItem = menu.findItem(R.id.action_delete);

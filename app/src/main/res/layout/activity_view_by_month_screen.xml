@@ -9,39 +9,43 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         >
 
         <TableRow
             android:id="@+id/spinners"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             >
 
             <Spinner
                 android:id="@+id/spinner_month"
-                android:layout_width="198dp"
-                android:layout_height="77dp" />
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:padding="12dp" />
 
             <Spinner
                 android:id="@+id/spinner_year"
-                android:layout_width="200dp"
-                android:layout_height="77dp" />
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:padding="12dp" />
 
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             >
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="60dp"
-                android:layout_span="2"
-                android:layout_column="0"/>
+                android:layout_weight="1"/>
         </TableRow>
 
     </TableLayout>
