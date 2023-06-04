@@ -24,20 +24,20 @@ import java.util.HashSet;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     //Variables storing data to display for this example
-    private ArrayList<String> prices;
-    private ArrayList<String> dates;
-    private ArrayList<String> names;
-    private ArrayList<String> id;
+    private final ArrayList<String> prices;
+    private final ArrayList<String> dates;
+    private final ArrayList<String> names;
+    private final ArrayList<String> id;
 
-    private MyDBHandler dbHandler;
+    private final MyDBHandler dbHandler;
 
-    private Activity activity;
+    private final Activity activity;
 
     boolean monthly;
 
     /**
      *
-     * @param activity
+     * @param activity the activity from which we are creating the adapter, either MainActivity or ViewByMonthScreen
      * @param monthly boolean
      */
     public RecyclerAdapter(AppCompatActivity activity, boolean monthly, String month, String year) {
