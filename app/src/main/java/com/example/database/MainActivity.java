@@ -33,10 +33,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, CameraScanCallback {
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
-    }
-
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerAdapter adapter;
@@ -69,9 +65,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
         }
 
-        //Set my Adapter for the RecyclerView
-        //refreshAdapter();
-
         // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {
         });
@@ -94,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     protected void onResume() {
         super.onResume();
         refreshAdapter();
+        invalidateOptionsMenu();
     }
 
     /**
@@ -123,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     dbHandler.deleteReceipt(id);
                 }
                 refreshAdapter();
+                adapter.disableTrash();
                 return false;
             }
         });
