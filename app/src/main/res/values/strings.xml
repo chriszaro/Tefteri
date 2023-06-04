@@ -30,4 +30,5 @@
     <string name="Go_to_about_page">About</string>
     <string name="wrong_date_format">Λάθος μορφή ημερομηνίας!</string>
     <string name="updated">Ενημερώθηκε!</string>
+    <string name="logo_image">logo image</string>
 </resources>
