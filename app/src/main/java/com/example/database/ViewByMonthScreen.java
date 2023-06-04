@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ViewByMonthScreen extends AppCompatActivity {
 
-    private static final String[] MONTHS = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
+    private static final String[] MONTHS = new String[] { "Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος" };
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerAdapter adapter;
@@ -84,7 +84,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedMonth = String.valueOf(Integer.parseInt((String) parent.getItemAtPosition(position)));
+                selectedMonth = String.valueOf(position + 1);
                 refreshAdapter();
             }
 
