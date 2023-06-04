@@ -151,6 +151,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
                     dbHandler.deleteReceipt(id);
                 }
                 refreshAdapter();
+                adapter.disableTrash();
                 return false;
             }
         });
