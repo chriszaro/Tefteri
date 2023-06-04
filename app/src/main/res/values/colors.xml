@@ -7,4 +7,5 @@
     <color name="colorOnBottomNavigationInactive">#666666</color>
     <color name="colorBackground">#01479F</color>
     <color name="navBar">#20AEE3</color>
+    <color name="textColor">#FFFFFF</color>
 </resources>
