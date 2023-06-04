@@ -111,7 +111,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return receipts;
     }
 
-    public ArrayList<Receipt> fetchAllReceipts(){
+    public ArrayList<Receipt> fetchAllReceipts() {
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
                 " ORDER BY " + COLUMN_DATE + " DESC " + ';';
         SQLiteDatabase db = this.getReadableDatabase();
@@ -147,7 +147,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
             date = Receipt.convertDateToDatabaseCompatible(date);
             pairs.put(COLUMN_DATE, date);
         }
-        if (pairs.size() == 0){
+        if (pairs.size() == 0) {
             return false;
         }
 //        String updateString =
@@ -180,20 +180,81 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
-
+    private String correctMonth(String month) {
         month = month.length() == 1 ? '0' + month : month; // if the month is a single digit, add 0
         // in front of it to make it compatible with an SQL query
-        String startDate = year + '-' + month + "-01";
+        return month;
+    }
+
+    private String correctStartDate(String month, String year) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(year);
+        builder.append('-');
+        builder.append(month);
+        builder.append("-01");
+        return builder.toString();
+    }
+
+    private String correctEndDate(String month, String year) {
         int m = Integer.parseInt(month);
-        String endDate;
+        StringBuilder builder = new StringBuilder();
+        builder.append(year);
+        builder.append('-');
+        builder.append(month);
         if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12)
-            endDate = year + '-' + month + "-31";
+            builder.append("-31");
         else
-            endDate = year + '-' + month + "-30";
+            builder.append("-30");
+
+        return builder.toString();
+    }
+
+    public float getTotalCostOfMonth(String month, String year) {
+
+        month = correctMonth(month); // make corrections to month string
+        String startDate = correctStartDate(month, year);
+        String endDate = correctEndDate(month, year);
+        String query = new StringBuilder().
+                append("SELECT SUM( ").
+                append(COLUMN_COST).
+                append(" )FROM ").
+                append(TABLE_RECEIPTS).
+                append(" WHERE ").
+                append(COLUMN_DATE).
+                append(" BETWEEN ").
+                append("'").
+                append(startDate).
+                append("'").
+                append(" AND ").
+                append("'").
+                append(endDate).
+                append("'").
+                append(" ORDER BY ").
+                append(COLUMN_DATE).
+                append(" DESC ").
+                append(';').
+                toString();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        float cost = -1f;
+        if (cursor.moveToFirst()) {
+            String costFloat = cursor.getString(0);
+            cost = Float.parseFloat(costFloat);
+        }
+        cursor.close();
+        db.close();
+        return cost;
+    }
+
+    public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
+
+        month = correctMonth(month); // make corrections to month string
+        String startDate = correctStartDate(month, year);
+        String endDate = correctEndDate(month, year);
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
                 " WHERE " + COLUMN_DATE + " BETWEEN " +
-                "'" + startDate + "'" + " AND " + "'"+ endDate + "'" +
+                "'" + startDate + "'" + " AND " + "'" + endDate + "'" +
                 " ORDER BY " + COLUMN_DATE + " DESC " + ';';
 
         SQLiteDatabase db = this.getReadableDatabase();
