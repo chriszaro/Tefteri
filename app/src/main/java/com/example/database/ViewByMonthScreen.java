@@ -54,7 +54,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
 
         // Month spinner
         Spinner monthSpinner = findViewById(R.id.spinner_month);
-        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, MONTHS);
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, MONTHS);
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         monthSpinner.setAdapter(monthAdapter);
 
@@ -68,7 +68,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
         for (int i = MIN_YEAR; i <= MAX_YEAR; i++) {
             years.add(Integer.toString(i));
         }
-        ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, years);
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
 

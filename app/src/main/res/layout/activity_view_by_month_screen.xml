@@ -55,7 +55,8 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/white"
                 android:paddingBottom="12dp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                />
 
             <Spinner
                 android:id="@+id/spinner_year"
