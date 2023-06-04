@@ -92,7 +92,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
                 selectedMonth = String.valueOf(position + 1);
                 float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
                 // Finally, set the value in sumField
-                sumField.setText(String.valueOf(cost));
+                sumField.setText(String.valueOf(cost) + '€');
                 refreshAdapter();
             }
 
@@ -107,7 +107,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
                 selectedYear = (String) parent.getItemAtPosition(position);
                 float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
                 // Finally, set the value in sumField
-                sumField.setText(String.valueOf(cost));
+                sumField.setText(String.valueOf(cost) + '€');
                 refreshAdapter();
             }
 
@@ -142,7 +142,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
         super.onResume();
         float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
         // Finally, set the value in sumField
-        sumField.setText(String.valueOf(cost));
+        sumField.setText(String.valueOf(cost) + '€');
         refreshAdapter();
         invalidateOptionsMenu();
     }
@@ -167,7 +167,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
                 }
                 float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
                 // Finally, set the value in sumField
-                sumField.setText(String.valueOf(cost));
+                sumField.setText(String.valueOf(cost) + '€');
                 refreshAdapter();
                 adapter.disableTrash();
                 return false;
@@ -192,7 +192,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
         // Finally, set the value in sumField
-        sumField.setText(String.valueOf(cost));
+        sumField.setText(String.valueOf(cost) + '€');
     }
 
     public Menu getActivityBarMenu() {

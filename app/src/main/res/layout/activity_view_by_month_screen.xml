@@ -116,7 +116,8 @@
         android:layout_height="wrap_content"
         android:text="Σύνολο:"
         android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/sumField"
@@ -125,7 +126,8 @@
         android:text="test"
         android:layout_gravity="end"
         android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold"/>
     </FrameLayout>
 
 
