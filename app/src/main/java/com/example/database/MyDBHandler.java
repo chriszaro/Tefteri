@@ -237,10 +237,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        float cost = -1f;
+        float cost = 0f;
         if (cursor.moveToFirst()) {
             String costFloat = cursor.getString(0);
-            cost = Float.parseFloat(costFloat);
+            if (costFloat != null)
+                cost = Float.parseFloat(costFloat);
         }
         cursor.close();
         db.close();

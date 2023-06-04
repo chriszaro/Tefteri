@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +39,8 @@ public class ViewByMonthScreen extends AppCompatActivity {
     String selectedYear;
     String selectedMonth;
 
+    TextView sumField;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         // as per the android documentation, the database should remain open for as long as possible
         dbHandler = new MyDBHandler(mainContext, null, null, 1);
+        sumField = findViewById(R.id.sumField);
 
         // Month spinner
         Spinner monthSpinner = findViewById(R.id.spinner_month);
@@ -84,7 +88,11 @@ public class ViewByMonthScreen extends AppCompatActivity {
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                 selectedMonth = String.valueOf(position + 1);
+                float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
+                // Finally, set the value in sumField
+                sumField.setText(String.valueOf(cost));
                 refreshAdapter();
             }
 
@@ -97,6 +105,9 @@ public class ViewByMonthScreen extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedYear = (String) parent.getItemAtPosition(position);
+                float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
+                // Finally, set the value in sumField
+                sumField.setText(String.valueOf(cost));
                 refreshAdapter();
             }
 
@@ -129,6 +140,9 @@ public class ViewByMonthScreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
+        // Finally, set the value in sumField
+        sumField.setText(String.valueOf(cost));
         refreshAdapter();
         invalidateOptionsMenu();
     }
@@ -151,6 +165,9 @@ public class ViewByMonthScreen extends AppCompatActivity {
                 for (String id : ids){
                     dbHandler.deleteReceipt(id);
                 }
+                float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
+                // Finally, set the value in sumField
+                sumField.setText(String.valueOf(cost));
                 refreshAdapter();
                 adapter.disableTrash();
                 return false;
@@ -173,6 +190,9 @@ public class ViewByMonthScreen extends AppCompatActivity {
     public void refreshAdapter() {
         adapter = new RecyclerAdapter( this, true, selectedMonth, selectedYear);
         recyclerView.setAdapter(adapter);
+        float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
+        // Finally, set the value in sumField
+        sumField.setText(String.valueOf(cost));
     }
 
     public Menu getActivityBarMenu() {
