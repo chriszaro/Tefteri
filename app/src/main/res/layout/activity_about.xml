@@ -29,7 +29,7 @@
             <TextView
                 android:id="@+id/description"
                 android:layout_width="365dp"
-                android:layout_height="189dp"
+                android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="center"
                 android:text="@string/tefteri_qr"
