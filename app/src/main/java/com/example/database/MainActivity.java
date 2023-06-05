@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         // Massively add data to database for testing purposes
         boolean loadManyReceipts = false;
-        String manyReceiptsSQLInsertsFileName= "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
+        String manyReceiptsSQLInsertsFileName = "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
         if (loadManyReceipts) {
             dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);
             Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
                 ArrayList<String> ids = adapter.findIDsOfItemsForDeletion();
-                for (String id : ids){
+                for (String id : ids) {
                     dbHandler.deleteReceipt(id);
                 }
                 refreshAdapter();
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         });
 
         MenuItem questionMark = menu.findItem(R.id.action_about);
-        questionMark.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
+        questionMark.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem menuItem) {
                 Intent intent = new Intent(mainContext, AboutActivity.class);
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 String input = result.getContents();
                 if (input != null) {
                     String temp = downloadReceipt(input);
-                    if (temp != null){
+                    if (temp != null) {
                         lastReceiptID = temp;
                     }
 
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         String input = result.getContents();
                         if (input != null) {
                             String temp = downloadReceipt(input);
-                            if (temp != null){
+                            if (temp != null) {
                                 lastReceiptID = temp;
                                 CameraScanCallback callback = (CameraScanCallback) mainContext;
                                 callback.onScanComplete();
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             input = "https://www1.aade.gr/tameiakes" + input.substring(29);
         } else if (input.contains("https://www1.gsis.gr")) {
             input = "https://www1.aade.gr/tameiakes" + input.substring(30);
-        } else if (input.contains("https://www1.aade.gr/tameiakes/myweb/q1.ph?")){
+        } else if (input.contains("https://www1.aade.gr/tameiakes/myweb/q1.ph?")) {
             input = "https://www1.aade.gr/tameiakes/myweb/q1.php" + input.substring(42);
         }
 
@@ -404,6 +404,40 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         "Εκδότης Επωνυμία επιχείρησης",
                         "Οδός",
                         "Εκδότης Επωνυμία επιχείρησης".length() + 1,
+                        -1
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (input.contains("https://einvoice-portal.s1ecos.gr/")) {
+            //einvoice receipt type 2
+            try {
+                Document doc = Jsoup.connect(input).get();
+                String info = doc.getElementsByTag("body").text();
+
+                receiptDate = ReceiptScreen.findWord(
+                        info,
+                        "ΗΜΕΡΟΜΗΝΙΑ",
+                        "ΗΜΕΡΟΜΗΝΙΑ",
+                        "ΗΜΕΡΟΜΗΝΙΑ".length() + 1,
+                        "ΗΜΕΡΟΜΗΝΙΑ".length() + 11
+                );
+                receiptDate = receiptDate.replace("/", "-");
+
+                receiptCost = ReceiptScreen.findWord(
+                        info,
+                        "ΣΥΝΟΛΙΚΗ ΑΞΙΑ",
+                        "Μ.Αρ.Κ.",
+                        "ΣΥΝΟΛΙΚΗ ΑΞΙΑ".length() + 1,
+                        -1
+                );
+                receiptCost = receiptCost.trim().replace(",", ".");
+
+                companyName = ReceiptScreen.findWord(
+                        info,
+                        "Επωνυμία επιχείρησης",
+                        "ΤΟΠΟΣ ΑΠΟΣΤΟΛΗΣ",
+                        "Επωνυμία επιχείρησης".length() + 1,
                         -1
                 );
             } catch (Exception e) {
