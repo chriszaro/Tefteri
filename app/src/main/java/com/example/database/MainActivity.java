@@ -3,6 +3,8 @@ package com.example.database;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -164,20 +166,35 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
      */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_option:
-                scanCode(false);
-                return true;
-            case R.id.multiple_add_option:
-                isMultiScanMode = true;
-                scanCode(false);
-                return true;
-            case R.id.add_and_edit_option:
-                scanCode(true);
-                return true;
-            default:
-                return false;
+        if (isNetworkAvailable()) {
+            switch (item.getItemId()) {
+                case R.id.add_option:
+                    scanCode(false);
+                    return true;
+                case R.id.multiple_add_option:
+                    isMultiScanMode = true;
+                    scanCode(false);
+                    return true;
+                case R.id.add_and_edit_option:
+                    scanCode(true);
+                    return true;
+                default:
+                    return false;
+            }
+        } else {
+            // Network is not available
+            Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
+            return false;
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = null;
+        if (connectivityManager != null) {
+            activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        }
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     String lastReceiptID;
