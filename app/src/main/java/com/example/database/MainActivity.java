@@ -40,10 +40,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     RecyclerAdapter adapter;
     Menu activityBarMenu;
     MyDBHandler dbHandler;
-    // Add a flag indicating whether we are in multi-scan mode
-    private boolean isMultiScanMode = false;
 
-    private Context mainContext;
+    CameraScanner camera;
+
+    ReceiptDownloader downloader;
+
+    Context mainContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         recyclerView.setLayoutManager(layoutManager);
         // as per the android documentation, the database should remain open for as long as possible
         dbHandler = new MyDBHandler(mainContext, null, null, 1);
+
+        camera = new CameraScanner(this);
+
+        downloader = new ReceiptDownloader(dbHandler, this);
 
         // Massively add data to database for testing purposes
         boolean loadManyReceipts = false;
@@ -169,14 +175,15 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         if (isNetworkAvailable()) {
             switch (item.getItemId()) {
                 case R.id.add_option:
-                    scanCode(false);
+                    camera.scanCode(false);
+                    //scanCode(false);
                     return true;
                 case R.id.multiple_add_option:
-                    isMultiScanMode = true;
-                    scanCode(false);
+                    camera.setMultiScanMode(true);
+                    camera.scanCode(false);
                     return true;
                 case R.id.add_and_edit_option:
-                    scanCode(true);
+                    camera.scanCode(true);
                     return true;
                 default:
                     return false;
@@ -215,45 +222,30 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivity(i);
     }
 
-    private void scanCode(Boolean edit) {
-        ScanOptions options = new ScanOptions();
-        options.setPrompt("Volume up to flash on");
-        options.setBeepEnabled(true);
-        options.setOrientationLocked(true);
-        options.setCaptureActivity(QRScannerActivity.class);
-        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-        options.setBeepEnabled(false);
-        if (edit) {
-            barLauncher2.launch(options);
-        } else {
-            barLauncher.launch(options);
-        }
-    }
-
     // For normal and multiple scan
     ActivityResultLauncher<ScanOptions> barLauncher =
             registerForActivityResult(new ScanContract(), result -> {
                 String input = result.getContents();
                 if (input != null) {
-                    String temp = downloadReceipt(input);
+                    String temp = downloader.downloadReceipt(input);
                     if (temp != null) {
                         lastReceiptID = temp;
                     }
 
-                    if (isMultiScanMode) {
+                    if (camera.getMultiScanMode()) {
                         AlertDialog dialog = new AlertDialog.Builder(this)
-                                .setTitle("Continue scanning?")
-                                .setMessage("Do you want to continue scanning?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                .setTitle("Συνέχεια;")
+                                .setMessage("Θέλετε να ξανασκανάρετε;")
+                                .setPositiveButton("Ναι", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // Continue scanning
-                                        scanCode(false);
+                                        camera.scanCode(false);
                                     }
                                 })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("Όχι", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // Stop scanning
-                                        isMultiScanMode = false;
+                                        camera.setMultiScanMode(false);
                                     }
                                 })
                                 .show();
@@ -266,11 +258,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                                 t.cancel(); // cancel also the Timer
                                 runOnUiThread(new Runnable() {
                                     public void run() {
-                                        scanCode(false); // Continue scanning
+                                        camera.scanCode(false); // Continue scanning
                                     }
                                 });
                             }
-                        }, 1); // 1 millisecond
+                        }, 5000); // 1 millisecond
                     }
                 }
             });
@@ -282,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     new ScanContract(), result -> {
                         String input = result.getContents();
                         if (input != null) {
-                            String temp = downloadReceipt(input);
+                            String temp = downloader.downloadReceipt(input);
                             if (temp != null) {
                                 lastReceiptID = temp;
                                 CameraScanCallback callback = (CameraScanCallback) mainContext;
@@ -291,182 +283,5 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         }
                     }
             );
-
-    public String downloadReceipt(String input) {
-        String companyName = "";
-        String receiptCost = "";
-        String receiptDate = "";
-
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
-        if (input.contains("http://tam.gsis.gr")) {
-            input = "https://www1.aade.gr/tameiakes" + input.substring(25);
-        } else if (input.contains("http://www1.gsis.gr")) {
-            input = "https://www1.aade.gr/tameiakes" + input.substring(29);
-        } else if (input.contains("https://www1.gsis.gr")) {
-            input = "https://www1.aade.gr/tameiakes" + input.substring(30);
-        } else if (input.contains("https://www1.aade.gr/tameiakes/myweb/q1.ph?")) {
-            input = "https://www1.aade.gr/tameiakes/myweb/q1.php" + input.substring(42);
-        }
-
-        if (input.contains("https://www1.aade.gr")) {
-            try {
-                Document doc = Jsoup.connect(input).get();
-                String info = doc.getElementsByClass("info").text();
-                String receipt = doc.getElementsByClass("receipt").text();
-
-                //Gov Verified Receipts
-                if (!doc.getElementsByClass("success").text().isEmpty()) {
-                    receiptDate = ReceiptScreen.findWord(
-                            info,
-                            "Ημερομηνία, ώρα",
-                            "Ημερομηνία, ώρα",
-                            "Ημερομηνία, ώρα".length() + 1,
-                            "Ημερομηνία, ώρα".length() + 11
-                    );
-                    receiptDate = Receipt.convertDateToDDMMYYY(receiptDate);
-
-                    receiptCost = ReceiptScreen.findWord(
-                            receipt,
-                            "Συνολικού ποσού",
-                            "ευρώ",
-                            16,
-                            -1
-                    );
-
-                    companyName = ReceiptScreen.findWord(
-                            info,
-                            "Επωνυμία",
-                            "Διεύθυνση",
-                            9,
-                            -1
-                    );
-
-                } else if (!doc.getElementsByClass("box-error").text().isEmpty()) {
-                    //Receipt from closed company
-                    receiptDate = "Unknown";
-
-                    receiptCost = ReceiptScreen.findWord(
-                            receipt,
-                            "Συνολικού ποσού",
-                            "ευρώ",
-                            16,
-                            -1
-                    );
-
-                    companyName = "Unknown";
-
-                } else if (!doc.getElementsByClass("box-warning").text().isEmpty()) {
-                    //Not Verified from gov receipt
-                    receiptDate = ReceiptScreen.findWord(
-                            info,
-                            "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
-                            "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
-                            39,
-                            49
-                    );
-
-                    receiptCost = ReceiptScreen.findWord(
-                            receipt,
-                            "Συνολικού ποσού",
-                            "ευρώ",
-                            16,
-                            -1
-                    );
-
-                    companyName = ReceiptScreen.findWord(
-                            info,
-                            "Επωνυμία",
-                            "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
-                            9,
-                            -1
-                    );
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (input.contains("https://einvoice.s1ecos.gr")) {
-            //einvoice receipt type
-            try {
-                Document doc = Jsoup.connect(input).get();
-                String info = doc.getElementsByTag("body").text();
-
-                receiptDate = ReceiptScreen.findWord(
-                        info,
-                        "Ημερομηνία Έκδοσης",
-                        "Ημερομηνία Έκδοσης",
-                        "Ημερομηνία Έκδοσης".length() + 1,
-                        "Ημερομηνία Έκδοσης".length() + 11
-                );
-                receiptDate = receiptDate.replace("/", "-");
-
-                receiptCost = ReceiptScreen.findWord(
-                        info,
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length() + 1,
-                        "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)".length() + 1 + 12
-                );
-                receiptCost = receiptCost.trim().replace(",", ".");
-                String[] xd = receiptCost.split("\\.");
-                receiptCost = xd[0] + "." + xd[1].charAt(0) + xd[1].charAt(1);
-
-                companyName = ReceiptScreen.findWord(
-                        info,
-                        "Εκδότης Επωνυμία επιχείρησης",
-                        "Οδός",
-                        "Εκδότης Επωνυμία επιχείρησης".length() + 1,
-                        -1
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (input.contains("https://einvoice-portal.s1ecos.gr/")) {
-            //einvoice receipt type 2
-            try {
-                Document doc = Jsoup.connect(input).get();
-                String info = doc.getElementsByTag("body").text();
-
-                receiptDate = ReceiptScreen.findWord(
-                        info,
-                        "ΗΜΕΡΟΜΗΝΙΑ",
-                        "ΗΜΕΡΟΜΗΝΙΑ",
-                        "ΗΜΕΡΟΜΗΝΙΑ".length() + 1,
-                        "ΗΜΕΡΟΜΗΝΙΑ".length() + 11
-                );
-                receiptDate = receiptDate.replace("/", "-");
-
-                receiptCost = ReceiptScreen.findWord(
-                        info,
-                        "ΣΥΝΟΛΙΚΗ ΑΞΙΑ",
-                        "Μ.Αρ.Κ.",
-                        "ΣΥΝΟΛΙΚΗ ΑΞΙΑ".length() + 1,
-                        -1
-                );
-                receiptCost = receiptCost.trim().replace(",", ".");
-
-                companyName = ReceiptScreen.findWord(
-                        info,
-                        "Επωνυμία επιχείρησης",
-                        "ΤΟΠΟΣ ΑΠΟΣΤΟΛΗΣ",
-                        "Επωνυμία επιχείρησης".length() + 1,
-                        -1
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(this, "Δεν υποστηρίζεται αυτός ο τύπος απόδειξης", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-        Receipt newReceipt = new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate);
-        dbHandler.addProduct(newReceipt);
-        return String.valueOf(newReceipt.get_ID());
-    }
 }
 
