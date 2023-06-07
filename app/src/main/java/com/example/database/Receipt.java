@@ -11,6 +11,12 @@ public class Receipt {
     public Receipt() {
     }
 
+    /**
+     * Costructor
+     * @param companyName string with the name of the company
+     * @param cost price of the receipt
+     * @param date String formatted date
+     */
     public Receipt(String companyName, float cost, String date) {
         this.companyName = companyName;
         this.cost = cost;
@@ -25,6 +31,8 @@ public class Receipt {
         hash = 31 * hash + date.hashCode();
         return hash;
     }
+
+    // setters and getters
 
     public int get_ID() {
         return id;
