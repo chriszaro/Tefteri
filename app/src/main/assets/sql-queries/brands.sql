@@ -1,20 +1,20 @@
 --
--- File generated with SQLiteStudio v3.4.4 on ?et ???? 7 11:31:08 2023
+-- File generated with SQLiteStudio v3.4.4 on Τετ Ιουν 7 12:16:49 2023
 --
--- Text encoding used: System
+-- Text encoding used: UTF-8
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- Table: companies
 CREATE TABLE IF NOT EXISTS companies (company_name TEXT PRIMARY KEY NOT NULL, discrete_title TEXT);
-INSERT INTO companies (company_name, discrete_title) VALUES ('??F? ???? ??S????????S ???????', '?? ?as???p?????');
-INSERT INTO companies (company_name, discrete_title) VALUES ('S?????? ??O????S ???????? ?????S??S ??????????', 'skroutz');
-INSERT INTO companies (company_name, discrete_title) VALUES ('????? ??????S ??? S?? ??', 'Old School Barber Shop');
-INSERT INTO companies (company_name, discrete_title) VALUES ('????????S ??S????S ?? S????? ?', '�as??t??');
-INSERT INTO companies (company_name, discrete_title) VALUES ('S????? ?????? ?G????? ??', 'Discount Markt');
-INSERT INTO companies (company_name, discrete_title) VALUES ('?S???????S ?S???', 'St? ??e ??se');
-INSERT INTO companies (company_name, discrete_title) VALUES ('??G?????? S??G???? ??', '?a?e??e??-?a?t??a Sta???d??');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΑΛΦΑ ΒΗΤΑ ΒΑΣΙΛΟΠΟΥΛΟΣ ΜΟΝΟΠΡΟ', 'ΑΒ Βασιλόπουλος');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΚΡΟΥΤΖ ΑΝΩΝΥΜΟΣ ΕΤΑΙΡΕΙΑ ΥΠΗΡΕΣΙΕΣ ΔΙΑΔΙΚΤΥΟΥ', 'skroutz');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΥΡΤΟ ΜΑΡΙΟΥΣ ΚΑΙ ΣΙΑ ΕΕ', 'Old School Barber Shop');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΔΙΑΜΑΝΤΗΣ ΜΑΣΟΥΤΗΣ ΑΕ ΣΟΥΠΕΡ Μ', 'μασούτης');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΟΥΠΕΡ ΜΑΡΚΕΤ ΕΓΝΑΤΙΑ ΑΕ', 'Discount Markt');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΤΣΑΚΙΡΙΔΗΣ ΙΣΑΑΚ', 'Στο Άψε Ψήσε');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΑΓΕΙΡΕΙΑ ΣΤΑΓΚΙΔΗ ΕΕ', 'Μαγειρείο-Καντίνα Σταγκίδης');
 
 -- Index: sqlite_autoindex_companies_1
 CREATE UNIQUE INDEX IF NOT EXISTS sqlite_autoindex_companies_1 ON companies (company_name COLLATE BINARY);
