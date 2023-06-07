@@ -268,22 +268,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                                     }
                                 })
                                 .show();
-
-                        // Set a timer to auto-respond as "Yes" if the user doesn't respond within 5 seconds.
-                        t.schedule(new TimerTask() {
-                            public void run() {
-                                // Close the dialog.
-                                dialog.dismiss();
-                                // Stop the Timer.
-                                t.cancel();
-                                // On UI thread, continue scanning as default response.
-                                runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        camera.scanCode(false);
-                                    }
-                                });
-                            }
-                        }, 5000); // 5 seconds delay for auto-response.
                     }
                 }
             });
