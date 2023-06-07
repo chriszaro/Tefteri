@@ -4,26 +4,44 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.journeyapps.barcodescanner.ScanOptions;
 
+/**
+ * Class for the camera settings handling
+ */
 public class CameraScanner extends AppCompatActivity{
-//    private String link;
-    private boolean isMultiScanMode;
+    private boolean isMultiScanMode;    // flag for multiple scan mode
 
-    MainActivity mainActivity;
+    MainActivity mainActivity;  // mainactivity object to call barlaunchers
 
+    /**
+     * Constructor
+     * @param activity the activity that calls the scanner (in this app is always the MainActivity)
+     */
     CameraScanner(MainActivity activity){
 //        link = "";
         isMultiScanMode = false;
         mainActivity = activity;
     }
 
+    /**
+     * setter for isMultiScanMode
+     * @param multiScanMode true/false boolean
+     */
     public void setMultiScanMode(boolean multiScanMode) {
         isMultiScanMode = multiScanMode;
     }
 
+    /**
+     * getter for isMultiScanMode
+     * @return the isMultiScanMode boolean
+     */
     Boolean getMultiScanMode(){
         return isMultiScanMode;
     }
 
+    /**
+     * A method to set the options of the scanner before calling the bar-launcher.
+     * @param edit
+     */
     void scanCode(Boolean edit){
         ScanOptions options = new ScanOptions();
         options.setPrompt("Volume up to flash on");

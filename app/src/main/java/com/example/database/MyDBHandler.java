@@ -180,6 +180,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Adds an additional 0 digit in front of 1 digit numbers
+     * @param month String number of the month
+     * @return the corrected string number of the month
+     */
     private String correctMonth(String month) {
         month = month.length() == 1 ? '0' + month : month; // if the month is a single digit, add 0
         // in front of it to make it compatible with an SQL query
@@ -209,6 +214,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return builder.toString();
     }
 
+    /**
+     * Method to get the total cost of a specific month and year
+     * @param month String number of the month
+     * @param year String of the year
+     * @return float number of the cost
+     */
     public float getTotalCostOfMonth(String month, String year) {
 
         month = correctMonth(month); // make corrections to month string
@@ -248,6 +259,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return cost;
     }
 
+    /**
+     * Method to get the Receipts of a specific month and year
+     * @param month String number of the month
+     * @param year String of the year
+     * @return list of the receipts
+     */
     public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
 
         month = correctMonth(month); // make corrections to month string

@@ -195,6 +195,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
     }
 
+    /**
+     * Network check function
+     * @return true/false whether a Network if any network is available or not.
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = null;
@@ -206,9 +210,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     String lastReceiptID;
 
+    /**
+     * Code to be executed after the camera scan is done
+     */
     @Override
     public void onScanComplete() {
-        // Code to be executed after the camera scan is done
 
         //Create the Intent to start the AddProductScreen Activity
         Intent i = new Intent(this, ReceiptScreen.class);

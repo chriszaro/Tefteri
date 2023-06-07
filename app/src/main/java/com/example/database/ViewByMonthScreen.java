@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * Activity to see the receipts by month
+ */
 public class ViewByMonthScreen extends AppCompatActivity {
 
     private static final String[] MONTHS = new String[] { "Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος" };
@@ -84,14 +87,14 @@ public class ViewByMonthScreen extends AppCompatActivity {
         yearSpinner.setSelection(years.indexOf(selectedYear));
         monthSpinner.setSelection(Integer.parseInt(selectedMonth));
 
-        // You can use an OnItemSelectedListener to react to changes:
+        // Callback function for when new item is selected from the month spinner
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 selectedMonth = String.valueOf(position + 1);
                 float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
-                // Finally, set the value in sumField
+                // Setting the new value to the sumField and refreshing
                 sumField.setText(String.valueOf(cost) + '€');
                 refreshAdapter();
             }
@@ -101,6 +104,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
             }
         });
 
+        // Callback function for when new item is selected from the year spinner
         yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

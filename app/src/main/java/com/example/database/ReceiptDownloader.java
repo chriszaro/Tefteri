@@ -12,11 +12,21 @@ public class ReceiptDownloader {
 
     MainActivity mainActivity;
 
+    /**
+     * Constructor
+     * @param dbHandler the current database
+     * @param mainActivity the current mainActivity
+     */
     ReceiptDownloader(MyDBHandler dbHandler, MainActivity mainActivity){
         this.dbHandler = dbHandler;
         this.mainActivity = mainActivity;
     }
 
+    /**
+     * Scrapes the information and creates the object of the receipt
+     * @param input String of the link of the QR code
+     * @return a string with the ID of the receipt
+     */
     public String downloadReceipt(String input) {
         String companyName = "";
         String receiptCost = "";
@@ -28,6 +38,8 @@ public class ReceiptDownloader {
                     .permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+
+        // Scrape Process
 
         if (input.contains("http://tam.gsis.gr")) {
             input = "https://www1.aade.gr/tameiakes" + input.substring(25);
@@ -189,9 +201,10 @@ public class ReceiptDownloader {
             Toast.makeText(mainActivity, "Δεν υποστηρίζεται αυτός ο τύπος απόδειξης", Toast.LENGTH_SHORT).show();
             return null;
         }
-        Receipt newReceipt = new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate);
-        dbHandler.addProduct(newReceipt);
-        return String.valueOf(newReceipt.get_ID());
+
+        Receipt newReceipt = new Receipt(companyName, Float.parseFloat(receiptCost), receiptDate); // create the object
+        dbHandler.addProduct(newReceipt);   // add it to the database
+        return String.valueOf(newReceipt.get_ID()); // return the id
     }
 
 }
