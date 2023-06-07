@@ -228,61 +228,84 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivity(i);
     }
 
-    // For normal and multiple scan
+    // ActivityResultLauncher for handling normal and multiple scans.
     ActivityResultLauncher<ScanOptions> barLauncher =
             registerForActivityResult(new ScanContract(), result -> {
+                // Get scan result.
                 String input = result.getContents();
+
+                // Check if result is not null.
                 if (input != null) {
+                    // Download the receipt using the scanned input.
                     String temp = downloader.downloadReceipt(input);
+
+                    // If the download was successful, save the last receipt ID.
                     if (temp != null) {
                         lastReceiptID = temp;
                     }
 
+                    // Check if the camera is in multi-scan mode.
                     if (camera.getMultiScanMode()) {
+                        // Initialize the Timer outside of the AlertDialog so it can be accessed in button callbacks.
+                        final Timer t = new Timer();
+
+                        // Create a dialog to ask the user if they want to continue scanning.
                         AlertDialog dialog = new AlertDialog.Builder(this)
-                                .setTitle("Συνέχεια;")
-                                .setMessage("Θέλετε να ξανασκανάρετε;")
+                                .setTitle("Συνέχεια;") // "Continue?" in Greek
+                                .setMessage("Θέλετε να ξανασκανάρετε;") // "Do you want to scan again?" in Greek
                                 .setPositiveButton("Ναι", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        // Continue scanning
+                                        // If user says "Yes", continue scanning.
                                         camera.scanCode(false);
                                     }
                                 })
                                 .setNegativeButton("Όχι", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        // Stop scanning
+                                        // If user says "No", stop scanning.
                                         camera.setMultiScanMode(false);
+                                        // Cancel the Timer when "No" is clicked to prevent scanner from reopening.
+                                        t.cancel();
                                     }
                                 })
                                 .show();
 
-                        // After 5 seconds, treat non-responses as "Yes"
-                        final Timer t = new Timer();
+                        // Set a timer to auto-respond as "Yes" if the user doesn't respond within 5 seconds.
                         t.schedule(new TimerTask() {
                             public void run() {
-                                dialog.dismiss(); // close dialog
-                                t.cancel(); // cancel also the Timer
+                                // Close the dialog.
+                                dialog.dismiss();
+                                // Stop the Timer.
+                                t.cancel();
+                                // On UI thread, continue scanning as default response.
                                 runOnUiThread(new Runnable() {
                                     public void run() {
-                                        camera.scanCode(false); // Continue scanning
+                                        camera.scanCode(false);
                                     }
                                 });
                             }
-                        }, 5000); // 1 millisecond
+                        }, 5000); // 5 seconds delay for auto-response.
                     }
                 }
             });
 
 
-    //For scan and edit
+
+    // ActivityResultLauncher for handling scan and edit mode.
     ActivityResultLauncher<ScanOptions> barLauncher2 =
             registerForActivityResult(
                     new ScanContract(), result -> {
+                        // Get scan result.
                         String input = result.getContents();
+
+                        // Check if result is not null.
                         if (input != null) {
+                            // Download the receipt using the scanned input.
                             String temp = downloader.downloadReceipt(input);
                             if (temp != null) {
+                                // Save last receipt ID if download was successful.
                                 lastReceiptID = temp;
+
+                                // Invoke the onScanComplete callback indicating that the scan is complete.
                                 CameraScanCallback callback = (CameraScanCallback) mainContext;
                                 callback.onScanComplete();
                             }
