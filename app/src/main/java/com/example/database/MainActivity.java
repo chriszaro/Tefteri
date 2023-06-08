@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     protected void onResume() {
         super.onResume();
         refreshAdapter();
-        invalidateOptionsMenu();
     }
 
     /**
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public void refreshAdapter() {
         adapter = new RecyclerAdapter(this, false, "", "");
         recyclerView.setAdapter(adapter);
+        invalidateOptionsMenu();
     }
 
     /**

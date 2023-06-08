@@ -148,7 +148,6 @@ public class ViewByMonthScreen extends AppCompatActivity {
         // Finally, set the value in sumField
         sumField.setText(String.valueOf(cost) + '€');
         refreshAdapter();
-        invalidateOptionsMenu();
     }
 
     /**
@@ -194,6 +193,7 @@ public class ViewByMonthScreen extends AppCompatActivity {
     public void refreshAdapter() {
         adapter = new RecyclerAdapter( this, true, selectedMonth, selectedYear);
         recyclerView.setAdapter(adapter);
+        invalidateOptionsMenu();
         float cost = dbHandler.getTotalCostOfMonth(selectedMonth, selectedYear);
         // Finally, set the value in sumField
         sumField.setText(String.valueOf(cost) + '€');
