@@ -1,8 +1,8 @@
 Christodoulos Zarogiannis: Product Owner
 
-Lazaros Gogos: Back End Developer
+Lazaros Gogos: Backend Developer
 
-Stavros Nikolaidis: Front End Developer
+Stavros Nikolaidis: Frontend Developer
 
 
 Ιδέες για επέκταση
