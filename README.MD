@@ -1,6 +1,9 @@
-Χριστοδουλος: Product Owner
-Λάζαρος: Back End Developer
-Σταύρος: Front End Developer
+Christodoulos Zarogiannis: Product Owner
+
+Lazaros Gogos: Back End Developer
+
+Stavros Nikolaidis: Front End Developer
+
 
 Ιδέες για επέκταση
 ------------------
