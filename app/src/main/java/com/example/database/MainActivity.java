@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,12 +25,8 @@ import com.google.android.gms.ads.MobileAds;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, CameraScanCallback {
     RecyclerView recyclerView;
@@ -65,13 +59,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         downloader = new ReceiptDownloader(dbHandler, this);
 
-        // Massively add data to database for testing purposes
-        boolean loadManyReceipts = false;
-        String manyReceiptsSQLInsertsFileName = "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
-        if (loadManyReceipts) {
-            dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);
-            Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
-        }
+//        // Massively add data to database for testing purposes
+//        boolean loadManyReceipts = false;
+//        String manyReceiptsSQLInsertsFileName = "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
+//        if (loadManyReceipts) {
+//            dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);
+//            //Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
+//        }
 
         // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {
@@ -98,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     /**
-     * This method refresh the data of main activity
+     * This method resets the state of MainActivity after any action that changes the database
      */
     public void refreshAdapter() {
         adapter = new RecyclerAdapter(this, false, "", "");
@@ -107,15 +101,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     /**
-     * This method is for the trash button on activity bar
-     *
-     * @param menu
-     * @return
+     * This method is for the menu of the action bar, it includes multiple deletion and about page
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { // here goes options menu with question mark
         getMenuInflater().inflate(R.menu.main_menu, menu);
         activityBarMenu = menu;
+
+        //Multiple deletion button
         MenuItem trashCanItem = menu.findItem(R.id.action_delete);
         trashCanItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -130,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
+        //About page button
         MenuItem questionMark = menu.findItem(R.id.action_about);
         questionMark.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -145,17 +139,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     /**
      * Getter for ActivityBarMenu
-     *
-     * @return
      */
     public Menu getActivityBarMenu() {
         return activityBarMenu;
     }
 
     /**
-     * Method for popup menu from float button (add)
-     *
-     * @param v
+     * Method for creating popup menu for the add float button
      */
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -165,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     /**
-     * Method for function of popup menu from float button (add)
+     * Click handler for popup menu from add float button
      *
      * @param item the menu item that was clicked
      * @return
@@ -176,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             switch (item.getItemId()) {
                 case R.id.add_option:
                     camera.scanCode(false);
-                    //scanCode(false);
                     return true;
                 case R.id.multiple_add_option:
                     camera.setMultiScanMode(true);
@@ -197,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     /**
      * Network check function
+     *
      * @return true/false whether a Network if any network is available or not.
      */
     private boolean isNetworkAvailable() {
@@ -212,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     /**
      * Code to be executed after the camera scan is done
+     * Synchronizes the execution
      */
     @Override
     public void onScanComplete() {
@@ -271,7 +262,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
                 }
             });
-
 
 
     // ActivityResultLauncher for handling scan and edit mode.

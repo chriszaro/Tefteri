@@ -1,5 +1,6 @@
 package com.example.database;
 
+import android.os.Build;
 import android.os.StrictMode;
 import android.widget.Toast;
 
@@ -14,16 +15,18 @@ public class ReceiptDownloader {
 
     /**
      * Constructor
-     * @param dbHandler the current database
+     *
+     * @param dbHandler    the current database
      * @param mainActivity the current mainActivity
      */
-    ReceiptDownloader(MyDBHandler dbHandler, MainActivity mainActivity){
+    ReceiptDownloader(MyDBHandler dbHandler, MainActivity mainActivity) {
         this.dbHandler = dbHandler;
         this.mainActivity = mainActivity;
     }
 
     /**
      * Scrapes the information and creates the object of the receipt
+     *
      * @param input String of the link of the QR code
      * @return a string with the ID of the receipt
      */
@@ -32,7 +35,7 @@ public class ReceiptDownloader {
         String receiptCost = "";
         String receiptDate = "";
 
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        int SDK_INT = Build.VERSION.SDK_INT;
         if (SDK_INT > 8) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                     .permitAll().build();
@@ -59,7 +62,7 @@ public class ReceiptDownloader {
 
                 //Gov Verified Receipts
                 if (!doc.getElementsByClass("success").text().isEmpty()) {
-                    receiptDate = ReceiptScreen.findWord(
+                    receiptDate = findWord(
                             info,
                             "Ημερομηνία, ώρα",
                             "Ημερομηνία, ώρα",
@@ -68,7 +71,7 @@ public class ReceiptDownloader {
                     );
                     receiptDate = Receipt.convertDateToDDMMYYY(receiptDate);
 
-                    receiptCost = ReceiptScreen.findWord(
+                    receiptCost = findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -76,7 +79,7 @@ public class ReceiptDownloader {
                             -1
                     );
 
-                    companyName = ReceiptScreen.findWord(
+                    companyName = findWord(
                             info,
                             "Επωνυμία",
                             "Διεύθυνση",
@@ -88,7 +91,7 @@ public class ReceiptDownloader {
                     //Receipt from closed company
                     receiptDate = "Unknown";
 
-                    receiptCost = ReceiptScreen.findWord(
+                    receiptCost = findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -100,7 +103,7 @@ public class ReceiptDownloader {
 
                 } else if (!doc.getElementsByClass("box-warning").text().isEmpty()) {
                     //Not Verified from gov receipt
-                    receiptDate = ReceiptScreen.findWord(
+                    receiptDate = findWord(
                             info,
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -108,7 +111,7 @@ public class ReceiptDownloader {
                             49
                     );
 
-                    receiptCost = ReceiptScreen.findWord(
+                    receiptCost = findWord(
                             receipt,
                             "Συνολικού ποσού",
                             "ευρώ",
@@ -116,7 +119,7 @@ public class ReceiptDownloader {
                             -1
                     );
 
-                    companyName = ReceiptScreen.findWord(
+                    companyName = findWord(
                             info,
                             "Επωνυμία",
                             "Διεύθυνση όπου λειτουργεί ο ΦΗΜ σήμερα ",
@@ -133,7 +136,7 @@ public class ReceiptDownloader {
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByTag("body").text();
 
-                receiptDate = ReceiptScreen.findWord(
+                receiptDate = findWord(
                         info,
                         "Ημερομηνία Έκδοσης",
                         "Ημερομηνία Έκδοσης",
@@ -142,7 +145,7 @@ public class ReceiptDownloader {
                 );
                 receiptDate = receiptDate.replace("/", "-");
 
-                receiptCost = ReceiptScreen.findWord(
+                receiptCost = findWord(
                         info,
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
                         "Σύνολο για πληρωμή EUR (συμπεριλαμβανομένου ΦΠΑ)",
@@ -153,7 +156,7 @@ public class ReceiptDownloader {
                 String[] xd = receiptCost.split("\\.");
                 receiptCost = xd[0] + "." + xd[1].charAt(0) + xd[1].charAt(1);
 
-                companyName = ReceiptScreen.findWord(
+                companyName = findWord(
                         info,
                         "Εκδότης Επωνυμία επιχείρησης",
                         "Οδός",
@@ -169,7 +172,7 @@ public class ReceiptDownloader {
                 Document doc = Jsoup.connect(input).get();
                 String info = doc.getElementsByTag("body").text();
 
-                receiptDate = ReceiptScreen.findWord(
+                receiptDate = findWord(
                         info,
                         "ΗΜΕΡΟΜΗΝΙΑ",
                         "ΗΜΕΡΟΜΗΝΙΑ",
@@ -178,7 +181,7 @@ public class ReceiptDownloader {
                 );
                 receiptDate = receiptDate.replace("/", "-");
 
-                receiptCost = ReceiptScreen.findWord(
+                receiptCost = findWord(
                         info,
                         "ΣΥΝΟΛΙΚΗ ΑΞΙΑ",
                         "Μ.Αρ.Κ.",
@@ -187,7 +190,7 @@ public class ReceiptDownloader {
                 );
                 receiptCost = receiptCost.trim().replace(",", ".");
 
-                companyName = ReceiptScreen.findWord(
+                companyName = findWord(
                         info,
                         "Επωνυμία επιχείρησης",
                         "ΤΟΠΟΣ ΑΠΟΣΤΟΛΗΣ",
@@ -207,4 +210,18 @@ public class ReceiptDownloader {
         return String.valueOf(newReceipt.get_ID()); // return the id
     }
 
+    /**
+     * Data cleaning
+     * @param paragraph The text we want to clean
+     * @param startString start index
+     * @param endString end index
+     * @param start offset for start index
+     * @param end offset for end index
+     * @return the text we want
+     */
+    static String findWord(String paragraph, String startString, String endString, int start, int end) {
+        int startDate = paragraph.indexOf(startString) + start;
+        int endDate = paragraph.indexOf(endString) + end;
+        return paragraph.substring(startDate, endDate);
+    }
 }

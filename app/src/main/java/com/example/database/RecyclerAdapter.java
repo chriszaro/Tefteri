@@ -3,7 +3,6 @@ package com.example.database;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -36,9 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     boolean monthly;
 
     /**
-     *
      * @param activity the activity from which we are creating the adapter, either MainActivity or ViewByMonthScreen
-     * @param monthly boolean
      */
     public RecyclerAdapter(AppCompatActivity activity, boolean monthly, String month, String year) {
         prices = new ArrayList<>();
@@ -52,10 +48,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         dbHandler = new MyDBHandler(activity, null, null, 1);
         this.activity = activity;
 
-        if(monthly){
+        if (monthly) {
             toAdd = dbHandler.fetchReceiptsBasedOnMonthAndYear(month, year);
-        }
-        else {
+        } else {
             toAdd = dbHandler.fetchAllReceipts();
         }
 
@@ -74,7 +69,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     HashSet<String> selectedCardViews;
     RecyclerAdapter.ViewHolder holder2;
 
-    //Class that holds the items to be displayed (Views in card_layout)
+    /**
+     * Card class
+     */
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView itemPrice;
         TextView itemDate;
@@ -109,11 +106,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 case R.id.delete_card:
                                     // Handle Delete from LongClick menu
                                     dbHandler.deleteReceipt(itemID);
-                                    if(!monthly){
+                                    if (!monthly) {
                                         MainActivity mainActivity = (MainActivity) activity;
                                         mainActivity.refreshAdapter();
-                                    }
-                                    else{
+                                    } else {
                                         ViewByMonthScreen viewByMonthScreen = (ViewByMonthScreen) activity;
                                         viewByMonthScreen.refreshAdapter();
                                     }
@@ -156,7 +152,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-    //RecyclerView calls this method whenever it needs to create a new ViewHolder.
+    /**
+     * RecyclerView calls this method whenever it needs to create a new ViewHolder.
+     */
     @NonNull
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -164,15 +162,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return new ViewHolder(v);
     }
 
-    //ViewHolder calls this method when a CheckBox is selected.
+    /**
+     * ViewHolder calls this method when a CheckBox is selected.
+     */
     public void enableTrash() {
-        if(!monthly){
+        if (!monthly) {
             MainActivity temp = (MainActivity) activity;
             Menu menu = temp.getActivityBarMenu();
             MenuItem myMenuItem = menu.findItem(R.id.action_delete);
             myMenuItem.setVisible(true);
-        }
-        else {
+        } else {
             ViewByMonthScreen temp = (ViewByMonthScreen) activity;
             Menu menu = temp.getActivityBarMenu();
             MenuItem myMenuItem = menu.findItem(R.id.action_delete);
@@ -181,15 +180,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     }
 
-    //ViewHolder calls this method when all CheckBoxes are unselected.
+    /**
+     * ViewHolder calls this method when all CheckBoxes are unselected.
+     */
     public void disableTrash() {
-        if(!monthly){
+        if (!monthly) {
             MainActivity temp = (MainActivity) activity;
             Menu menu = temp.getActivityBarMenu();
             MenuItem myMenuItem = menu.findItem(R.id.action_delete);
             myMenuItem.setVisible(false);
-        }
-        else {
+        } else {
             ViewByMonthScreen temp = (ViewByMonthScreen) activity;
             Menu menu = temp.getActivityBarMenu();
             MenuItem myMenuItem = menu.findItem(R.id.action_delete);
@@ -198,6 +198,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     }
 
+    /**
+     * @return a list with the ids of the selected card views
+     */
     public ArrayList<String> findIDsOfItemsForDeletion() {
         HashSet<String> selectedCardViews = this.getSelectedCardViews();
         ArrayList<String> idsToDelete = new ArrayList<>();
@@ -205,7 +208,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return idsToDelete;
     }
 
-    //ViewHolder calls this method when a CardView is clicked.
+    /**
+     * ViewHolder calls this method when a CardView is clicked.
+     * This method creates the activity for Edit a receipt or just view it.
+     *
+     * @param context the Activity from where it is being called
+     * @param edit    true we want to edit a receipt
+     * @param id      which receipt we want to view/edit
+     */
     public void startMyActivity(Context context, Boolean edit, String id) {
         Intent intent = new Intent(context, ReceiptScreen.class);
         if (edit) {
@@ -218,12 +228,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         a.startActivity(intent);
     }
 
-    //RecyclerView calls this method to associate a ViewHolder with data.
+    /**
+     * RecyclerView calls this method to associate a ViewHolder with data.
+     *
+     * @param holder   The ViewHolder which should be updated to represent the contents of the
+     *                 item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
-        holder.itemPrice.setText(prices.get(position).replace('.', ',') + '€');
+        holder.itemPrice.setText(prices.get(position).replace('.', ',') + "€");
         holder.itemDate.setText(dates.get(position));
-
         holder.itemName.setText(names.get(position));
 
         int maxCharacters = 20; // Set the maximum number of characters you want to display
@@ -238,12 +253,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder2 = holder;
     }
 
-    //RecyclerView calls this method to get the size of the dataset.
+    /**
+     * RecyclerView calls this method to get the size of the dataset.
+     *
+     * @return how many receipts is the dataset
+     */
     @Override
     public int getItemCount() {
         return names.size();
     }
 
+    /**
+     * Getter for the set with the selected cards
+     *
+     * @return set with strings
+     */
     public HashSet<String> getSelectedCardViews() {
         return selectedCardViews;
     }

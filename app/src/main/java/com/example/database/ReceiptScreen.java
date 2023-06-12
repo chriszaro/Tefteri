@@ -43,18 +43,7 @@ public class ReceiptScreen extends AppCompatActivity {
         context = this;
         dbHandler = new MyDBHandler(findViewById(android.R.id.content).getRootView().getContext(), null, null, 1);
 
-        //Get references to view objects
-        nameBox = findViewById(R.id.companyName);
-        defaultKeyListenerForNameBox = nameBox.getKeyListener();
-        nameBox.setKeyListener(null);
-
-        costBox = findViewById(R.id.receiptCost);
-        defaultKeyListenerForCostBox = costBox.getKeyListener();
-        costBox.setKeyListener(null);
-
-        dateBox = findViewById(R.id.receiptDate);
-        defaultKeyListenerForDateBox = dateBox.getKeyListener();
-        dateBox.setKeyListener(null);
+        nullifyTextAreaListeners();
 
         //Code for ads
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -86,7 +75,7 @@ public class ReceiptScreen extends AppCompatActivity {
     /**
      * This method sets the receiptScreen to view mode.
      *
-     * @param id
+     * @param id of the receipt
      */
     public void viewReceipt(String id) {
         //Set name and function to left button
@@ -114,10 +103,11 @@ public class ReceiptScreen extends AppCompatActivity {
     /**
      * This method sets the receiptScreen to edit mode.
      *
-     * @param id
+     * @param id         of the receipt
+     * @param newReceipt true if new receipt, so delete if cancel
      */
     public void editReceipt(String id, Boolean newReceipt) {
-        resetFieldsListeners();
+        resetTextAreaListeners();
 
         //Set name and function to left button
         Button leftButton = findViewById(R.id.leftButton);
@@ -125,23 +115,7 @@ public class ReceiptScreen extends AppCompatActivity {
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String date = dateBox.getText().toString();
-                String cost = costBox.getText().toString();
-                String name = nameBox.getText().toString();
-                if (date.length() == 0 || cost.length() == 0 || name.length() == 0) {
-                    Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
-                } else {
-                    if (date.length() != 10) {
-                        Toast.makeText(context, R.string.wrong_date_format, Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (date.charAt(2) == '/' || date.charAt(5) == '/') {
-                            date = date.replace('/', '-');
-                        }
-                        dbHandler.updateReceipt(id, name, cost, date);
-                        Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
-                        endActivity();
-                    }
-                }
+                updateReceipt(id);
             }
         });
 
@@ -149,6 +123,10 @@ public class ReceiptScreen extends AppCompatActivity {
         Button rightButton = findViewById(R.id.rightButton);
         rightButton.setText(R.string.Cancel_button);
         rightButton.setOnClickListener(new View.OnClickListener() {
+            /*
+             * If this is called by Scan and Edit, then we delete
+             * else we just close the activity
+             */
             @Override
             public void onClick(View v) {
                 if (newReceipt) {
@@ -159,23 +137,45 @@ public class ReceiptScreen extends AppCompatActivity {
         });
     }
 
-    public void endActivity() {
-        this.finish();
+    /**
+     * Method for updating receipts
+     *
+     * @param id the receipt
+     */
+    public void updateReceipt(String id) {
+        String date = dateBox.getText().toString();
+        String cost = costBox.getText().toString();
+        String name = nameBox.getText().toString();
+        if (date.length() == 0 || cost.length() == 0 || name.length() == 0) {
+            Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
+        } else {
+            if (date.length() != 10) {
+                Toast.makeText(context, R.string.wrong_date_format, Toast.LENGTH_SHORT).show();
+            } else {
+                if (date.charAt(2) == '/' || date.charAt(5) == '/') {
+                    date = date.replace('/', '-');
+                }
+                dbHandler.updateReceipt(id, name, cost, date);
+                Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
+                endActivity();
+            }
+        }
     }
 
-    public static String findWord(String paragraph, String startString, String endString, int start, int end) {
-        int startDate = paragraph.indexOf(startString) + start;
-        int endDate = paragraph.indexOf(endString) + end;
-        return paragraph.substring(startDate, endDate);
+    /**
+     * Close the activity
+     */
+    public void endActivity() {
+        this.finish();
     }
 
     /**
      * This method sets values to the fields
      *
-     * @param id
+     * @param id receipt
      */
     public void setValues(String id) {
-        //search tin apodeiksi me to id
+        //search tin apodiksi me to id
         Receipt receipt = dbHandler.findProduct(id);
 
         //set values sta boxes
@@ -185,9 +185,26 @@ public class ReceiptScreen extends AppCompatActivity {
     }
 
     /**
+     * This method removes the listeners of the text boxes
+     */
+    public void nullifyTextAreaListeners() {
+        nameBox = findViewById(R.id.companyName);
+        defaultKeyListenerForNameBox = nameBox.getKeyListener();
+        nameBox.setKeyListener(null);
+
+        costBox = findViewById(R.id.receiptCost);
+        defaultKeyListenerForCostBox = costBox.getKeyListener();
+        costBox.setKeyListener(null);
+
+        dateBox = findViewById(R.id.receiptDate);
+        defaultKeyListenerForDateBox = dateBox.getKeyListener();
+        dateBox.setKeyListener(null);
+    }
+
+    /**
      * This method resets the default key listeners for the text fields
      */
-    public void resetFieldsListeners() {
+    public void resetTextAreaListeners() {
         nameBox.setKeyListener(defaultKeyListenerForNameBox);
         costBox.setKeyListener(defaultKeyListenerForCostBox);
         dateBox.setKeyListener(defaultKeyListenerForDateBox);
