@@ -20,6 +20,7 @@ INSERT INTO companies (company_name, discrete_title) VALUES ('ΕΛΛΗΝΙΚΕΣ
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΛΙΝΤΛ ΕΛΛΑΣ ΚΑΙ ΣΙΑ ΟΜΟΡΡΥΘΜΗ', 'LIDL');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΕΤΡΟ ΑΝΩΝΥΜΟΣ ΕΜΠΟΡΙΚΗ ΚΑΙ ΒΙ', 'My market');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΚΕΚΤΣΙΑΝ ΑΡΣΕΝ', 'Prime Market Mini Market');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΕΣΑΓΙΑΝ ΟΒΑΝΝ', 'Θράκα 18');
 
 -- Index: sqlite_autoindex_companies_1
 CREATE UNIQUE INDEX IF NOT EXISTS sqlite_autoindex_companies_1 ON companies (company_name COLLATE BINARY);
