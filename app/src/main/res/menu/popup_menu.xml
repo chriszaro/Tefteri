@@ -11,4 +11,7 @@
     <item
         android:id="@+id/add_and_edit_option"
         android:title="@string/add_and_edit_option" />
+    <item
+        android:id="@+id/manual_add_option"
+        android:title="@string/manual_add" />
 </menu>

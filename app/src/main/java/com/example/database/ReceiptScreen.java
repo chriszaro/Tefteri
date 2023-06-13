@@ -61,14 +61,19 @@ public class ReceiptScreen extends AppCompatActivity {
         boolean editBoolean = intent.getBooleanExtra("editBoolean", false);
         boolean newReceipt = intent.getBooleanExtra("newReceipt", false);
 
-        String id = intent.getStringExtra("id");
-        setValues(id);
+        if (intent.getStringExtra("id") != null) {
+            String id = intent.getStringExtra("id");
+            setValues(id);
 
-        //if true then edit, else just view
-        if (editBoolean) {
-            editReceipt(id, newReceipt);
-        } else {
-            viewReceipt(id);
+            //if true then edit, else just view
+            if (editBoolean) {
+                editReceipt(id, newReceipt);
+            } else {
+                viewReceipt(id);
+            }
+        }
+        else {
+            editReceipt(null, newReceipt);
         }
     }
 
@@ -115,7 +120,8 @@ public class ReceiptScreen extends AppCompatActivity {
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateReceipt(id);
+                if (id == null) createReceipt();
+                else updateReceipt(id);
             }
         });
 
@@ -135,6 +141,28 @@ public class ReceiptScreen extends AppCompatActivity {
                 endActivity();
             }
         });
+    }
+
+    /**
+     * For manual addition
+     */
+    private void createReceipt() {
+        String date = dateBox.getText().toString();
+        String cost = costBox.getText().toString();
+        String name = nameBox.getText().toString();
+        if (date.length() == 0 || cost.length() == 0 || name.length() == 0) {
+            Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
+        } else {
+            if (date.length() != 10) {
+                Toast.makeText(context, R.string.wrong_date_format, Toast.LENGTH_SHORT).show();
+            } else {
+                if (date.charAt(2) == '/' || date.charAt(5) == '/') {
+                    date = date.replace('/', '-');
+                }
+                dbHandler.addProduct(new Receipt(name, Float.parseFloat(cost), date));
+                endActivity();
+            }
+        }
     }
 
     /**

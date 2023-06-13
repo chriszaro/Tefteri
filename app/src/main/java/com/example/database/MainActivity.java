@@ -174,13 +174,22 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 case R.id.add_and_edit_option:
                     camera.scanCode(true);
                     return true;
+                case R.id.manual_add_option:
+                    manualAddition();
+                    return true;
                 default:
                     return false;
             }
         } else {
-            // Network is not available
-            Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
-            return false;
+            switch (item.getItemId()) {
+                case R.id.manual_add_option:
+                    manualAddition();
+                    return true;
+                default:
+                    // Network is not available
+                    Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
+                    return false;
+            }
         }
     }
 
@@ -214,6 +223,22 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         i.putExtra("editBoolean", true);
         i.putExtra("newReceipt", true);
         i.putExtra("id", lastReceiptID);
+
+        //Ask Android to start the new Activity
+        startActivity(i);
+    }
+
+    /**
+     * Code to be executed after the camera scan is done
+     */
+    public void manualAddition() {
+
+        //Create the Intent to start the AddProductScreen Activity
+        Intent i = new Intent(this, ReceiptScreen.class);
+
+        //Pass data to the AddProductScreen Activity through the Intent
+        i.putExtra("editBoolean", true);
+        i.putExtra("newReceipt", true);
 
         //Ask Android to start the new Activity
         startActivity(i);
