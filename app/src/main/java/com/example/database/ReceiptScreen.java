@@ -1,11 +1,13 @@
 package com.example.database;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.KeyListener;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,6 +20,10 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ReceiptScreen extends AppCompatActivity {
     EditText nameBox;
@@ -74,6 +80,31 @@ public class ReceiptScreen extends AppCompatActivity {
         } else {
             editReceipt(null, newReceipt);
         }
+    }
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                        // Format the selected date
+                        Calendar selectedDate = Calendar.getInstance();
+                        selectedDate.set(selectedYear, selectedMonth, selectedDay);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                        String formattedDate = dateFormat.format(selectedDate.getTime());
+
+                        // Update the text field with the selected date
+                        dateBox.setText(formattedDate);
+                    }
+                }, year, month, day);
+
+        // Show the date picker dialog
+        datePickerDialog.show();
     }
 
     /**
@@ -143,51 +174,6 @@ public class ReceiptScreen extends AppCompatActivity {
     }
 
     /**
-     * Checks if date is size of 10, if day and month are valid options (xoris disekta eth)
-     */
-    private boolean dateChecker(String date) {
-        if (date.length() != 10) {
-            Toast.makeText(context, R.string.wrong_date_format, Toast.LENGTH_SHORT).show();
-        } else {
-            int month = Integer.parseInt(date.substring(3, 5));
-            int day = Integer.parseInt(date.substring(0, 2));
-            int year = Integer.parseInt(date.substring(6));
-            if (month > 12 || month < 1) {
-                Toast.makeText(context, R.string.wrong_month, Toast.LENGTH_SHORT).show();
-            } else {
-                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-                    if (day < 1 || day > 31) {
-                        Toast.makeText(context, R.string.wrong_day, Toast.LENGTH_SHORT).show();
-                    } else {
-                        return true;
-                    }
-                } else if (month == 2) {
-                    if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
-                        if (day < 1 || day > 29) {
-                            Toast.makeText(context, R.string.wrong_day, Toast.LENGTH_SHORT).show();
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if (day < 1 || day > 28) {
-                            Toast.makeText(context, R.string.wrong_day, Toast.LENGTH_SHORT).show();
-                        } else {
-                            return true;
-                        }
-                    }
-                } else {
-                    if (day < 1 || day > 30) {
-                        Toast.makeText(context, R.string.wrong_day, Toast.LENGTH_SHORT).show();
-                    } else {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * For manual addition 11-11-2011
      */
     private void createReceipt() {
@@ -197,13 +183,8 @@ public class ReceiptScreen extends AppCompatActivity {
         if (date.length() == 0 || cost.length() == 0 || name.length() == 0) {
             Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
         } else {
-            if (dateChecker(date)) {
-                if (date.charAt(2) == '/' || date.charAt(5) == '/') {
-                    date = date.replace('/', '-');
-                }
-                dbHandler.addProduct(new Receipt(name, Float.parseFloat(cost), date));
-                endActivity();
-            }
+            dbHandler.addProduct(new Receipt(name, Float.parseFloat(cost), date));
+            endActivity();
         }
     }
 
@@ -219,14 +200,9 @@ public class ReceiptScreen extends AppCompatActivity {
         if (date.length() == 0 || cost.length() == 0 || name.length() == 0) {
             Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
         } else {
-            if (dateChecker(date)) {
-                if (date.charAt(2) == '/' || date.charAt(5) == '/') {
-                    date = date.replace('/', '-');
-                }
-                dbHandler.updateReceipt(id, name, cost, date);
-                Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
-                endActivity();
-            }
+            dbHandler.updateReceipt(id, name, cost, date);
+            Toast.makeText(context, R.string.updated, Toast.LENGTH_SHORT).show();
+            endActivity();
         }
     }
 
@@ -276,6 +252,11 @@ public class ReceiptScreen extends AppCompatActivity {
     public void resetTextAreaListeners() {
         nameBox.setKeyListener(defaultKeyListenerForNameBox);
         costBox.setKeyListener(defaultKeyListenerForCostBox);
-        dateBox.setKeyListener(defaultKeyListenerForDateBox);
+        dateBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
     }
 }
