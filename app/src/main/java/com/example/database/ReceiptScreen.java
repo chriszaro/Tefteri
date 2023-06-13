@@ -71,8 +71,7 @@ public class ReceiptScreen extends AppCompatActivity {
             } else {
                 viewReceipt(id);
             }
-        }
-        else {
+        } else {
             editReceipt(null, newReceipt);
         }
     }
@@ -144,7 +143,52 @@ public class ReceiptScreen extends AppCompatActivity {
     }
 
     /**
-     * For manual addition
+     * Checks if date is size of 10, if day and month are valid options (xoris disekta eth)
+     */
+    private boolean dateChecker(String date) {
+        if (date.length() != 10) {
+            Toast.makeText(context, R.string.wrong_date_format, Toast.LENGTH_SHORT).show();
+        } else {
+            int month = Integer.parseInt(date.substring(3, 5));
+            int day = Integer.parseInt(date.substring(0, 2));
+            int year = Integer.parseInt(date.substring(6));
+            if (month > 12 || month < 1) {
+                Toast.makeText(context, R.string.wrong_month, Toast.LENGTH_SHORT).show();
+            } else {
+                if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+                    if (day < 1 || day > 31) {
+                        Toast.makeText(context, R.string.wrong_day, Toast.LENGTH_SHORT).show();
+                    } else {
+                        return true;
+                    }
+                } else if (month == 2) {
+                    if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
+                        if (day < 1 || day > 29) {
+                            Toast.makeText(context, R.string.wrong_day, Toast.LENGTH_SHORT).show();
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        if (day < 1 || day > 28) {
+                            Toast.makeText(context, R.string.wrong_day, Toast.LENGTH_SHORT).show();
+                        } else {
+                            return true;
+                        }
+                    }
+                } else {
+                    if (day < 1 || day > 30) {
+                        Toast.makeText(context, R.string.wrong_day, Toast.LENGTH_SHORT).show();
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * For manual addition 11-11-2011
      */
     private void createReceipt() {
         String date = dateBox.getText().toString();
@@ -153,9 +197,7 @@ public class ReceiptScreen extends AppCompatActivity {
         if (date.length() == 0 || cost.length() == 0 || name.length() == 0) {
             Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
         } else {
-            if (date.length() != 10) {
-                Toast.makeText(context, R.string.wrong_date_format, Toast.LENGTH_SHORT).show();
-            } else {
+            if (dateChecker(date)) {
                 if (date.charAt(2) == '/' || date.charAt(5) == '/') {
                     date = date.replace('/', '-');
                 }
@@ -177,9 +219,7 @@ public class ReceiptScreen extends AppCompatActivity {
         if (date.length() == 0 || cost.length() == 0 || name.length() == 0) {
             Toast.makeText(context, R.string.emptyValues, Toast.LENGTH_SHORT).show();
         } else {
-            if (date.length() != 10) {
-                Toast.makeText(context, R.string.wrong_date_format, Toast.LENGTH_SHORT).show();
-            } else {
+            if (dateChecker(date)) {
                 if (date.charAt(2) == '/' || date.charAt(5) == '/') {
                     date = date.replace('/', '-');
                 }
@@ -189,6 +229,7 @@ public class ReceiptScreen extends AppCompatActivity {
             }
         }
     }
+
 
     /**
      * Close the activity

@@ -181,15 +181,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     return false;
             }
         } else {
-            switch (item.getItemId()) {
-                case R.id.manual_add_option:
-                    manualAddition();
-                    return true;
-                default:
-                    // Network is not available
-                    Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
-                    return false;
-            }
+            if (item.getItemId() == R.id.manual_add_option) {
+                manualAddition();
+                return true;
+            }// Network is not available
+            Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
