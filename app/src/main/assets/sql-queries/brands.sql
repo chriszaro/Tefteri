@@ -7,21 +7,21 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- Table: companies
-CREATE TABLE IF NOT EXISTS companies (company_name TEXT PRIMARY KEY NOT NULL, discrete_title TEXT);
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΑΛΦΑ ΒΗΤΑ ΒΑΣΙΛΟΠΟΥΛΟΣ ΜΟΝΟΠΡΟ', 'ΑΒ Βασιλόπουλος');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΚΡΟΥΤΖ ΑΝΩΝΥΜΟΣ ΕΤΑΙΡΕΙΑ ΥΠΗΡΕΣΙΕΣ ΔΙΑΔΙΚΤΥΟΥ', 'skroutz');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΥΡΤΟ ΜΑΡΙΟΥΣ ΚΑΙ ΣΙΑ ΕΕ', 'Old School Barber Shop');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΔΙΑΜΑΝΤΗΣ ΜΑΣΟΥΤΗΣ ΑΕ ΣΟΥΠΕΡ Μ', 'μασούτης');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΟΥΠΕΡ ΜΑΡΚΕΤ ΕΓΝΑΤΙΑ ΑΕ', 'Discount Markt');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΤΣΑΚΙΡΙΔΗΣ ΙΣΑΑΚ', 'Στο Άψε Ψήσε');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΑΓΕΙΡΕΙΑ ΣΤΑΓΚΙΔΗ ΕΕ', 'Μαγειρείο-Καντίνα Σταγκίδης');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΧΧ ΚΡΕΑΤΟΣΚΕΥΑΣΜΑΤΑ ΚΑΙ ΣΙΑ Ε', 'Χρήστος Γυράδικο');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΕΛΛΗΝΙΚΕΣ ΥΠΕΡΑΓΟΡΕΣ ΣΚΛΑΒΕΝΙΤ', 'Σκλαβενίτης');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΛΙΝΤΛ ΕΛΛΑΣ ΚΑΙ ΣΙΑ ΟΜΟΡΡΥΘΜΗ', 'LIDL');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΕΤΡΟ ΑΝΩΝΥΜΟΣ ΕΜΠΟΡΙΚΗ ΚΑΙ ΒΙ', 'My market');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΚΕΚΤΣΙΑΝ ΑΡΣΕΝ', 'Prime Market Mini Market');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΕΣΑΓΙΑΝ ΟΒΑΝΝ', 'Θράκα 18');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΛΟΓΙΣΜΙΚΗ ΕΠΕ', 'Ticket Services');
+CREATE TABLE IF NOT EXISTS companies (company_name TEXT PRIMARY KEY NOT NULL, discrete_title TEXT, category TEXT);
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΑΛΦΑ ΒΗΤΑ ΒΑΣΙΛΟΠΟΥΛΟΣ ΜΟΝΟΠΡΟ', 'ΑΒ Βασιλόπουλος', 'Σουπερμάρκετ');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΔΙΑΜΑΝΤΗΣ ΜΑΣΟΥΤΗΣ ΑΕ ΣΟΥΠΕΡ Μ', 'μασούτης', 'Σουπερμάρκετ');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΟΥΠΕΡ ΜΑΡΚΕΤ ΕΓΝΑΤΙΑ ΑΕ', 'Discount Markt', 'Σουπερμάρκετ');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΕΛΛΗΝΙΚΕΣ ΥΠΕΡΑΓΟΡΕΣ ΣΚΛΑΒΕΝΙΤ', 'Σκλαβενίτης', 'Σουπερμάρκετ');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΛΙΝΤΛ ΕΛΛΑΣ ΚΑΙ ΣΙΑ ΟΜΟΡΡΥΘΜΗ', 'LIDL', 'Σουπερμάρκετ');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΕΤΡΟ ΑΝΩΝΥΜΟΣ ΕΜΠΟΡΙΚΗ ΚΑΙ ΒΙ', 'My market', 'Σουπερμάρκετ');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΚΕΚΤΣΙΑΝ ΑΡΣΕΝ', 'Prime Market Mini Market', 'Mini Market');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΤΣΑΚΙΡΙΔΗΣ ΙΣΑΑΚ', 'Στο Άψε Ψήσε', 'Εστίαση');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΑΓΕΙΡΕΙΑ ΣΤΑΓΚΙΔΗ ΕΕ', 'Μαγειρείο-Καντίνα Σταγκίδης', 'Εστίαση');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΧΧ ΚΡΕΑΤΟΣΚΕΥΑΣΜΑΤΑ ΚΑΙ ΣΙΑ Ε', 'Χρήστος Γυράδικο', 'Εστίαση');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΕΣΑΓΙΑΝ ΟΒΑΝΝ', 'Θράκα 18', 'Εστίαση');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΛΟΓΙΣΜΙΚΗ ΕΠΕ', 'Ticket Services', 'Ψυχαγωγία');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΚΡΟΥΤΖ ΑΝΩΝΥΜΟΣ ΕΤΑΙΡΕΙΑ ΥΠΗΡΕΣΙΕΣ ΔΙΑΔΙΚΤΥΟΥ', 'skroutz', 'E-commerce');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΥΡΤΟ ΜΑΡΙΟΥΣ ΚΑΙ ΣΙΑ ΕΕ', 'Old School Barber Shop', 'Υπηρεσίες Αισθητικής');
 
 -- Index: sqlite_autoindex_companies_1
 CREATE UNIQUE INDEX IF NOT EXISTS sqlite_autoindex_companies_1 ON companies (company_name COLLATE BINARY);
