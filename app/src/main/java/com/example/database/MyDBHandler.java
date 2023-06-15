@@ -35,12 +35,18 @@ public class MyDBHandler extends SQLiteOpenHelper {
     //Δημιουργία του σχήματος της ΒΔ (πίνακας products)
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " +
-                TABLE_RECEIPTS + '(' +
-                COLUMN_ID + " INTEGER PRIMARY KEY," +
-                COLUMN_COMPANYNAME + " TEXT," +
-                COLUMN_COST + " INTEGER," +
-                COLUMN_DATE + " TEXT" + ')';
+        String CREATE_PRODUCTS_TABLE = new StringBuilder().
+                append("CREATE TABLE ").
+                append(TABLE_RECEIPTS).
+                append('(').
+                append(COLUMN_ID).
+                append(" INTEGER PRIMARY KEY,").
+                append(COLUMN_COMPANYNAME).
+                append(" TEXT,").
+                append(COLUMN_COST).
+                append(" INTEGER,").
+                append(COLUMN_DATE).
+                append(" TEXT").append(')').toString();
         db.execSQL(CREATE_PRODUCTS_TABLE);
 //        db.close();
     }
@@ -68,8 +74,15 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     //Μέθοδος για εύρεση προϊόντος βάσει ονομασίας του
     public Receipt findProduct(String id) {
-        String query = "SELECT * FROM " + TABLE_RECEIPTS + " WHERE " +
-                COLUMN_ID + " = '" + id + '\'';
+        String query = new StringBuilder().
+                append("SELECT * FROM ").
+                append(TABLE_RECEIPTS).
+                append(" WHERE ").
+                append(COLUMN_ID).
+                append(" = '").
+                append(id).
+                append('\'').
+                toString();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Receipt receipt;
@@ -92,10 +105,18 @@ public class MyDBHandler extends SQLiteOpenHelper {
      * @return An array list of the receipts
      */
     public ArrayList<Receipt> fetchNReceipts(int N, int skip) {
-        String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " ORDER BY " + COLUMN_DATE + " DESC " +
-                " LIMIT " + N +
-                " OFFSET " + skip + ';';
+        String query = new StringBuilder().
+                append("SELECT * FROM ").
+                append(TABLE_RECEIPTS).
+                append(" ORDER BY ").
+                append(COLUMN_DATE).
+                append(" DESC ").
+                append(" LIMIT ").
+                append(N).
+                append(" OFFSET ").
+                append(skip).
+                append(';').
+                toString();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         ArrayList<Receipt> receipts = new ArrayList<>(N);
@@ -112,8 +133,14 @@ public class MyDBHandler extends SQLiteOpenHelper {
     }
 
     public ArrayList<Receipt> fetchAllReceipts() {
-        String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " ORDER BY " + COLUMN_DATE + " DESC " + ';';
+        String query = new StringBuilder().
+                append("SELECT * FROM ").
+                append(TABLE_RECEIPTS).
+                append(" ORDER BY ").
+                append(COLUMN_DATE).
+                append(" DESC ").
+                append(';').
+                toString();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         ArrayList<Receipt> receipts = new ArrayList<>();
@@ -182,6 +209,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * Adds an additional 0 digit in front of 1 digit numbers
+     *
      * @param month String number of the month
      * @return the corrected string number of the month
      */
@@ -216,8 +244,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * Method to get the total cost of a specific month and year
+     *
      * @param month String number of the month
-     * @param year String of the year
+     * @param year  String of the year
      * @return float number of the cost
      */
     public float getTotalCostOfMonth(String month, String year) {
@@ -261,8 +290,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * Method to get the Receipts of a specific month and year
+     *
      * @param month String number of the month
-     * @param year String of the year
+     * @param year  String of the year
      * @return list of the receipts
      */
     public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
@@ -270,10 +300,24 @@ public class MyDBHandler extends SQLiteOpenHelper {
         month = correctMonth(month); // make corrections to month string
         String startDate = correctStartDate(month, year);
         String endDate = correctEndDate(month, year);
-        String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " WHERE " + COLUMN_DATE + " BETWEEN " +
-                "'" + startDate + "'" + " AND " + "'" + endDate + "'" +
-                " ORDER BY " + COLUMN_DATE + " DESC " + ';';
+        String query = new StringBuilder().
+                append("SELECT * FROM ").
+                append(TABLE_RECEIPTS).
+                append(" WHERE ").
+                append(COLUMN_DATE).
+                append(" BETWEEN ").
+                append("'").
+                append(startDate).
+                append("'").
+                append(" AND ").
+                append("'").
+                append(endDate).
+                append("'").
+                append(" ORDER BY ").
+                append(COLUMN_DATE).
+                append(" DESC ").
+                append(';').
+                toString();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
