@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         // Create a dialog to ask the user if they want to continue scanning.
                         AlertDialog dialog = new AlertDialog.Builder(this)
                                 .setTitle("Συνέχεια;") // "Continue?" in Greek
-                                .setMessage("Θέλετε να ξανασκανάρετε;") // "Do you want to scan again?" in Greek
+                                .setMessage("Θέλετε να σαρώσετε ξανά;") // "Do you want to scan again?" in Greek
                                 .setPositiveButton("Ναι", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // If user says "Yes", continue scanning.
