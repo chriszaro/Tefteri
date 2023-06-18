@@ -96,42 +96,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return receipt;
     }
 
-
     /**
-     * This method fetches the first N results from the table
-     *
-     * @param N    the results we need
-     * @param skip the number of results to be skipped
-     * @return An array list of the receipts
+     * Method that fetches all receipts, packs them in an ArrayList and returns them.
+     * @return An ArrayList of all receipts the database contains
      */
-    public ArrayList<Receipt> fetchNReceipts(int N, int skip) {
-        String query = new StringBuilder().
-                append("SELECT * FROM ").
-                append(TABLE_RECEIPTS).
-                append(" ORDER BY ").
-                append(COLUMN_DATE).
-                append(" DESC ").
-                append(" LIMIT ").
-                append(N).
-                append(" OFFSET ").
-                append(skip).
-                append(';').
-                toString();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        ArrayList<Receipt> receipts = new ArrayList<>(N);
-        if (cursor.moveToFirst()) { // if the cursor is not empty
-            do {
-                Receipt receipt = this.createReceiptFromCursor(cursor);
-                receipts.add(receipt);
-            } while (cursor.moveToNext());
-        } else // if the cursor is empty
-            receipts = null;
-        cursor.close();
-        db.close();
-        return receipts;
-    }
-
     public ArrayList<Receipt> fetchAllReceipts() {
         String query = new StringBuilder().
                 append("SELECT * FROM ").
@@ -195,15 +163,13 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * This method allows for receipt deletion from the database
+     * @param ID the id of the receipt to be deleted
+     */
     public void deleteReceipt(String ID) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", new String[]{ID});
-        db.close();
-    }
-
-    public void deleteReceipts(ArrayList<String> ids) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", (String[]) ids.toArray());
         db.close();
     }
 
@@ -219,6 +185,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return month;
     }
 
+    /**
+     * This method parses a given month and year string, to make it usable for database operations
+     * @param month the month, given in string format
+     * @param year the year, given in string format
+     * @return The first day of a month, given the month and year, in YYYY-MM-DD format
+     */
     private String correctStartDate(String month, String year) {
         StringBuilder builder = new StringBuilder();
         builder.append(year);
@@ -228,6 +200,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return builder.toString();
     }
 
+    /**
+     * This method parses a given month and year string, to make it usable for database operations
+     * @param month the month, given in string format
+     * @param year the year, given in string format
+     * @return The last day of a month, given the month and year, in YYYY-MM-DD format
+     */
     private String correctEndDate(String month, String year) {
         int m = Integer.parseInt(month);
         StringBuilder builder = new StringBuilder();
@@ -236,6 +214,15 @@ public class MyDBHandler extends SQLiteOpenHelper {
         builder.append(month);
         if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12)
             builder.append("-31");
+        else if (m == 2) { // DETERMINE IF YEAR IS LEAP YEAR
+            int y = Integer.parseInt(year);
+            if (y % 4 == 0 && y % 100 != 0) // is leap year
+                builder.append("-29");
+            else if (y % 400 == 0) // is leap year
+                builder.append("-29");
+            else // is NOT leap year
+                builder.append("-28");
+        }
         else
             builder.append("-30");
 
