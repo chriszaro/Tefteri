@@ -35,12 +35,18 @@ public class MyDBHandler extends SQLiteOpenHelper {
     //Δημιουργία του σχήματος της ΒΔ (πίνακας products)
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " +
-                TABLE_RECEIPTS + '(' +
-                COLUMN_ID + " INTEGER PRIMARY KEY," +
-                COLUMN_COMPANYNAME + " TEXT," +
-                COLUMN_COST + " INTEGER," +
-                COLUMN_DATE + " TEXT" + ')';
+        String CREATE_PRODUCTS_TABLE = new StringBuilder().
+                append("CREATE TABLE ").
+                append(TABLE_RECEIPTS).
+                append('(').
+                append(COLUMN_ID).
+                append(" INTEGER PRIMARY KEY,").
+                append(COLUMN_COMPANYNAME).
+                append(" TEXT,").
+                append(COLUMN_COST).
+                append(" INTEGER,").
+                append(COLUMN_DATE).
+                append(" TEXT").append(')').toString();
         db.execSQL(CREATE_PRODUCTS_TABLE);
 //        db.close();
     }
@@ -68,8 +74,15 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     //Μέθοδος για εύρεση προϊόντος βάσει ονομασίας του
     public Receipt findProduct(String id) {
-        String query = "SELECT * FROM " + TABLE_RECEIPTS + " WHERE " +
-                COLUMN_ID + " = '" + id + '\'';
+        String query = new StringBuilder().
+                append("SELECT * FROM ").
+                append(TABLE_RECEIPTS).
+                append(" WHERE ").
+                append(COLUMN_ID).
+                append(" = '").
+                append(id).
+                append('\'').
+                toString();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Receipt receipt;
@@ -83,37 +96,19 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return receipt;
     }
 
-
     /**
-     * This method fetches the first N results from the table
-     *
-     * @param N    the results we need
-     * @param skip the number of results to be skipped
-     * @return An array list of the receipts
+     * Method that fetches all receipts, packs them in an ArrayList and returns them.
+     * @return An ArrayList of all receipts the database contains
      */
-    public ArrayList<Receipt> fetchNReceipts(int N, int skip) {
-        String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " ORDER BY " + COLUMN_DATE + " DESC " +
-                " LIMIT " + N +
-                " OFFSET " + skip + ';';
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        ArrayList<Receipt> receipts = new ArrayList<>(N);
-        if (cursor.moveToFirst()) { // if the cursor is not empty
-            do {
-                Receipt receipt = this.createReceiptFromCursor(cursor);
-                receipts.add(receipt);
-            } while (cursor.moveToNext());
-        } else // if the cursor is empty
-            receipts = null;
-        cursor.close();
-        db.close();
-        return receipts;
-    }
-
     public ArrayList<Receipt> fetchAllReceipts() {
-        String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " ORDER BY " + COLUMN_DATE + " DESC " + ';';
+        String query = new StringBuilder().
+                append("SELECT * FROM ").
+                append(TABLE_RECEIPTS).
+                append(" ORDER BY ").
+                append(COLUMN_DATE).
+                append(" DESC ").
+                append(';').
+                toString();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         ArrayList<Receipt> receipts = new ArrayList<>();
@@ -168,20 +163,19 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * This method allows for receipt deletion from the database
+     * @param ID the id of the receipt to be deleted
+     */
     public void deleteReceipt(String ID) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", new String[]{ID});
         db.close();
     }
 
-    public void deleteReceipts(ArrayList<String> ids) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", (String[]) ids.toArray());
-        db.close();
-    }
-
     /**
      * Adds an additional 0 digit in front of 1 digit numbers
+     *
      * @param month String number of the month
      * @return the corrected string number of the month
      */
@@ -191,6 +185,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return month;
     }
 
+    /**
+     * This method parses a given month and year string, to make it usable for database operations
+     * @param month the month, given in string format
+     * @param year the year, given in string format
+     * @return The first day of a month, given the month and year, in YYYY-MM-DD format
+     */
     private String correctStartDate(String month, String year) {
         StringBuilder builder = new StringBuilder();
         builder.append(year);
@@ -200,6 +200,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return builder.toString();
     }
 
+    /**
+     * This method parses a given month and year string, to make it usable for database operations
+     * @param month the month, given in string format
+     * @param year the year, given in string format
+     * @return The last day of a month, given the month and year, in YYYY-MM-DD format
+     */
     private String correctEndDate(String month, String year) {
         int m = Integer.parseInt(month);
         StringBuilder builder = new StringBuilder();
@@ -208,6 +214,15 @@ public class MyDBHandler extends SQLiteOpenHelper {
         builder.append(month);
         if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12)
             builder.append("-31");
+        else if (m == 2) { // DETERMINE IF YEAR IS LEAP YEAR
+            int y = Integer.parseInt(year);
+            if (y % 4 == 0 && y % 100 != 0) // is leap year
+                builder.append("-29");
+            else if (y % 400 == 0) // is leap year
+                builder.append("-29");
+            else // is NOT leap year
+                builder.append("-28");
+        }
         else
             builder.append("-30");
 
@@ -216,8 +231,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * Method to get the total cost of a specific month and year
+     *
      * @param month String number of the month
-     * @param year String of the year
+     * @param year  String of the year
      * @return float number of the cost
      */
     public float getTotalCostOfMonth(String month, String year) {
@@ -261,8 +277,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * Method to get the Receipts of a specific month and year
+     *
      * @param month String number of the month
-     * @param year String of the year
+     * @param year  String of the year
      * @return list of the receipts
      */
     public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
@@ -270,10 +287,24 @@ public class MyDBHandler extends SQLiteOpenHelper {
         month = correctMonth(month); // make corrections to month string
         String startDate = correctStartDate(month, year);
         String endDate = correctEndDate(month, year);
-        String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " WHERE " + COLUMN_DATE + " BETWEEN " +
-                "'" + startDate + "'" + " AND " + "'" + endDate + "'" +
-                " ORDER BY " + COLUMN_DATE + " DESC " + ';';
+        String query = new StringBuilder().
+                append("SELECT * FROM ").
+                append(TABLE_RECEIPTS).
+                append(" WHERE ").
+                append(COLUMN_DATE).
+                append(" BETWEEN ").
+                append("'").
+                append(startDate).
+                append("'").
+                append(" AND ").
+                append("'").
+                append(endDate).
+                append("'").
+                append(" ORDER BY ").
+                append(COLUMN_DATE).
+                append(" DESC ").
+                append(';').
+                toString();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
