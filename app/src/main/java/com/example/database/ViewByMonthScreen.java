@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -153,8 +152,8 @@ public class ViewByMonthScreen extends AppCompatActivity {
     /**
      * This method is for the trash button on activity bar
      *
-     * @param menu
-     * @return
+     * @param menu menu object
+     * @return true/false
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { // here goes options menu with question mark
