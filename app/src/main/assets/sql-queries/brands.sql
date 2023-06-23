@@ -8,13 +8,17 @@ BEGIN TRANSACTION;
 
 -- Table: companies
 CREATE TABLE IF NOT EXISTS companies (company_name TEXT PRIMARY KEY NOT NULL, discrete_title TEXT, category TEXT);
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΑΛΦΑ ΒΗΤΑ ΒΑΣΙΛΟΠΟΥΛΟΣ ΜΟΝΟΠΡΟ', 'ΑΒ Βασιλόπουλος', 'Σουπερμάρκετ');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΔΙΑΜΑΝΤΗΣ ΜΑΣΟΥΤΗΣ ΑΕ ΣΟΥΠΕΡ Μ', 'μασούτης', 'Σουπερμάρκετ');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΟΥΠΕΡ ΜΑΡΚΕΤ ΕΓΝΑΤΙΑ ΑΕ', 'Discount Markt', 'Σουπερμάρκετ');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΕΛΛΗΝΙΚΕΣ ΥΠΕΡΑΓΟΡΕΣ ΣΚΛΑΒΕΝΙΤ', 'Σκλαβενίτης', 'Σουπερμάρκετ');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΛΙΝΤΛ ΕΛΛΑΣ ΚΑΙ ΣΙΑ ΟΜΟΡΡΥΘΜΗ', 'LIDL', 'Σουπερμάρκετ');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΕΤΡΟ ΑΝΩΝΥΜΟΣ ΕΜΠΟΡΙΚΗ ΚΑΙ ΒΙ', 'My market', 'Σουπερμάρκετ');
-INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΚΕΚΤΣΙΑΝ ΑΡΣΕΝ', 'Prime Market Mini Market', 'Mini Market');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΑΛΦΑ ΒΗΤΑ ΒΑΣΙΛΟΠΟΥΛΟΣ ΜΟΝΟΠΡΟ', 'ΑΒ Βασιλόπουλος', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΔΙΑΜΑΝΤΗΣ ΜΑΣΟΥΤΗΣ ΑΕ ΣΟΥΠΕΡ Μ', 'μασούτης', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΟΥΠΕΡ ΜΑΡΚΕΤ ΕΓΝΑΤΙΑ ΑΕ', 'Discount Markt', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΕΛΛΗΝΙΚΕΣ ΥΠΕΡΑΓΟΡΕΣ ΣΚΛΑΒΕΝΙΤ', 'Σκλαβενίτης', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΛΙΝΤΛ ΕΛΛΑΣ ΚΑΙ ΣΙΑ ΟΜΟΡΡΥΘΜΗ', 'LIDL', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΕΤΡΟ ΑΝΩΝΥΜΟΣ ΕΜΠΟΡΙΚΗ ΚΑΙ ΒΙ', 'My market', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΚΕΚΤΣΙΑΝ ΑΡΣΕΝ', 'Prime Market Mini Market', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΗΛΙΑΔΗΣ ΙΩΑΚΕ', 'Καφεκοπτείο Ηλιάδη', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΧΟΝΔΡΑΝΤΩΝΗΣ ΚΩΝΣΤ', 'Φούρνος Χονδραντώνης', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΙΝΔΗΣ ΚΩΝΣΤ', 'Ζαχαροπλαστείο Φίνο', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('ΤΣΙΛΙΓΚΕΡΙΔΟΥ ΚΑΙ ΣΙΑ ΟΕ', 'Ιχθυοπωλείο Τσιλιγκερίδου', 'Καθημερινά Ψώνια');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΤΣΑΚΙΡΙΔΗΣ ΙΣΑΑΚ', 'Στο Άψε Ψήσε', 'Εστίαση');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΑΓΕΙΡΕΙΑ ΣΤΑΓΚΙΔΗ ΕΕ', 'Μαγειρείο-Καντίνα Σταγκίδης', 'Εστίαση');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΧΧ ΚΡΕΑΤΟΣΚΕΥΑΣΜΑΤΑ ΚΑΙ ΣΙΑ Ε', 'Χρήστος Γυράδικο', 'Εστίαση');
