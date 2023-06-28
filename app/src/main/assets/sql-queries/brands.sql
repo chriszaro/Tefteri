@@ -28,6 +28,7 @@ INSERT INTO companies (company_name, discrete_title) VALUES ('ΧΧ ΚΡΕΑΤΟ�
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΓΕΣΑΓΙΑΝ ΟΒΑΝΝ', 'Θράκα 18', 'Εστίαση');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΚΑΡΑΤΖΟΓΛΟΥ ΕΛΕΥΘ', 'Vitro', 'Εστίαση');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΦΩΤΕΙΝΗ ΤΡΥΠΤΣΙΑ ΧΡΗΣΤΟΣ ΓΚΟΛΦ', 'Το Κάτι Άλλο', 'Εστίαση');
+INSERT INTO companies (company_name, discrete_title) VALUES ('FIVE PLUS Ι Κ Ε', 'ΓΡΝ', 'Εστίαση');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΛΟΓΙΣΜΙΚΗ ΕΠΕ', 'Ticket Services', 'Ψυχαγωγία');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ODEON ENTERTAINMENT MANAGEMENT', 'Odeon', 'Ψυχαγωγία');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΣΚΡΟΥΤΖ ΑΝΩΝΥΜΟΣ ΕΤΑΙΡΕΙΑ ΥΠΗΡΕΣΙΕΣ ΔΙΑΔΙΚΤΥΟΥ', 'skroutz', 'E-commerce');
