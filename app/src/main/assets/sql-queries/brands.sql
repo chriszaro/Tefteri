@@ -23,6 +23,7 @@ INSERT INTO companies (company_name, discrete_title) VALUES ('ΤΣΙΛΙΓΚΕΡ
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΚΥΡΤΣΙΟΣ ΑΠΟΣΤΟΛΟΣ ΤΣΙΑΠΑΝΙΤ', 'Κρεοπωλείο Φάρμα Κύρτσιος', 'Καθημερινά Ψώνια');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΠΑΡΜΠΑΡΟΥΣΗΣ ΣΩΤΗΡ', 'Οπωροπωλείο Μπαρμπαρούσης', 'Καθημερινά Ψώνια');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΔΗΜΗΤΡΙΟΥ ΙΩΑΝΝ', 'Παντοπωλείο Δημητρίου', 'Καθημερινά Ψώνια');
+INSERT INTO companies (company_name, discrete_title) VALUES ('BAZAAR ΑΝΩΝΥΜΗ ΨΥΚΤΙΚΗ ΒΙΟΜΗΧΑ', 'Bazaar', 'Καθημερινά Ψώνια');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΤΣΑΚΙΡΙΔΗΣ ΙΣΑΑΚ', 'Στο Άψε Ψήσε', 'Εστίαση');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΜΑΓΕΙΡΕΙΑ ΣΤΑΓΚΙΔΗ ΕΕ', 'Μαγειρείο-Καντίνα Σταγκίδης', 'Εστίαση');
 INSERT INTO companies (company_name, discrete_title) VALUES ('ΧΧ ΚΡΕΑΤΟΣΚΕΥΑΣΜΑΤΑ ΚΑΙ ΣΙΑ Ε', 'Χρήστος Γυράδικο', 'Εστίαση');
