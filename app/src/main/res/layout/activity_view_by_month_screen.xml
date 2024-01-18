@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:adUnitId="ca-app-pub-7060649347793178/7020811091"
         app:layout_constraintBottom_toTopOf="@+id/sumFrame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
