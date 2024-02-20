@@ -1,4 +1,4 @@
-# Tefteri?
+# Tefteri
 
 Tefteri is a simple and convenient Android application designed for consumers in the Greek market to keep track of their purchases. The app allows users to easily record and manage their receipts, providing a hassle-free way to organize expenses.
 
