@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         downloader = new ReceiptDownloader(dbHandler, this);
 
-//        // Massively add data to database for testing purposes
+        /* Massively add data to database for testing purposes */
+
 //        boolean loadManyReceipts = false;
 //        String manyReceiptsSQLInsertsFileName = "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
 //        if (loadManyReceipts) {
@@ -74,10 +75,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        //ClickListener for Calendar Icon
+        // ClickListener for Calendar Icon
         View calendar = findViewById(R.id.nav_view).findViewById(R.id.navigation_monthly);
         calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
+                @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainContext, ViewByMonthScreen.class);
                 startActivity(intent);
@@ -187,14 +188,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     /**
      * Network check function
      *
-     * @return true/false whether a Network if any network is available or not.
+     * @return true/false whether a Network if any network is available or not
      */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = null;
-        if (connectivityManager != null) {
+        if (connectivityManager != null)
             activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
@@ -219,8 +219,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivity(i);
     }
 
-    // ActivityResultLauncher for handling normal and multiple scans.
-    ActivityResultLauncher<ScanOptions> barLauncher =
+    // Default ActivityResultLauncher for handling scans in Normal and Multiple mode.
+    ActivityResultLauncher<ScanOptions> barLauncherDefault =
             registerForActivityResult(new ScanContract(), result -> {
                 // Get scan result.
                 String input = result.getContents();
@@ -231,31 +231,28 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     String temp = downloader.downloadReceipt(input);
 
                     // If the download was successful, save the last receipt ID.
-                    if (temp != null) {
-                        lastReceiptID = temp;
-                    }
+                    if (temp != null) lastReceiptID = temp;
 
                     // Check if the camera is in multi-scan mode.
                     if (camera.getMultiScanMode()) {
-                        // Initialize the Timer outside of the AlertDialog so it can be accessed in button callbacks.
-                        final Timer t = new Timer();
+                        // Initialize the Timer outside of the AlertDialog so it can be accessed in button callbacks
+                        final Timer timer = new Timer();
 
-                        // Create a dialog to ask the user if they want to continue scanning.
+                        // Create a dialog to ask the user if they want to continue scanning
                         AlertDialog dialog = new AlertDialog.Builder(this)
                                 .setTitle("Συνέχεια;") // "Continue?" in Greek
                                 .setMessage("Θέλετε να σαρώσετε ξανά;") // "Do you want to scan again?" in Greek
                                 .setPositiveButton("Ναι", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        // If user says "Yes", continue scanning.
-                                        camera.scanCode(false);
+                                        camera.scanCode(false); // If user says "Yes", continue scanning
                                     }
                                 })
                                 .setNegativeButton("Όχι", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // If user says "No", stop scanning.
                                         camera.setMultiScanMode(false);
-                                        // Cancel the Timer when "No" is clicked to prevent scanner from reopening.
-                                        t.cancel();
+                                        // Cancel the Timer when "No" is clicked to prevent scanner from reopening
+                                        timer.cancel();
                                     }
                                 })
                                 .show();
@@ -264,16 +261,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             });
 
 
-    // ActivityResultLauncher for handling scan and edit mode.
-    ActivityResultLauncher<ScanOptions> barLauncher2 =
+    // ActivityResultLauncher for handling scans in Edit mode
+    ActivityResultLauncher<ScanOptions> barLauncherEditMode =
             registerForActivityResult(
                     new ScanContract(), result -> {
-                        // Get scan result.
+                        // Get scan result
                         String input = result.getContents();
 
-                        // Check if result is not null.
+                        // Check if result is not null
                         if (input != null) {
-                            // Download the receipt using the scanned input.
+                            // Download the receipt using the scanned input
                             String temp = downloader.downloadReceipt(input);
                             if (temp != null) {
                                 // Save last receipt ID if download was successful.

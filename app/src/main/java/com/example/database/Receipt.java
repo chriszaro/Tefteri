@@ -2,17 +2,22 @@ package com.example.database;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * Class to hold each Receipt's information
+ */
 public class Receipt {
     private int id;
     private String companyName;
     private float cost;
     private String date;
 
+    // Default Constructor
     public Receipt() {
+
     }
 
     /**
-     * Costructor
+     * Constructor
      * @param companyName string with the name of the company
      * @param cost price of the receipt
      * @param date String formatted date
