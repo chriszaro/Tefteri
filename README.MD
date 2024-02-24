@@ -21,12 +21,12 @@ https://www.youtube.com/shorts/2Dona4s4NXU
 # Screenshots
 
 <div style="display: flex; gap: 10px;">
-  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_01.jpg" height="250">
-  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_02.jpg" height="250">
-  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_03.jpg" height="250">
-  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_04.jpg" height="250">
-  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_05.jpg" height="250">
-  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_06.jpg" height="250">
+  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_01.jpg" height="280">
+  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_02.jpg" height="280">
+  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_03.jpg" height="280">
+  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_04.jpg" height="280">
+  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_05.jpg" height="280">
+  <img src="https://github.com/chriszaro/Tefteri/blob/d64d82e93ed6a280286a9e2b8b0dc774130acea7/Screenshots/tefteri_06.jpg" height="280">
 </div>
 
 # Meet the Tefteri Team
