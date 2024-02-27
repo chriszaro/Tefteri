@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,11 +19,17 @@ public class MyDBHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "receiptsDB.db";
     public static final String TABLE_RECEIPTS = "receipts";
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_COMPANYNAME = "companyname";
-    public static final String COLUMN_COST = "cost";
+    public static final String RECEIPTS_COLUMN_ID = "_id";
+    public static final String RECEIPTS_COLUMN_COMPANYNAME = "companyname";
+    public static final String RECEIPTS_COLUMN_COST = "cost";
 
-    public static final String COLUMN_DATE = "date";
+    public static final String RECEIPTS_COLUMN_DATE = "date";
+
+    public static final String TABLE_BRANDS = "companies";
+    public static final String BRANDS_COLUMN_COMPANY_NAME = "company_name";
+    public static final String BRANDS_COLUMN_DISCRETE_TITLE = "discrete_title";
+
+    public static final String BRANDS_COLUMN_CATEGORY = "category";
     private Context context;
 
     //Constructor
@@ -37,10 +44,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_PRODUCTS_TABLE = "CREATE TABLE " +
                 TABLE_RECEIPTS + '(' +
-                COLUMN_ID + " INTEGER PRIMARY KEY," +
-                COLUMN_COMPANYNAME + " TEXT," +
-                COLUMN_COST + " INTEGER," +
-                COLUMN_DATE + " TEXT" + ')';
+                RECEIPTS_COLUMN_ID + " INTEGER PRIMARY KEY," +
+                RECEIPTS_COLUMN_COMPANYNAME + " TEXT," +
+                RECEIPTS_COLUMN_COST + " INTEGER," +
+                RECEIPTS_COLUMN_DATE + " TEXT" + ')';
         db.execSQL(CREATE_PRODUCTS_TABLE);
 //        db.close();
     }
@@ -56,11 +63,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
     //Μέθοδος για προσθήκη ενός προϊόντος στη ΒΔ
     public void addProduct(Receipt receipt) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_COMPANYNAME, receipt.get_companyName());
-        values.put(COLUMN_ID, receipt.get_ID());
-        values.put(COLUMN_COST, receipt.get_cost());
+        values.put(RECEIPTS_COLUMN_COMPANYNAME, receipt.get_companyName());
+        values.put(RECEIPTS_COLUMN_ID, receipt.get_ID());
+        values.put(RECEIPTS_COLUMN_COST, receipt.get_cost());
         String date = Receipt.convertDateToDatabaseCompatible(receipt.get_date());
-        values.put(COLUMN_DATE, date);
+        values.put(RECEIPTS_COLUMN_DATE, date);
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_RECEIPTS, null, values);
         db.close();
@@ -69,7 +76,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     //Μέθοδος για εύρεση προϊόντος βάσει ονομασίας του
     public Receipt findProduct(String id) {
         String query = "SELECT * FROM " + TABLE_RECEIPTS + " WHERE " +
-                COLUMN_ID + " = '" + id + '\'';
+                RECEIPTS_COLUMN_ID + " = '" + id + '\'';
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         Receipt receipt;
@@ -93,7 +100,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
      */
     public ArrayList<Receipt> fetchNReceipts(int N, int skip) {
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " ORDER BY " + COLUMN_DATE + " DESC " +
+                " ORDER BY " + RECEIPTS_COLUMN_DATE + " DESC " +
                 " LIMIT " + N +
                 " OFFSET " + skip + ';';
         SQLiteDatabase db = this.getReadableDatabase();
@@ -113,7 +120,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     public ArrayList<Receipt> fetchAllReceipts() {
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " ORDER BY " + COLUMN_DATE + " DESC " + ';';
+                " ORDER BY " + RECEIPTS_COLUMN_DATE + " DESC " + ';';
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         ArrayList<Receipt> receipts = new ArrayList<>();
@@ -140,12 +147,12 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public boolean updateReceipt(String ID, String companyName, String cost, String date) {
         ContentValues pairs = new ContentValues();
         if (companyName != null)
-            pairs.put(COLUMN_COMPANYNAME, companyName);
+            pairs.put(RECEIPTS_COLUMN_COMPANYNAME, companyName);
         if (cost != null)
-            pairs.put(COLUMN_COST, cost);
+            pairs.put(RECEIPTS_COLUMN_COST, cost);
         if (date != null) {
             date = Receipt.convertDateToDatabaseCompatible(date);
-            pairs.put(COLUMN_DATE, date);
+            pairs.put(RECEIPTS_COLUMN_DATE, date);
         }
         if (pairs.size() == 0) {
             return false;
@@ -163,25 +170,26 @@ public class MyDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         // found help at
         // https://stackoverflow.com/questions/9798473/sqlite-in-android-how-to-update-a-specific-row
-        db.update(TABLE_RECEIPTS, pairs, COLUMN_ID + " = ?", new String[]{ID});
+        db.update(TABLE_RECEIPTS, pairs, RECEIPTS_COLUMN_ID + " = ?", new String[]{ID});
         db.close();
         return true;
     }
 
     public void deleteReceipt(String ID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", new String[]{ID});
+        db.delete(TABLE_RECEIPTS, RECEIPTS_COLUMN_ID + " = ?", new String[]{ID});
         db.close();
     }
 
     public void deleteReceipts(ArrayList<String> ids) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_RECEIPTS, COLUMN_ID + " = ?", (String[]) ids.toArray());
+        db.delete(TABLE_RECEIPTS, RECEIPTS_COLUMN_ID + " = ?", (String[]) ids.toArray());
         db.close();
     }
 
     /**
      * Adds an additional 0 digit in front of 1 digit numbers
+     *
      * @param month String number of the month
      * @return the corrected string number of the month
      */
@@ -216,8 +224,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * Method to get the total cost of a specific month and year
+     *
      * @param month String number of the month
-     * @param year String of the year
+     * @param year  String of the year
      * @return float number of the cost
      */
     public float getTotalCostOfMonth(String month, String year) {
@@ -227,11 +236,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
         String endDate = correctEndDate(month, year);
         String query = new StringBuilder().
                 append("SELECT SUM( ").
-                append(COLUMN_COST).
+                append(RECEIPTS_COLUMN_COST).
                 append(" )FROM ").
                 append(TABLE_RECEIPTS).
                 append(" WHERE ").
-                append(COLUMN_DATE).
+                append(RECEIPTS_COLUMN_DATE).
                 append(" BETWEEN ").
                 append("'").
                 append(startDate).
@@ -241,7 +250,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 append(endDate).
                 append("'").
                 append(" ORDER BY ").
-                append(COLUMN_DATE).
+                append(RECEIPTS_COLUMN_DATE).
                 append(" DESC ").
                 append(';').
                 toString();
@@ -261,8 +270,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     /**
      * Method to get the Receipts of a specific month and year
+     *
      * @param month String number of the month
-     * @param year String of the year
+     * @param year  String of the year
      * @return list of the receipts
      */
     public ArrayList<Receipt> fetchReceiptsBasedOnMonthAndYear(String month, String year) {
@@ -271,9 +281,9 @@ public class MyDBHandler extends SQLiteOpenHelper {
         String startDate = correctStartDate(month, year);
         String endDate = correctEndDate(month, year);
         String query = "SELECT * FROM " + TABLE_RECEIPTS +
-                " WHERE " + COLUMN_DATE + " BETWEEN " +
+                " WHERE " + RECEIPTS_COLUMN_DATE + " BETWEEN " +
                 "'" + startDate + "'" + " AND " + "'" + endDate + "'" +
-                " ORDER BY " + COLUMN_DATE + " DESC " + ';';
+                " ORDER BY " + RECEIPTS_COLUMN_DATE + " DESC " + ';';
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -312,27 +322,20 @@ public class MyDBHandler extends SQLiteOpenHelper {
      * @param filename The path to the file, located in the assets folder
      */
     public void loadDataFromFile(String filename) {
-        String TAG = "SQL massive Loader";
+        String TAG = "SQLML";
         InputStream inputStream = null;
         try {
             // Open the SQL file in the assets folder
             inputStream = this.context.getAssets().open(filename);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder stringBuilder = new StringBuilder();
-
             String line;
 
             SQLiteDatabase db = this.getWritableDatabase();
 
             // Read the SQL file line by line
             while ((line = bufferedReader.readLine()) != null) {
-//                stringBuilder.append(line);
-//                stringBuilder.append('\n');
                 db.execSQL(line);
             }
-//            Log.d(TAG, stringBuilder.toString());
-            // Execute the SQL statements that we fetched
-//            db.execSQL(stringBuilder.toString());
             db.close();
 
             Log.d(TAG, "Loaded SQL file successfully");
@@ -348,4 +351,35 @@ public class MyDBHandler extends SQLiteOpenHelper {
             }
         }
     }
+
+    public String brand(String company_name) {
+        String query = "SELECT discrete_title FROM companies WHERE company_name = '" + company_name + "' ;";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        String result;
+        if (cursor.moveToFirst()) { // if the cursor is not empty
+            result = cursor.getString(0);
+        } else // if the cursor is empty
+            result = null;
+        cursor.close();
+        db.close();
+        return result;
+    }
+
+    public void table() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String CREATE_BRANDS_TABLE = "CREATE TABLE IF NOT EXISTS " +
+                TABLE_BRANDS + '(' +
+                BRANDS_COLUMN_COMPANY_NAME + " TEXT PRIMARY KEY," +
+                BRANDS_COLUMN_DISCRETE_TITLE + " TEXT," +
+                BRANDS_COLUMN_CATEGORY + " TEXT" + ')';
+        db.execSQL(CREATE_BRANDS_TABLE);
+        db.close();
+
+        //this.getReadableDatabase().execSQL("INSERT INTO companies (company_name, discrete_title, category) VALUES ('ΑΛΦΑ ΒΗΤΑ ΒΑΣΙΛΟΠΟΥΛΟΣ ΜΟΝΟΠΡΟ', 'ΑΒ Βασιλόπουλος', 'Καθημερινά Ψώνια');");
+
+
+    }
+
 }

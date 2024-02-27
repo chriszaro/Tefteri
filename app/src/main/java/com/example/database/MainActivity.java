@@ -46,26 +46,31 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainContext = this;
+        dbHandler = new MyDBHandler(mainContext, null, null, 1);
+        //dbHandler.loadDataFromFile("brands.sql");
+
         recyclerView = findViewById(R.id.recycler_view);
 
         //Set the layout of the items in the RecyclerView
         layoutManager = new LinearLayoutManager(this);
-        mainContext = this;
         recyclerView.setLayoutManager(layoutManager);
         // as per the android documentation, the database should remain open for as long as possible
-        dbHandler = new MyDBHandler(mainContext, null, null, 1);
 
         camera = new CameraScanner(this);
 
         downloader = new ReceiptDownloader(dbHandler, this);
 
-//        // Massively add data to database for testing purposes
-//        boolean loadManyReceipts = false;
-//        String manyReceiptsSQLInsertsFileName = "sql-queries/receiptsDB_db-receipts.sql"; // located in /src/main/assets
-//        if (loadManyReceipts) {
-//            dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);
-//            //Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
-//        }
+        dbHandler.table();
+        //dbHandler.loadDataFromFile("brands.sql");
+
+        // Massively add data to database for testing purposes
+        boolean loadManyReceipts = false;
+        String manyReceiptsSQLInsertsFileName = "receiptsDB_db-receipts.sql"; // located in /src/main/assets
+        if (loadManyReceipts) {
+            dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);
+            //Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
+        }
 
         // Code For Ads
         MobileAds.initialize(this, initializationStatus -> {

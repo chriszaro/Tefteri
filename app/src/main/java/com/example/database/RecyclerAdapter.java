@@ -59,7 +59,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 for (Receipt selectedReceipt : toAdd) {
                     prices.add(String.valueOf(selectedReceipt.get_cost()));
                     dates.add(String.valueOf(selectedReceipt.get_date()));
-                    names.add(String.valueOf(selectedReceipt.get_companyName()));
+                    if (dbHandler.brand(selectedReceipt.get_companyName())!=null)
+                        names.add(dbHandler.brand(selectedReceipt.get_companyName()));
+                    else
+                        names.add(selectedReceipt.get_companyName());
+                    //names.add(selectedReceipt.get_companyName());
                     id.add(String.valueOf(selectedReceipt.get_ID()));
                 }
             }
