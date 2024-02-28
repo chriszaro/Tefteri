@@ -19,9 +19,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -61,15 +58,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         downloader = new ReceiptDownloader(dbHandler, this);
 
-        dbHandler.table();
-        //dbHandler.loadDataFromFile("brands.sql");
+        dbHandler.companiesTableInit();
+        dbHandler.runSQLFile("brands.sql"); // located in /src/main/assets
 
         // Massively add data to database for testing purposes
         boolean loadManyReceipts = false;
         String manyReceiptsSQLInsertsFileName = "receiptsDB_db-receipts.sql"; // located in /src/main/assets
         if (loadManyReceipts) {
-            dbHandler.loadDataFromFile(manyReceiptsSQLInsertsFileName);
-            //Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
+            dbHandler.runSQLFile(manyReceiptsSQLInsertsFileName);
         }
 
 //        // Code For Ads

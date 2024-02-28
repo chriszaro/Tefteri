@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 DELETE FROM receipts;
 INSERT INTO receipts VALUES(-2106151948,'ΑΝΑΣΤΑΣΙΑΔΗ ΑΦΟΙ ΚΑΙ ΣΙΑ Ο Ε',16,'2023-01-03');
 INSERT INTO receipts VALUES(-2066104009,'ΑΝΩΝΥΜΟΣ ΕΤΑΙΡΕΙΑ ΜΕΤΑΦΟΡΩΝ ΕΚ',20,'2023-03-24');
@@ -33,4 +32,3 @@ INSERT INTO receipts VALUES(1809754776,'ΠΑΠΑΔΟΠΟΥΛΟΥ ΔΕΣΠΟ',14,
 INSERT INTO receipts VALUES(1891681837,'ΑΝΑΣΤΑΣΙΑΔΗ ΑΦΟΙ ΚΑΙ ΣΙΑ Ο Ε',10,'2022-12-30');
 INSERT INTO receipts VALUES(1918926348,'ΚΑΛΥΨΩ ΚΕΑ ΜΟΝΟΠΡΟΣΩΠΗ ΑΝΩΝΥΜΗ',50,'2023-04-10');
 INSERT INTO receipts VALUES(2119737120,'ALFRED DAJA ΚΕΡΡΕΤΙ ΘΩΜΑ ΟΜΟΡΡ',10,'2023-03-21');
-COMMIT;

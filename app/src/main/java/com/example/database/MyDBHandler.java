@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -321,7 +320,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
      *
      * @param filename The path to the file, located in the assets folder
      */
-    public void loadDataFromFile(String filename) {
+    public void runSQLFile(String filename) {
         String TAG = "SQLML";
         InputStream inputStream = null;
         try {
@@ -366,20 +365,18 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return result;
     }
 
-    public void table() {
+    public void companiesTableInit() {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String CREATE_BRANDS_TABLE = "CREATE TABLE IF NOT EXISTS " +
+        db.execSQL("DROP TABLE IF EXISTS companies;");
+
+        String CREATE_BRANDS_TABLE = "CREATE TABLE " +
                 TABLE_BRANDS + '(' +
                 BRANDS_COLUMN_COMPANY_NAME + " TEXT PRIMARY KEY," +
                 BRANDS_COLUMN_DISCRETE_TITLE + " TEXT," +
                 BRANDS_COLUMN_CATEGORY + " TEXT" + ')';
         db.execSQL(CREATE_BRANDS_TABLE);
         db.close();
-
-        //this.getReadableDatabase().execSQL("INSERT INTO companies (company_name, discrete_title, category) VALUES ('ΑΛΦΑ ΒΗΤΑ ΒΑΣΙΛΟΠΟΥΛΟΣ ΜΟΝΟΠΡΟ', 'ΑΒ Βασιλόπουλος', 'Καθημερινά Ψώνια');");
-
-
     }
 
 }
