@@ -59,10 +59,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         downloader = new ReceiptDownloader(dbHandler, this);
 
         dbHandler.companiesTableInit();
-        dbHandler.runSQLFile("brands.sql"); // located in /src/main/assets
+        //dbHandler.runSQLFile("brands.sql"); // located in /src/main/assets
 
         // Massively add data to database for testing purposes
-        boolean loadManyReceipts = false;
+        boolean loadManyReceipts = true;
         String manyReceiptsSQLInsertsFileName = "receiptsDB_db-receipts.sql"; // located in /src/main/assets
         if (loadManyReceipts) {
             dbHandler.runSQLFile(manyReceiptsSQLInsertsFileName);

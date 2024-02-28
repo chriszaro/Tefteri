@@ -368,15 +368,39 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public void companiesTableInit() {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        db.execSQL("DROP TABLE IF EXISTS companies;");
+        if (!tableExists(db, TABLE_BRANDS)) {
+            db.execSQL("DROP TABLE IF EXISTS companies;");
 
-        String CREATE_BRANDS_TABLE = "CREATE TABLE " +
-                TABLE_BRANDS + '(' +
-                BRANDS_COLUMN_COMPANY_NAME + " TEXT PRIMARY KEY," +
-                BRANDS_COLUMN_DISCRETE_TITLE + " TEXT," +
-                BRANDS_COLUMN_CATEGORY + " TEXT" + ')';
-        db.execSQL(CREATE_BRANDS_TABLE);
+            String CREATE_BRANDS_TABLE = "CREATE TABLE " +
+                    TABLE_BRANDS + '(' +
+                    BRANDS_COLUMN_COMPANY_NAME + " TEXT PRIMARY KEY," +
+                    BRANDS_COLUMN_DISCRETE_TITLE + " TEXT," +
+                    BRANDS_COLUMN_CATEGORY + " TEXT" + ')';
+            db.execSQL(CREATE_BRANDS_TABLE);
+            this.runSQLFile("brands.sql"); // located in /src/main/assets
+        }
         db.close();
+    }
+
+    /**
+     * Checks if a table exists in a database
+     * https://gist.github.com/ruslan-hut/389134bc0bd3cbbbc783c41f430b00ff
+     * @param sqLiteDatabase the database
+     * @param table the name of the table
+     * @return true/false
+     */
+    private boolean tableExists(SQLiteDatabase sqLiteDatabase, String table){
+        if (sqLiteDatabase == null || !sqLiteDatabase.isOpen() || table == null){
+            return false;
+        }
+        int count = 0;
+        String[] args = {"table",table};
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type=? AND name=?",args,null);
+        if (cursor.moveToFirst()){
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count > 0;
     }
 
 }
