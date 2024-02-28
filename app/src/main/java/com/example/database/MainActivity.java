@@ -72,12 +72,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             //Log.d("MainActivityReceiptsLoa", "Loaded many receipts from MainActivity");
         }
 
-        // Code For Ads
-        MobileAds.initialize(this, initializationStatus -> {
-        });
-        AdView mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        // Code For Ads
+//        MobileAds.initialize(this, initializationStatus -> {
+//        });
+//        AdView mAdView = findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
 
         //ClickListener for Calendar Icon
         View calendar = findViewById(R.id.nav_view).findViewById(R.id.navigation_monthly);

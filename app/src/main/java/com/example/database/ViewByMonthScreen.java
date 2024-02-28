@@ -120,12 +120,12 @@ public class ViewByMonthScreen extends AppCompatActivity {
             }
         });
 
-        // Code For Ads
-        MobileAds.initialize(this, initializationStatus -> {
-        });
-        AdView mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        // Code For Ads
+//        MobileAds.initialize(this, initializationStatus -> {
+//        });
+//        AdView mAdView = findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
 
         BottomNavigationView nav = findViewById(R.id.nav_view);
         nav.getMenu().findItem(R.id.navigation_recents).setChecked(false);
