@@ -316,7 +316,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Adds data from an sql file that contains sql INSERT statements
+     * Executes SQL statements from sql file
      *
      * @param filename The path to the file, located in the assets folder
      */
